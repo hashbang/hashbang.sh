@@ -151,7 +151,7 @@ if [[ -n $key && -n $username ]]; then
         curl -H "Content-Type: application/json" \
         -d "{\"username\":\"$username\",\"key\":\"$key\"}" \
         http://new.hashbang.sh/
-        echo -e "\nHost hashbang\nHostName hashbang.sh\nUser $USER\n ForwardAgent yes" \
+        echo -e "\nHost hashbang\nHostName hashbang.sh\nUser $username\n ForwardAgent yes" \
         >> ~/.ssh/config
         echo " ";
         echo " Account Created!";
