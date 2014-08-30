@@ -1,5 +1,6 @@
 #!/bin/bash
 <<\EOF
 HTML
-<!--EOF
+<!--
+EOF
 BASH
