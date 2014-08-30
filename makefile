@@ -1,2 +1,3 @@
 all:
-	sed -f template.sed template > index.html
+	mkdir -p dist
+	sed -f template.sed template > dist/index.html
