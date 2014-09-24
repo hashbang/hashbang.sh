@@ -81,7 +81,7 @@ echo " ";
 until [[ -n $username ]]; do
     printf " Username: ";
     read input;
-    if [[ $input = [[:lower:]]+([[:alnum:]]) && $input -le 31 ]]; then
+    if [[ $input =~ ^[[:lower:]][[:alnum:]]{0,30}$ ]]; then
         username=$input
     else
         echo " ";
