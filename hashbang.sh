@@ -158,7 +158,7 @@ if [[ -n $key && -n $username ]]; then
         echo " ";
         echo " You can now connect any time by entering the command:";
         echo " ";
-        echo " > ssh hashbang";
+        echo " > ssh $username@hashbang";
         echo " ";
     fi
 
