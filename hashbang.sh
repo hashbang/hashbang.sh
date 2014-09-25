@@ -16,8 +16,8 @@ checkutil() {
 
 ask() {
     while true; do
-			local prompt=""
-			local default=""
+			prompt=""
+			default=""
 
         if [ "${2:-}" = "Y" ]; then
             prompt="Y/n"
@@ -93,7 +93,7 @@ echo " NOTE: If you see this message, it is likely because something is";
 echo " note installed. Check the list below, and install any";
 echo " missing applications.";
 
-checkutil sed || exit 1
+checkutil expr || exit 1
 ( checkutil ssh-keygen && checkutil ssh ) || exit 1
 ( checkutil curl || checkutil busybox ) || exit 1
 
