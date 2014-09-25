@@ -157,7 +157,7 @@ fi
 
 
 
-until [[ -n $key ]]; do
+while [[ "x$key" == "x" ]]; do
     echo " ";
     echo -n " Please enter path to SSH Public Key: ";
     read keyfile
