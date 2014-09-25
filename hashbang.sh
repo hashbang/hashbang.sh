@@ -197,7 +197,7 @@ if [[ -n $key && -n $username ]]; then
         http://new.hashbang.sh/
         echo -e "\nHost hashbang\nHostName hashbang.sh\nUser $username" \
         >> ~/.ssh/config
-				echo "IdentityFile $keyfile" >> ~/.ssh/config
+				echo "IdentityFile ${keyfile%.*}" >> ~/.ssh/config
         echo " ";
         echo " Account Created!";
         echo " ";
