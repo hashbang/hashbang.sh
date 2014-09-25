@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/sh
 <<\EOF
 HTML
 <!--
 EOF
-BASH
+SH
