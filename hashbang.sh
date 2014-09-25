@@ -140,12 +140,16 @@ echo " SSH Keys are a type of public/private key system that let you identify ";
 echo " yourself to systems like this one without ever sending your password ";
 echo " over the internet, and thus by nature we won't even know what it is";
 echo " ";
-if [ -e ~/.ssh/id_rsa.pub  ]; then
-    if ask " We found a public key in [ ~/.ssh/id_rsa.pub ]. Use this key?" Y; then
-        keyfile="~/.ssh/id_rsa.pub"
-        key=$(cat ~/.ssh/id_rsa.pub)
+
+for keytype in id_rsa id_dsa id_ecdsa id_ed25519; do
+    if [ -e ~/.ssh/$keytype.pub  ]; then
+        if ask " We found a public key in [ ~/.ssh/$keytype.pub ]. Use this key?" Y; then
+            keyfile="~/.ssh/$keytype.pub"
+            key=$(cat ~/.ssh/$keytype.pub)
+            break
+        fi
     fi
-fi
+done
 
 if [[ -z $key ]]; then
     if ask " Do you want us to generate a key for you?" Y; then
