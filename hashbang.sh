@@ -1,8 +1,23 @@
-#!/bin/bash
-shopt -s extglob
+#!/bin/sh
+# If we're using bash, we do this
+[[ "x$BASH" == "x" ]] || shopt -s extglob
 
-function ask {
+checkutil() {
+	printf " * Checking for $1..."
+	which $1 >/dev/null
+	if [[ "$?" == "0" ]]; then
+		printf "ok!\n";
+		return 0;
+	else
+		printf "not found!"
+		return 1
+	fi
+}
+
+ask() {
     while true; do
+			local prompt=""
+			local default=""
 
         if [ "${2:-}" = "Y" ]; then
             prompt="Y/n"
@@ -30,6 +45,11 @@ function ask {
         esac
 
     done
+}
+
+is_valid() {
+	expr match "$1" "[a-z0-9]*$" > /dev/null
+	echo $?
 }
 
 clear;
@@ -66,6 +86,25 @@ echo " ";
 echo " -------------------------------------------------------------------- ";
 echo " ";
 
+echo " First, your system must be properly configured with the required";
+echo " utilities and executables.";
+echo " We will perform a short check for those now.";
+echo " NOTE: If you see this message, it is likely because something is";
+echo " note installed. Check the list below, and install any";
+echo " missing applications.";
+
+checkutil sed || exit 1
+( checkutil ssh-keygen && checkutil ssh ) || exit 1
+( checkutil curl || checkutil busybox ) || exit 1
+
+clear;
+
+echo " ";
+echo " ";
+echo " -------------------------------------------------------------------- ";
+echo " ";
+
+
 echo " To create your account we first need a username.";
 echo " ";
 echo " A valid username must:";
@@ -78,10 +117,10 @@ echo " and the first 6 characters of the last name, but feel free to use ";
 echo " whatever you want";
 echo " ";
 
-until [[ -n $username ]]; do
+while [[ "x$username" == "x" ]]; do
     printf " Username: ";
     read input;
-    if [[ $input = [[:lower:]]+([[:alnum:]]) && $input -le 31 ]]; then
+		if [[ ${#input} -le 31 && $(is_valid $input) -eq 0 ]]; then
         username=$input
     else
         echo " ";
@@ -90,6 +129,7 @@ until [[ -n $username ]]; do
         echo " ";
     fi
 done
+exit
 
 echo " ";
 echo " -------------------------------------------------------------------- ";
