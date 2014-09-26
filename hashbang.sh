@@ -120,7 +120,7 @@ echo " ";
 while [ "x$username" = "x" ]; do
     printf " Username: ";
     read input;
-		if [ ${#input} -le 31 && $(is_valid $input) -eq 0 ]; then
+    if [ ${#input} -le 31 -a $(is_valid $input) -eq 0 ]; then
         username=$input
     else
         echo " ";
@@ -178,7 +178,7 @@ while [ "x$key" = "x" ]; do
     fi
 done
 
-if [ "x$key" != "x" && "x$username" != "x" ]; then
+if [ "x$key" != "x" -a "x$username" != "x" ]; then
     echo " ";
     echo " -------------------------------------------------------------------- ";
     echo " ";
