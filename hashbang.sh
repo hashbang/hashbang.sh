@@ -120,7 +120,7 @@ echo " ";
 while [ "x$username" == "x" ]; do
     printf " Username: ";
     read input;
-		if [[ ${#input} -le 31 && $(is_valid $input) -eq 0 ]]; then
+		if [ ${#input} -le 31 && $(is_valid $input) -eq 0 ]; then
         username=$input
     else
         echo " ";
