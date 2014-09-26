@@ -1,11 +1,11 @@
 #!/bin/sh
 # If we're using bash, we do this
-[ "x$BASH" -eq "x" ] || shopt -s extglob
+[ "x$BASH" == "x" ] || shopt -s extglob
 
 checkutil() {
 	printf " * Checking for $1..."
 	which $1 >/dev/null
-	if [ "$?" -eq "0" ]; then
+	if [ $? -eq 0 ]; then
 		printf "ok!\n";
 		return 0;
 	else
@@ -19,10 +19,10 @@ ask() {
 			prompt=""
 			default=""
 
-        if [ "${2:-}" = "Y" ]; then
+        if [ "${2:-}" == "Y" ]; then
             prompt="Y/n"
             default=Y
-        elif [ "${2:-}" = "N" ]; then
+        elif [ "${2:-}" == "N" ]; then
             prompt="y/N"
             default=N
         else
@@ -117,7 +117,7 @@ echo " and the first 6 characters of the last name, but feel free to use ";
 echo " whatever you want";
 echo " ";
 
-while [ "x$username" -eq "x" ]; do
+while [ "x$username" == "x" ]; do
     printf " Username: ";
     read input;
 		if [ ${#input} -le 31 && $(is_valid $input) -eq 0 ]; then
@@ -150,7 +150,7 @@ for keytype in id_rsa id_dsa id_ecdsa id_ed25519; do
     fi
 done
 
-if [ "x$key" -eq "x" ]; then
+if [ "x$key" == "x" ]; then
     if ask " Do you want us to generate a key for you?" Y; then
         ssh-keygen -t rsa -C "#! $username"
         keyfile="~/.ssh/id_rsa.pub"
@@ -160,7 +160,7 @@ fi
 
 
 
-while [ "x$key" -eq "x" ]; do
+while [ "x$key" == "x" ]; do
     echo " ";
     echo -n " Please enter path to SSH Public Key: ";
     read keyfile
@@ -178,7 +178,7 @@ while [ "x$key" -eq "x" ]; do
     fi
 done
 
-if [ "x$key" -ne "x" && "x$username" -ne "x" ]; then
+if [ "x$key" != "x" && "x$username" != "x" ]; then
     echo " ";
     echo " -------------------------------------------------------------------- ";
     echo " ";
