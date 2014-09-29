@@ -192,7 +192,7 @@ if [ "x$key" != "x" -a "x$username" != "x" ]; then
         echo " Creating your account...";
         echo " ";
         curl -H "Content-Type: application/json" \
-        -d "{\"user\":\"$username\",\"keyType\":\"ssh-rsa\",\"key\":\"$key\"}" \
+        -d "{\"user\":\"$username\",\"key\":\"$key\"}" \
         https://new.hashbang.sh/
         echo -e "\nHost hashbang\nHostName hashbang.sh\nUser $username" \
         >> ~/.ssh/config
