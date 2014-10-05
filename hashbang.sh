@@ -171,6 +171,7 @@ if [[ -n $key && -n $username ]]; then
     fi
 
     if ask " Do you want us to log you in now?" Y; then
-        ssh hashbang
+        ssh $username@hashbang.sh
     fi
 fi
+exit
