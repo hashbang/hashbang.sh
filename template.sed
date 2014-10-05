@@ -1,4 +1,4 @@
-/BASH/ {
+/SH/ {
   r hashbang.sh
   d
 }

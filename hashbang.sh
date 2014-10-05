@@ -1,8 +1,23 @@
-#!/bin/bash
-shopt -s extglob
+#!/bin/sh
+# If we're using bash, we do this
+[ "x$BASH" = "x" ] || shopt -s extglob
 
-function ask {
+checkutil() {
+	printf " * Checking for $1..."
+	which $1 >/dev/null
+	if [ $? -eq 0 ]; then
+		printf "ok!\n";
+		return 0;
+	else
+		printf "not found!"
+		return 1
+	fi
+}
+
+ask() {
     while true; do
+			prompt=""
+			default=""
 
         if [ "${2:-}" = "Y" ]; then
             prompt="Y/n"
@@ -30,6 +45,11 @@ function ask {
         esac
 
     done
+}
+
+is_valid() {
+	expr match "$1" "[a-z0-9]*$" > /dev/null
+	echo $?
 }
 
 clear;
@@ -66,6 +86,25 @@ echo " ";
 echo " -------------------------------------------------------------------- ";
 echo " ";
 
+echo " First, your system must be properly configured with the required";
+echo " utilities and executables.";
+echo " We will perform a short check for those now.";
+echo " NOTE: If you see this message, it is likely because something is";
+echo " note installed. Check the list below, and install any";
+echo " missing applications.";
+
+checkutil expr || exit 1
+( checkutil ssh-keygen && checkutil ssh ) || exit 1
+( checkutil curl || checkutil busybox ) || exit 1
+
+clear;
+
+echo " ";
+echo " ";
+echo " -------------------------------------------------------------------- ";
+echo " ";
+
+
 echo " To create your account we first need a username.";
 echo " ";
 echo " A valid username must:";
@@ -78,10 +117,10 @@ echo " and the first 6 characters of the last name, but feel free to use ";
 echo " whatever you want";
 echo " ";
 
-until [[ -n $username ]]; do
+while [ "x$username" = "x" ]; do
     printf " Username: ";
     read input;
-    if [[ $input = [[:lower:]]+([[:alnum:]]) && $input -le 31 ]]; then
+    if [ ${#input} -le 31 -a $(is_valid $input) -eq 0 ]; then
         username=$input
     else
         echo " ";
@@ -100,14 +139,18 @@ echo " SSH Keys are a type of public/private key system that let you identify ";
 echo " yourself to systems like this one without ever sending your password ";
 echo " over the internet, and thus by nature we won't even know what it is";
 echo " ";
-if [ -e ~/.ssh/id_rsa.pub  ]; then
-    if ask " We found a public key in [ ~/.ssh/id_rsa.pub ]. Use this key?" Y; then
-        keyfile="~/.ssh/id_rsa.pub"
-        key=$(cat ~/.ssh/id_rsa.pub)
-    fi
-fi
 
-if [[ -z $key ]]; then
+for keytype in id_rsa id_dsa id_ecdsa id_ed25519; do
+    if [ -e ~/.ssh/$keytype.pub  ]; then
+        if ask " We found a public key in [ ~/.ssh/$keytype.pub ]. Use this key?" Y; then
+            keyfile="~/.ssh/$keytype.pub"
+            key=$(cat ~/.ssh/$keytype.pub)
+            break
+        fi
+    fi
+done
+
+if [ "x$key" = "x" ]; then
     if ask " Do you want us to generate a key for you?" Y; then
         ssh-keygen -t rsa -C "#! $username"
         keyfile="~/.ssh/id_rsa.pub"
@@ -117,7 +160,7 @@ fi
 
 
 
-until [[ -n $key ]]; do
+while [ "x$key" = "x" ]; do
     echo " ";
     echo -n " Please enter path to SSH Public Key: ";
     read keyfile
@@ -135,7 +178,7 @@ until [[ -n $key ]]; do
     fi
 done
 
-if [[ -n $key && -n $username ]]; then
+if [ "x$key" != "x" -a "x$username" != "x" ]; then
     echo " ";
     echo " -------------------------------------------------------------------- ";
     echo " ";
@@ -174,4 +217,6 @@ if [[ -n $key && -n $username ]]; then
         ssh $username@hashbang.sh
     fi
 fi
-exit
+# exit [n]. if [n] is not specified, then exit shall use the return code of the
+# last command.
+exit 0
