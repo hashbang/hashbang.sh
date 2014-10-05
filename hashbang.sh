@@ -149,20 +149,28 @@ if [[ -n $key && -n $username ]]; then
         echo " Creating your account...";
         echo " ";
         curl -H "Content-Type: application/json" \
-        -d "{\"username\":\"$username\",\"key\":\"$key\"}" \
-        http://new.hashbang.sh/
-        echo -e "\nHost hashbang\nHostName hashbang.sh\nUser $username" \
-        >> ~/.ssh/config
+        -d "{\"user\":\"$username\",\"key\":\"$key\"}" \
+        https://new.hashbang.sh/
         echo " ";
         echo " Account Created!";
         echo " ";
-        echo " You can now connect any time by entering the command:";
-        echo " ";
-        echo " > ssh $username@hashbang";
+
+        if ask " Would you like an alias (shortcut) added to your .ssh/config?" Y ; then
+            echo -e "\nHost hashbang\nHostName hashbang.sh\nUser $username" \
+            >> ~/.ssh/config
+            echo " You can now connect any time by entering the command:";
+            echo " ";
+            echo " > ssh hashbang";
+        else
+            echo " You can now connect any time by entering the command:";
+            echo " ";
+            echo " > ssh $username@hashbang.sh";
+        fi
+
         echo " ";
     fi
 
     if ask " Do you want us to log you in now?" Y; then
-        ssh $username@hashbang.sh
+        ssh hashbang
     fi
 fi
