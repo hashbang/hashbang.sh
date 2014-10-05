@@ -1,3 +1,40 @@
+<!--
+  Hey, you found the source code!
+  
+  That is a sign you hopefully know better than to blindly run unknown commands
+  from the internet and/or are a curious person. We like you already.
+
+  What this command will actually do, is set you up with a free "shell" account
+  on one of our servers, that you can use as you see fit. It will also set you 
+  up with email, IRC, and other things on your shell, so you can keep in touch 
+  and learn/make awesome things with us.
+
+  Don't trust us? Good! You probably don't know us (yet) so you shouldn't.
+
+  To help address this we GPG sign all our installer releases so you can verify
+  our script has not been changed by a third party before you run it by doing:
+
+  > gpg --verify <(curl hashbang.sh)
+
+  The safest method of running a script from a source you don't trust is of
+  course is to download, verify, inspect, then run.
+
+  One way to do this is:
+
+  > curl https://hashbang.sh >> hashbang.sh
+  > gpg --verify hashbang.sh
+  > less hashbang.sh
+  > chmod +x hashbang.sh
+  > ./hashbang.sh
+
+  As another alternative you can bypass using this script and hit our user
+  provisioning API directly with an SSH Public Key and desired username:
+
+  > curl -d '{"user":"someuser","key":"'"$(cat ~/.ssh/id_rsa.pub)"'"}' -H 'Content-Type: application/json' https://new.hashbang.sh
+
+  We look forward to seeing you on the other side.
+
+-->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -60,6 +97,6 @@
       document.getElementsByTagName("head")[0].appendChild(link);
     </script>
     <h1>#!</h1>
-    <code>sh <(curl -3 hashbang.sh)</code>
+    <code>sh <(curl https://hashbang.sh)</code>
   </body>
 </html>

@@ -194,16 +194,22 @@ if [ "x$key" != "x" -a "x$username" != "x" ]; then
         curl -H "Content-Type: application/json" \
         -d "{\"user\":\"$username\",\"key\":\"$key\"}" \
         https://new.hashbang.sh/
-        echo -e "\nHost hashbang\nHostName hashbang.sh\nUser $username" \
-        >> ~/.ssh/config
-				echo "IdentityFile ${keyfile%.*}" >> ~/.ssh/config
-				echo " $key"
         echo " ";
         echo " Account Created!";
         echo " ";
-        echo " You can now connect any time by entering the command:";
-        echo " ";
-        echo " > ssh $username@hashbang";
+
+        if ask " Would you like an alias (shortcut) added to your .ssh/config?" Y ; then
+            echo -e "\nHost hashbang\nHostName hashbang.sh\nUser $username" \
+            >> ~/.ssh/config
+            echo " You can now connect any time by entering the command:";
+            echo " ";
+            echo " > ssh hashbang";
+        else
+            echo " You can now connect any time by entering the command:";
+            echo " ";
+            echo " > ssh $username@hashbang.sh";
+        fi
+
         echo " ";
     fi
 
@@ -211,3 +217,4 @@ if [ "x$key" != "x" -a "x$username" != "x" ]; then
         ssh $username@hashbang.sh
     fi
 fi
+exit
