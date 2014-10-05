@@ -217,4 +217,6 @@ if [ "x$key" != "x" -a "x$username" != "x" ]; then
         ssh $username@hashbang.sh
     fi
 fi
-exit
+# exit [n]. if [n] is not specified, then exit shall use the return code of the
+# last command.
+exit 0
