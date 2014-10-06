@@ -17,13 +17,18 @@
   > gpg --verify <(curl https://hashbang.sh)
 
   The safest method of running a script from a source you don't trust is of
-  course is to download, verify, inspect, then run.
-
-  One way to do this is:
-
+  to:
+  
+  Download locally over SSL
   > curl https://hashbang.sh >> hashbang.sh
+  
+  Verify integrty with GPG
   > gpg --verify hashbang.sh
+
+  Inspect source code
   > less hashbang.sh
+
+  Run
   > chmod +x hashbang.sh
   > ./hashbang.sh
 
