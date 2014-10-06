@@ -53,6 +53,12 @@
     <style type="text/css">
         * {
         text-indent:-9999px;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
       }
       html {
         background:black;
@@ -80,6 +86,10 @@
         line-height:0px;
         font-size:280px;
       }
+      a {
+        color:white;
+        text-decoration:none;
+      }
       code {
         text-indent:0px;
         display:block;
@@ -102,6 +112,6 @@
       document.getElementsByTagName("head")[0].appendChild(link);
     </script>
     <h1>#!</h1>
-    <code>sh <(curl hashbang.sh)</code>
+    <a href="view-source:https://hashbang.sh"><code>sh <(curl hashbang.sh)</code></a>
   </body>
 </html>
