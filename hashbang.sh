@@ -47,11 +47,6 @@ ask() {
     done
 }
 
-is_valid() {
-	expr match "$1" "[a-z0-9]*$" > /dev/null
-	echo $?
-}
-
 clear;
 echo "   _  _    __  ";
 echo " _| || |_ |  |  Welcome to #!. This network has three rules:";
@@ -120,7 +115,7 @@ echo " ";
 while [ "x$username" = "x" ]; do
     printf " Username: ";
     read input;
-    if [ ${#input} -le 31 -a $(is_valid $input) -eq 0 ]; then
+    if echo "$input" | grep -E "^[a-z][a-z0-9]{0,30}$" >/dev/null; then
         username=$input
     else
         echo " ";
