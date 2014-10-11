@@ -48,7 +48,7 @@ ask() {
 }
 
 is_valid() {
-	expr match "$1" "[a-z0-9]*$" > /dev/null
+	echo "$1" | grep -E "^[a-z][a-z0-9]{0,30}$" >/dev/null
 	echo $?
 }
 
