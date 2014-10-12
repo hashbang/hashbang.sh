@@ -1,4 +1,8 @@
 #!/bin/sh
+# This script first and foremost attempts to be POSIX complaint.
+# Secondly, it attempts to be compatible with as many shell implementations as
+# possible to provide an easy gateway for new users.
+
 # If we're using bash, we do this
 if [ "x$BASH" = "x" ]; then
 	shopt -s extglob
@@ -17,6 +21,16 @@ checkutil() {
 	fi
 }
 
+# This function can be called with two parameters:
+#
+# First is obligatory, and is the "question posed".
+# For instance, one may ask "is pizza your favorite meal?", to which the
+# responder may answer Y (yes) or N (no).
+# 
+# Second parameter is optional, and can be either Y or N.
+# The reasoning behind this is to have a default answer to the question,
+# resulting in the responder being able to simple press [enter] and skip
+# pressing Y or N, giving the default answer instead.
 ask() {
     while true; do
 			prompt=""
@@ -79,6 +93,7 @@ echo " Please report any issues here: ";
 echo "   -> https://github.com/lrvick/hashbang.sh/issues/";
 echo " ";
 read -p " If you agree with the above and wish to continue, hit [Enter] " _;
+clear
 
 echo " ";
 echo " ";
