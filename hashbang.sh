@@ -1,6 +1,9 @@
 #!/bin/sh
 # If we're using bash, we do this
-[ "x$BASH" = "x" ] || shopt -s extglob
+if [ "x$BASH" = "x" ]; then
+	shopt -s extglob
+	set -o posix
+fi
 
 checkutil() {
 	printf " * Checking for $1..."
