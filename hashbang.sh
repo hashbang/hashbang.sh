@@ -92,7 +92,8 @@ echo " ";
 echo " Please report any issues here: ";
 echo "   -> https://github.com/lrvick/hashbang.sh/issues/";
 echo " ";
-read -p " If you agree with the above and wish to continue, hit [Enter] " _;
+printf " If you agree with the above and wish to continue, hit [Enter] ";
+read _
 clear
 
 echo " ";
