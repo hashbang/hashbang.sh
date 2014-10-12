@@ -31,7 +31,8 @@ ask() {
         fi
 
         # Ask the question
-        read -p "$1 [$prompt] " REPLY
+				printf "$1 [$prompt} "
+        read REPLY
 
         # Default?
         if [ -z "$REPLY" ]; then
