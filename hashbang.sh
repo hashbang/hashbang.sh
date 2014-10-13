@@ -4,7 +4,7 @@
 # possible to provide an easy gateway for new users.
 
 # If we're using bash, we do this
-if [ "x$BASH" = "x" ]; then
+if [ "x$BASH" != "x" ]; then
 	shopt -s extglob
 	set -o posix
 fi
@@ -48,7 +48,7 @@ ask() {
         fi
 
         # Ask the question
-				printf "$1 [$prompt} "
+				printf "%s [%s] " "$1" "$prompt"
         read REPLY
 
         # Default?
@@ -177,7 +177,7 @@ fi
 
 while [ "x$key" = "x" ]; do
     echo " ";
-    echo -n " Please enter path to SSH Public Key: ";
+    echo " Please enter path to SSH Public Key: ";
     read keyfile
     if [ -f $keyfile ] ; then
         ssh-keygen -l -f $keyfile > /dev/null 2>&1
@@ -214,7 +214,8 @@ if [ "x$key" != "x" -a "x$username" != "x" ]; then
         echo " ";
 
         if ask " Would you like an alias (shortcut) added to your .ssh/config?" Y ; then
-            echo -e "\nHost hashbang\nHostName hashbang.sh\nUser $username" \
+            printf "\nHost hashbang\n  HostName hashbang.sh\n  User %s\n  IdentityFile %s\n" \
+							"$username" "$keyfile" \
             >> ~/.ssh/config
             echo " You can now connect any time by entering the command:";
             echo " ";
