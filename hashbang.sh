@@ -1,6 +1,13 @@
 #!/bin/sh
+# This script first and foremost attempts to be POSIX complaint.
+# Secondly, it attempts to be compatible with as many shell implementations as
+# possible to provide an easy gateway for new users.
+
 # If we're using bash, we do this
-[ "x$BASH" = "x" ] || shopt -s extglob
+if [ "x$BASH" != "x" ]; then
+	shopt -s extglob
+	set -o posix
+fi
 
 checkutil() {
 	printf " * Checking for $1..."
@@ -14,15 +21,25 @@ checkutil() {
 	fi
 }
 
+# This function can be called with two parameters:
+#
+# First is obligatory, and is the "question posed".
+# For instance, one may ask "is pizza your favorite meal?", to which the
+# responder may answer Y (yes) or N (no).
+# 
+# Second parameter is optional, and can be either Y or N.
+# The reasoning behind this is to have a default answer to the question,
+# resulting in the responder being able to simple press [enter] and skip
+# pressing Y or N, giving the default answer instead.
 ask() {
     while true; do
 			prompt=""
 			default=""
 
-        if [ "${2:-}" = "Y" ]; then
+        if [ "${2}" = "Y" ]; then
             prompt="Y/n"
             default=Y
-        elif [ "${2:-}" = "N" ]; then
+        elif [ "${2}" = "N" ]; then
             prompt="y/N"
             default=N
         else
@@ -31,7 +48,8 @@ ask() {
         fi
 
         # Ask the question
-        read -p "$1 [$prompt] " REPLY
+				printf "%s [%s] " "$1" "$prompt"
+        read REPLY
 
         # Default?
         if [ -z "$REPLY" ]; then
@@ -74,7 +92,9 @@ echo " ";
 echo " Please report any issues here: ";
 echo "   -> https://github.com/lrvick/hashbang.sh/issues/";
 echo " ";
-read -p " If you agree with the above and wish to continue, hit [Enter] " _;
+printf " If you agree with the above and wish to continue, hit [Enter] ";
+read _
+clear
 
 echo " ";
 echo " ";
@@ -157,7 +177,7 @@ fi
 
 while [ "x$key" = "x" ]; do
     echo " ";
-    echo -n " Please enter path to SSH Public Key: ";
+    echo " Please enter path to SSH Public Key: ";
     read keyfile
     if [ -f $keyfile ] ; then
         ssh-keygen -l -f $keyfile > /dev/null 2>&1
@@ -194,7 +214,8 @@ if [ "x$key" != "x" -a "x$username" != "x" ]; then
         echo " ";
 
         if ask " Would you like an alias (shortcut) added to your .ssh/config?" Y ; then
-            echo -e "\nHost hashbang\nHostName hashbang.sh\nUser $username" \
+            printf "\nHost hashbang\n  HostName hashbang.sh\n  User %s\n  IdentityFile %s\n" \
+							"$username" "$keyfile" \
             >> ~/.ssh/config
             echo " You can now connect any time by entering the command:";
             echo " ";
