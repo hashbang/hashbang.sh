@@ -90,7 +90,7 @@ echo " ";
 echo " Everything should work perfectly, unless it doesn't";
 echo " ";
 echo " Please report any issues here: ";
-echo "   -> https://github.com/lrvick/hashbang.sh/issues/";
+echo "   -> https://github.com/hashbang/hashbang.sh/issues/";
 echo " ";
 printf " If you agree with the above and wish to continue, hit [Enter] ";
 read _
@@ -105,7 +105,7 @@ echo " First, your system must be properly configured with the required";
 echo " utilities and executables.";
 echo " We will perform a short check for those now.";
 echo " NOTE: If you see this message, it is likely because something is";
-echo " note installed. Check the list below, and install any";
+echo " not installed. Check the list below, and install any";
 echo " missing applications.";
 
 checkutil expr || exit 1
@@ -206,12 +206,24 @@ if [ "x$key" != "x" -a "x$username" != "x" ]; then
         echo " ";
         echo " Creating your account...";
         echo " ";
-        curl -H "Content-Type: application/json" \
+
+	if curl -f -H "Content-Type: application/json" \
         -d "{\"user\":\"$username\",\"key\":\"$key\"}" \
-        https://new.hashbang.sh/
-        echo " ";
-        echo " Account Created!";
-        echo " ";
+        https://new.hashbang.sh/; then
+            echo " ";
+            echo " Account Created!"
+            echo " ";
+        else
+            echo " ";
+            echo " Account creation failed.";
+            echo " Something went awfully wrong and we couldn't create an account for you.";
+            echo " If you think this is a bug, please report it to ";
+            echo " -> https://github.com/hashbang/hashbang.sh/issues/";
+            echo " ";
+            echo " The installer will not continue from here...";
+            echo " ";
+            exit 1
+        fi
 
         if ask " Would you like an alias (shortcut) added to your .ssh/config?" Y ; then
             printf "\nHost hashbang\n  HostName hashbang.sh\n  User %s\n  IdentityFile %s\n" \
