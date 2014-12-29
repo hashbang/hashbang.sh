@@ -90,7 +90,7 @@ echo " ";
 echo " Everything should work perfectly, unless it doesn't";
 echo " ";
 echo " Please report any issues here: ";
-echo "   -> https://github.com/lrvick/hashbang.sh/issues/";
+echo "   -> https://github.com/hashbang/hashbang.sh/issues/";
 echo " ";
 printf " If you agree with the above and wish to continue, hit [Enter] ";
 read _
@@ -218,7 +218,7 @@ if [ "x$key" != "x" -a "x$username" != "x" ]; then
             echo " Account creation failed.";
             echo " Something went awfully wrong and we couldn't create an account for you.";
             echo " If you think this is a bug, please report it to ";
-            echo " -> https://github.com/lrvick/hashbang.sh/issues/";
+            echo " -> https://github.com/hashbang/hashbang.sh/issues/";
             echo " ";
             echo " The installer will not continue from here...";
             echo " ";
