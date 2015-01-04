@@ -1,5 +1,5 @@
 #!/bin/sh
-# This script first and foremost attempts to be POSIX complaint.
+# This script first and foremost attempts to be POSIX compliant.
 # Secondly, it attempts to be compatible with as many shell implementations as
 # possible to provide an easy gateway for new users.
 
