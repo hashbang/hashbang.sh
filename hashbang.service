@@ -1,0 +1,17 @@
+Description=#! Website Server
+After=docker.service
+Requires=docker.service
+
+[Service]
+Restart=always
+ExecStartPre=-/usr/bin/docker pull hashbang/hashbang
+ExecStartPre=-/usr/bin/docker kill hashbang
+ExecStartPre=-/usr/bin/docker rm hashbang
+ExecStart=/usr/bin/docker run \
+  -p 443:4443 \
+  -v /home/core/hashbang/certs:/opt/app/certs \
+  --name="hashbang" \
+  hashbang/hashbang
+
+[Install]
+WantedBy=multi-user.target
