@@ -60,6 +60,12 @@ def root():
     return send_from_directory('static','index.html')
 
 if __name__ == '__main__':
-    http_server = HTTPServer(WSGIContainer(app))
-    http_server.listen(5000)
+    http_server = HTTPServer(
+        WSGIContainer(app),
+        ssl_options={
+            "certfile": os.path.join(os.getcwd(), "certs/server.crt"),
+            "keyfile": os.path.join(os.getcwd(), "certs/server.key"),
+        }
+    )
+    http_server.listen(4443)
     IOLoop.instance().start()
