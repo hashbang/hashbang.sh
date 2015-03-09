@@ -1,7 +1,7 @@
 FROM debian:wheezy
 
 RUN apt-get update && \
-    LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get install -y python-dev && \
+    LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get install -y git python-dev python-pip build-essential libldap2-dev libsasl2-dev libssl-dev && \
     apt-get clean && \
     rm -rf /tmp/* /var/tmp/*
 
@@ -11,4 +11,4 @@ RUN pip install -r requirements.txt
 
 EXPOSE 4443
 
-CMD ["python", "server.py"]
+CMD ["python2.7", "server.py"]

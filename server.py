@@ -2,7 +2,7 @@
 
 import os
 from subprocess import check_call, CalledProcessError
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory, redirect, request
 from flask.ext.restful import Resource, Api
 from flask.ext.restful.reqparse import RequestParser
 from tornado.wsgi import WSGIContainer
@@ -57,15 +57,21 @@ api.add_resource(UserCreate, '/user/create')
 
 @app.route('/',methods=["GET"])
 def root():
-    return send_from_directory('static','index.html')
+    if request.is_secure:
+        return send_from_directory('static','index.html')
+    return redirect(request.url.replace("http://", "https://"))
 
 if __name__ == '__main__':
-    http_server = HTTPServer(
+    https_server = HTTPServer(
         WSGIContainer(app),
         ssl_options={
             "certfile": os.path.join(os.getcwd(), "certs/server.crt"),
             "keyfile": os.path.join(os.getcwd(), "certs/server.key"),
         }
     )
-    http_server.listen(4443)
+    http_server = HTTPServer(WSGIContainer(app))
+
+    https_server.listen(4443)
+    http_server.listen(8080)
+
     IOLoop.instance().start()
