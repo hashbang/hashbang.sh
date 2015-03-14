@@ -1,7 +1,16 @@
 FROM debian:wheezy
 
-RUN apt-get update && \
-    LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get install -y git python-dev python-pip build-essential libldap2-dev libsasl2-dev libssl-dev && \
+RUN LC_ALL=C \
+    DEBIAN_FRONTEND=noninteractive \
+    apt-get update && \
+    apt-get install -y \
+        git \
+        python-dev \
+        python-pip \
+        build-essential \
+        libldap2-dev \
+        libsasl2-dev \
+        libssl-dev && \
     apt-get clean && \
     rm -rf /tmp/* /var/tmp/*
 
