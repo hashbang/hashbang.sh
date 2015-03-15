@@ -6,3 +6,23 @@ The index.html is both an html page, and a bash script, which is done by:
 2.  Having the the bash script inside of an html comment.
 
 This allows both bash and browsers to render this document appropriately.
+
+## Deployment
+
+1. Build/sign index.html (requires hashbang team private key in gpg ring)
+
+    ```
+    make
+    ```
+2. Build/push new docker container
+
+    ```
+    docker build -t hashbang/hashbang.sh .
+    docker push hashbang/hashbang.sh
+    ```
+
+3. Restart systemd service on production CoreOS machine
+
+    ```
+    ssh core@hashbang.sh sudo systemctl restart hashbangsh
+    ```
