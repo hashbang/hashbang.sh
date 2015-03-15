@@ -1,12 +1,12 @@
 <!--
   Hey, you found the source code!
-  
+
   That is a sign you hopefully know better than to blindly run unknown commands
   from the internet and/or are a curious person. We like you already.
 
   What this command will actually do, is set you up with a free "shell" account
-  on one of our servers, that you can use as you see fit. It will also set you 
-  up with email, IRC, and other things on your shell, so you can keep in touch 
+  on one of our servers, that you can use as you see fit. It will also set you
+  up with email, IRC, and other things on your shell, so you can keep in touch
   and learn/make awesome things with us.
 
   Don't trust us? Good! You probably don't know us (yet) so you shouldn't.
@@ -17,10 +17,10 @@
   > gpg --verify <(curl https://hashbang.sh)
 
   The safest method of running a script from a source you don't trust is to:
-  
+
   Download locally over SSL
   > curl https://hashbang.sh >> hashbang.sh
-  
+
   Verify integrty with GPG (If available)
   > gpg --recv-keys 8FAA96F5
   > gpg --verify hashbang.sh
@@ -32,10 +32,10 @@
   > chmod +x hashbang.sh
   > ./hashbang.sh
 
-  As another alternative you can bypass using this script and hit our user
+  As an advanced alternative you can bypass using this script and hit our user
   provisioning API directly with an SSH Public Key and desired username:
 
-  > curl -d '{"user":"someuser","key":"'"$(cat ~/.ssh/id_rsa.pub)"'"}' -H 'Content-Type: application/json' https://new.hashbang.sh
+  > curl -d '{"user":"someuser","key":"'"$(cat ~/.ssh/id_rsa.pub)"'"}' -H 'Content-Type: application/json' https://hashbang.sh/user/create
 
   We look forward to seeing you on the other side.
 

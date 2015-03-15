@@ -26,7 +26,7 @@ checkutil() {
 # First is obligatory, and is the "question posed".
 # For instance, one may ask "is pizza your favorite meal?", to which the
 # responder may answer Y (yes) or N (no).
-# 
+#
 # Second parameter is optional, and can be either Y or N.
 # The reasoning behind this is to have a default answer to the question,
 # resulting in the responder being able to simple press [enter] and skip
@@ -193,6 +193,10 @@ while [ "x$key" = "x" ]; do
     fi
 done
 
+# Insert functions to allow user to select from multiple hosts here
+# hardcoding all users to va1 for now
+host="va1"
+
 if [ "x$key" != "x" -a "x$username" != "x" ]; then
     echo " ";
     echo " -------------------------------------------------------------------- ";
@@ -201,6 +205,7 @@ if [ "x$key" != "x" -a "x$username" != "x" ]; then
     echo " ";
     echo " Username: $username";
     echo " Public Key: $keyfile";
+    echo " Host: $host";
     echo " ";
     if ask " Does this look correct?" Y ; then
         echo " ";
@@ -208,8 +213,8 @@ if [ "x$key" != "x" -a "x$username" != "x" ]; then
         echo " ";
 
 	if curl -f -H "Content-Type: application/json" \
-        -d "{\"user\":\"$username\",\"key\":\"$key\"}" \
-        https://new.hashbang.sh/; then
+        -d "{\"user\":\"$username\",\"key\":\"$key\",\"host\":\"$host\"}" \
+        https://hashbang.sh/user/create; then
             echo " ";
             echo " Account Created!"
             echo " ";
@@ -226,7 +231,7 @@ if [ "x$key" != "x" -a "x$username" != "x" ]; then
         fi
 
         if ask " Would you like an alias (shortcut) added to your .ssh/config?" Y ; then
-            printf "\nHost hashbang\n  HostName hashbang.sh\n  User %s\n  IdentityFile %s\n" \
+            printf "\nHost hashbang\n  HostName ${host}.hashbang.sh\n  User %s\n  IdentityFile %s\n" \
 							"$username" "$keyfile" \
             >> ~/.ssh/config
             echo " You can now connect any time by entering the command:";
@@ -235,14 +240,14 @@ if [ "x$key" != "x" -a "x$username" != "x" ]; then
         else
             echo " You can now connect any time by entering the command:";
             echo " ";
-            echo " > ssh $username@hashbang.sh";
+            echo " > ssh ${username}@${host}.hashbang.sh";
         fi
 
         echo " ";
     fi
 
     if ask " Do you want us to log you in now?" Y; then
-        ssh $username@hashbang.sh
+        ssh ${username}@${host}.hashbang.sh
     fi
 fi
 # exit [n]. if [n] is not specified, then exit shall use the return code of the
