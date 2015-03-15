@@ -1,6 +1,7 @@
 #!/usr/bin/python2.7
 
 import os
+import sys
 from subprocess import check_call, CalledProcessError
 from flask import Flask, send_from_directory, redirect, request
 from flask.ext.restful import Resource, Api
@@ -8,11 +9,20 @@ from flask.ext.restful.reqparse import RequestParser
 from tornado.wsgi import WSGIContainer
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
+from provisor import Provisor
 from provisor.utils import validate_pubkey as pubkey
 from provisor.utils import validate_username as username
 
 app = Flask(__name__)
 api = Api(app)
+
+p = Provisor(
+    uri="ldap://ldap.hashbang.sh",
+    user ="cn=provisor,ou=Admin,dc=hashbang,dc=sh",
+    password=os.environ['LDAP_PASSWORD'],
+    user_base="ou=People,dc=hashbang,dc=sh",
+    group_base="ou=Group,dc=hashbang,dc=sh"
+)
 
 certfile = os.path.join(os.getcwd(), "certs/server.crt")
 keyfile = os.path.join(os.getcwd(), "certs/server.key")
@@ -38,23 +48,23 @@ class UserCreate(Resource):
 
     def post(self):
         args = self.reqparse.parse_args()
-        try:
-            check_call(
-                [ 'sudo',
-                  '%s/bin/provisor-create' % os.getcwd(),
-                  args['user'],
-                  args['key']
-                ],
-                timeout=5
-            )
-        except CalledProcessError as e:
-            if e.returncode == 1:
-                return {'message': 'User creation script failed'}
-            elif e.returncode == 2:
-                return {'message': 'Username error/already taken'}
-            elif e.returncode == 3:
-                return {'message': 'Key type must be ssh-dsa or ssh-rsa.'}
 
+        try:
+            p.add_user(
+                username=str(args['user']),
+                pubkey=args['key'],
+                hostname='va1.hashbang.sh'
+            )
+
+        except NameError as e:
+          print(e)
+          return { 'message': 'User creation script failed'}
+        except TypeError as e:
+          print(e)
+          return { 'message': 'User creation script failed'}
+        except:
+            print("Unexpected Error: %s" % sys.exc_info()[0])
+            return { 'message': 'User creation script failed'}
 
         return {'message': 'success'}
 
