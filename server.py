@@ -62,6 +62,8 @@ api.add_resource(UserCreate, '/user/create')
 
 @app.route('/',methods=["GET"])
 def root():
+    if not os.path.isfile(certfile) and not os.path.isfile(keyfile):
+        return send_from_directory('static','index.html')
     if request.is_secure:
         return send_from_directory('static','index.html')
     return redirect(request.url.replace("http://", "https://"))
