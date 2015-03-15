@@ -71,17 +71,15 @@ def root():
 if __name__ == '__main__':
 
     if os.path.isfile(certfile) and os.path.isfile(keyfile):
-      https_server = HTTPServer(
+        https_server = HTTPServer(
           WSGIContainer(app),
           ssl_options={
               "certfile": certfile,
               "keyfile": keyfile,
           }
-      )
-      https_server.listen(https_port)
+        )
+        https_server.listen(https_port)
 
     http_server = HTTPServer(WSGIContainer(app))
-
     http_server.listen(http_port)
-
     IOLoop.instance().start()
