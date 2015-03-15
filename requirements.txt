@@ -7,7 +7,7 @@ aniso8601==0.92
 backports.ssl-match-hostname==3.4.0.2
 certifi==14.05.14
 itsdangerous==0.24
--e git+https://github.com/hashbang/provisor/@24c7f3b84b01b02629d82cd0dc31301fdb492bce#egg=provisor-master
+-e git+https://github.com/hashbang/provisor/@master#egg=provisor-master
 python-ldap==2.4.19
 pytz==2014.10
 six==1.9.0
