@@ -14,6 +14,11 @@ from provisor.utils import validate_username as username
 app = Flask(__name__)
 api = Api(app)
 
+certfile = os.path.join(os.getcwd(), "certs/server.crt")
+keyfile = os.path.join(os.getcwd(), "certs/server.key")
+https_port = 4443
+http_port = 8080
+
 class UserCreate(Resource):
     def __init__(self):
         self.reqparse = RequestParser()
@@ -30,7 +35,7 @@ class UserCreate(Resource):
             location = 'json'
         )
         super(UserCreate, self).__init__()
-        
+
     def post(self):
         args = self.reqparse.parse_args()
         try:
@@ -50,7 +55,7 @@ class UserCreate(Resource):
             elif e.returncode == 3:
                 return {'message': 'Key type must be ssh-dsa or ssh-rsa.'}
 
-       
+
         return {'message': 'success'}
 
 api.add_resource(UserCreate, '/user/create')
@@ -62,16 +67,19 @@ def root():
     return redirect(request.url.replace("http://", "https://"))
 
 if __name__ == '__main__':
-    https_server = HTTPServer(
-        WSGIContainer(app),
-        ssl_options={
-            "certfile": os.path.join(os.getcwd(), "certs/server.crt"),
-            "keyfile": os.path.join(os.getcwd(), "certs/server.key"),
-        }
-    )
+
+    if os.path.isfile(certfile) and os.path.isfile(keyfile):
+      https_server = HTTPServer(
+          WSGIContainer(app),
+          ssl_options={
+              "certfile": certfile,
+              "keyfile": keyfile,
+          }
+      )
+      https_server.listen(https_port)
+
     http_server = HTTPServer(WSGIContainer(app))
 
-    https_server.listen(4443)
-    http_server.listen(8080)
+    http_server.listen(http_port)
 
     IOLoop.instance().start()
