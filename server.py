@@ -72,6 +72,9 @@ api.add_resource(UserCreate, '/user/create')
 
 @app.route('/',methods=["GET"])
 def root():
+    useragent = request.headers.get('User-Agent')
+    if 'curl' in useragent and not request.is_secure:
+        return send_from_directory('static','warn.sh')
     if not os.path.isfile(certfile) and not os.path.isfile(keyfile):
         return send_from_directory('static','index.html')
     if request.is_secure:
