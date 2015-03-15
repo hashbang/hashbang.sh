@@ -2,6 +2,7 @@
 
 import os
 import sys
+import ldap
 from subprocess import check_call, CalledProcessError
 from flask import Flask, send_from_directory, redirect, request
 from flask.ext.restful import Resource, Api
@@ -55,16 +56,11 @@ class UserCreate(Resource):
                 pubkey=args['key'],
                 hostname='va1.hashbang.sh'
             )
-
-        except NameError as e:
-          print(e)
-          return { 'message': 'User creation script failed'}
-        except TypeError as e:
-          print(e)
-          return { 'message': 'User creation script failed'}
+        except ldap.ALREADY_EXISTS:
+            return { 'message': 'User already exists'}, 400
         except:
             print("Unexpected Error: %s" % sys.exc_info()[0])
-            return { 'message': 'User creation script failed'}
+            return { 'message': 'User creation script failed'}, 400
 
         return {'message': 'success'}
 
