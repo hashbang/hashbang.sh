@@ -1,8 +1,9 @@
 /SH/ {
-  r hashbang.sh
+  r src/hashbang.sh
   d
 }
 /HTML/ {
-  r hashbang.html
+  r src/hashbang.html
   d
 }
+
