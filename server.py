@@ -59,7 +59,7 @@ class UserCreate(Resource):
         except ldap.ALREADY_EXISTS:
             return { 'message': 'User already exists'}, 400
         except:
-            sys.stdout.write("Unexpected Error: %s\n" % sys.exc_info()[0])
+            sys.stderr.write("Unexpected Error: %s\n" % sys.exc_info()[0])
             return { 'message': 'User creation script failed'}, 400
 
         return {'message': 'success'}
