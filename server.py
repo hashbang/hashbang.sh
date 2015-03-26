@@ -56,6 +56,8 @@ class UserCreate(Resource):
                 pubkey=args['key'],
                 hostname='va1.hashbang.sh'
             )
+        except ldap.SERVER_DOWN:
+            return { 'message': 'Unable to connect to LDAP server'}, 400
         except ldap.ALREADY_EXISTS:
             return { 'message': 'User already exists'}, 400
         except:
