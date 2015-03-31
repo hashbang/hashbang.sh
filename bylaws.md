@@ -74,7 +74,7 @@ Section 1. Number of Directors
 ------------------------------
 
 The organization shall be managed by a Board of Directors consisting of
-7 director(s).
+7 directors.
 
 Section 2. Election and Term of Office
 --------------------------------------
