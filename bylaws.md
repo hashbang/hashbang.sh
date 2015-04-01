@@ -1,7 +1,7 @@
 ---
 title: BYLAWS OF HASHBANG, INC.
 section: 7
-...
+---
 
 The name of the organization is Hashbang, Inc. The organization is
 organized in accordance with the Nonprofit Corporation Act of
