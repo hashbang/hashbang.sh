@@ -167,9 +167,18 @@ done
 
 if [ "x$key" = "x" ]; then
     if ask " Do you want us to generate a key for you?" Y; then
-        ssh-keygen -t rsa -C "#! $username"
-        keyfile="~/.ssh/id_rsa.pub"
-        key=$(cat ~/.ssh/id_rsa.pub)
+        echo -n "Path to file (~/.ssh/id_rsa): ";
+        read keyfile
+        if [ -e "$keyfile" ] ; then
+            if ask " File exists: $keyfile - delete?" Y; then
+               rm "$keyfile"
+               ssh-keygen -t rsa -C "$! $username" -f "$keyfile"
+            fi
+        else
+            ssh-keygen -t rsa -C "#! $username" -f "$keyfile"
+        fi
+        chmod 600 "$keyfile"
+        key=$(cat "$keyfile")
     fi
 fi
 
@@ -234,6 +243,7 @@ if [ "x$key" != "x" -a "x$username" != "x" ]; then
             printf "\nHost hashbang\n  HostName ${host}.hashbang.sh\n  User %s\n  IdentityFile %s\n" \
 							"$username" "$keyfile" \
             >> ~/.ssh/config
+            chmod 600 ~/.ssh/config
             echo " You can now connect any time by entering the command:";
             echo " ";
             echo " > ssh hashbang";
