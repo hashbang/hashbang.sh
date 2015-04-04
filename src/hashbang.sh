@@ -231,7 +231,7 @@ if [ "x$key" != "x" -a "x$username" != "x" ]; then
         fi
 
         if ask " Would you like to add trusted/signed keys for our servers to your .ssh/known_hosts?" Y ; then
-            if [ ssh-keyscan -H va1.hashbang.sh 2>/dev/null | awk '{print $3}' -eq "AAAAB3NzaC1yc2EAAAADAQABAAABAQDc8y3TDgxPKNtX9e2q3v9D2II8Ps4p/78zWXek+B2dNPbwIjyJvzK7Dg94SpwEwnbPMjl81Wtfj+ClkQzlw0JcDJDC++xrfCh6F1wMQUm/oL/N+3v6nhVoGF/tjh9tGHNk8Np1cEU86I/Eb417qaDwjofd2EZknnz1Ce6+ebXCV3iy05wsEXK9ivm6oHyzcoUOD96OXbA6eru/fdPw/4bkFyezRNNeXEkrN9nlgMWsEOfKXGufDswEqmUookGFu/X7Y6QEJJnIJr45LURN8pai+CbUZfzY9Tdihtl/fnYGb+DaCy8+yUgojyebo4inyM2tMcRMul1Fgum7nhcxeXuZ" ]; then
+            if [ $(ssh-keyscan -H va1.hashbang.sh 2>/dev/null | awk '{print $3}') = "AAAAB3NzaC1yc2EAAAADAQABAAABAQDc8y3TDgxPKNtX9e2q3v9D2II8Ps4p/78zWXek+B2dNPbwIjyJvzK7Dg94SpwEwnbPMjl81Wtfj+ClkQzlw0JcDJDC++xrfCh6F1wMQUm/oL/N+3v6nhVoGF/tjh9tGHNk8Np1cEU86I/Eb417qaDwjofd2EZknnz1Ce6+ebXCV3iy05wsEXK9ivm6oHyzcoUOD96OXbA6eru/fdPw/4bkFyezRNNeXEkrN9nlgMWsEOfKXGufDswEqmUookGFu/X7Y6QEJJnIJr45LURN8pai+CbUZfzY9Tdihtl/fnYGb+DaCy8+yUgojyebo4inyM2tMcRMul1Fgum7nhcxeXuZ" ]; then
                 ssh-keyscan -H va1.hashbang.sh 2>/dev/null > ~/.ssh/known_hosts
             fi
         fi
