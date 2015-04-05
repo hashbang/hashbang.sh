@@ -241,12 +241,11 @@ if [ "x$key" != "x" -a "x$username" != "x" ]; then
             data=<(curl "http://hashbang.sh/static/known_hosts.asc")
             echo $data | gpg --verify
             if [ $? -eq 1 ]; then
-                if ask " Unable to verify keys, would you like to continue?" N ; then
-                    echo " "
-                    echo " The installer will not continue from here..."
-                    echo " "
-                    exit 1
-                fi
+                echo " "
+                echo " Unable to verify keys"
+                echo " The installer will not continue from here..."
+                echo " "
+                exit 1
             fi
             echo $data | grep "hashbang.sh" >> ~/.ssh/known_hosts
             echo " "
