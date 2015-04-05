@@ -109,6 +109,7 @@ echo " not installed. Check the list below, and install any";
 echo " missing applications.";
 
 checkutil expr || exit 1
+checkutil gpg || exit 1
 ( checkutil ssh-keygen && checkutil ssh ) || exit 1
 ( checkutil curl || checkutil busybox ) || exit 1
 
@@ -229,7 +230,6 @@ if [ "x$key" != "x" -a "x$username" != "x" ]; then
             echo " ";
             exit 1
         fi
-
         if ask " Would you like to add trusted/signed keys for our servers to your .ssh/known_hosts?" Y ; then
             echo " "
             echo " Downloading GPG keys"
