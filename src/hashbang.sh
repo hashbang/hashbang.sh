@@ -48,7 +48,7 @@ ask() {
         fi
 
         # Ask the question
-				printf "%s [%s] " "$1" "$prompt"
+        printf "%s [%s] " "$1" "$prompt"
         read REPLY
 
         # Default?
@@ -231,9 +231,26 @@ if [ "x$key" != "x" -a "x$username" != "x" ]; then
         fi
 
         if ask " Would you like to add trusted/signed keys for our servers to your .ssh/known_hosts?" Y ; then
-            if [ $(ssh-keyscan -H va1.hashbang.sh 2>/dev/null | awk '{print $3}') = "AAAAB3NzaC1yc2EAAAADAQABAAABAQDc8y3TDgxPKNtX9e2q3v9D2II8Ps4p/78zWXek+B2dNPbwIjyJvzK7Dg94SpwEwnbPMjl81Wtfj+ClkQzlw0JcDJDC++xrfCh6F1wMQUm/oL/N+3v6nhVoGF/tjh9tGHNk8Np1cEU86I/Eb417qaDwjofd2EZknnz1Ce6+ebXCV3iy05wsEXK9ivm6oHyzcoUOD96OXbA6eru/fdPw/4bkFyezRNNeXEkrN9nlgMWsEOfKXGufDswEqmUookGFu/X7Y6QEJJnIJr45LURN8pai+CbUZfzY9Tdihtl/fnYGb+DaCy8+yUgojyebo4inyM2tMcRMul1Fgum7nhcxeXuZ" ]; then
-                ssh-keyscan -H va1.hashbang.sh 2>/dev/null > ~/.ssh/known_hosts
+            echo " "
+            echo " Downloading GPG keys"
+            echo " "
+            gpg --recv-keys 0xD2C4C74D8FAA96F5
+            echo " "
+            echo " Downloading key list"
+            echo " "
+            curl "http://hashbang.sh/static/known_hosts.asc" | gpg --verify
+            if [ $? -eq 1 ]; then
+                if ask " Unable to verify keys, would you like to continue?" N ; then
+                    echo " "
+                    echo " The installer will not continue from here..."
+                    echo " "
+                    exit 1
+                fi
             fi
+            curl "http://hashbang.sh/static/known_hosts.asc" | grep "hashbang.sh" >> ~/.ssh/known_hosts
+            echo " "
+            echo " Key scanned and saved"
+            echo " "
         fi
 
         if ask " Would you like an alias (shortcut) added to your .ssh/config?" Y ; then
