@@ -257,7 +257,7 @@ if [ "x$key" != "x" -a "x$username" != "x" ]; then
     fi
 
     if ask " Do you want us to log you in now?" Y; then
-        ssh ${username}@${host}.hashbang.sh
+        ssh ${username}@${host}.hashbang.sh -i $keyfile
     fi
 fi
 # exit [n]. if [n] is not specified, then exit shall use the return code of the
