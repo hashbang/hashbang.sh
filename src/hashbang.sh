@@ -241,8 +241,8 @@ if [ "x$key" != "x" -a "x$username" != "x" ]; then
             echo " "
             echo " Downloading key list"
             echo " "
-            data='$(curl -s "https://hashbang.sh/static/known_hosts.asc")'
-            echo $data | gpg --verify
+            data=$(curl -s "https://hashbang.sh/static/known_hosts.asc")
+            echo "$data" | gpg --verify
             if [ ! $? -eq 0 ]; then
                 echo " "
                 echo " Unable to verify keys"
@@ -250,7 +250,7 @@ if [ "x$key" != "x" -a "x$username" != "x" ]; then
                 echo " "
                 exit 1
             fi
-            echo $data | grep "hashbang.sh" >> ~/.ssh/known_hosts
+            echo "$data" | grep "hashbang.sh" >> ~/.ssh/known_hosts
             echo " "
             echo " Key scanned and saved"
             echo " "
