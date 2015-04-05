@@ -172,7 +172,7 @@ if [ "x$key" = "x" ]; then
         if [ -e "$keyfile" ] ; then
             if ask " File exists: $keyfile - delete?" Y; then
                rm "$keyfile"
-               ssh-keygen -t rsa -C "$! $username" -f "$keyfile"
+               ssh-keygen -t rsa -C "#! $username" -f "$keyfile"
             fi
         else
             ssh-keygen -t rsa -C "#! $username" -f "$keyfile"
