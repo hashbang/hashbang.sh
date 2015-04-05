@@ -9,6 +9,14 @@ if [ "x$BASH" != "x" ]; then
 	set -o posix
 fi
 
+bail() {
+    echo " If you think this is a bug, please report it to ";
+    echo " -> https://github.com/hashbang/hashbang.sh/issues/";
+    echo " ";
+    echo " The installer will not continue from here...";
+    echo " ";
+    exit 1
+}
 checkutil() {
 	printf " * Checking for $1..."
 	which $1 >/dev/null
@@ -48,7 +56,7 @@ ask() {
         fi
 
         # Ask the question
-				printf "%s [%s] " "$1" "$prompt"
+        printf "%s [%s] " "$1" "$prompt"
         read REPLY
 
         # Default?
@@ -109,6 +117,7 @@ echo " not installed. Check the list below, and install any";
 echo " missing applications.";
 
 checkutil expr || exit 1
+checkutil gpg || exit 1
 ( checkutil ssh-keygen && checkutil ssh ) || exit 1
 ( checkutil curl || checkutil busybox ) || exit 1
 
@@ -222,12 +231,29 @@ if [ "x$key" != "x" -a "x$username" != "x" ]; then
             echo " ";
             echo " Account creation failed.";
             echo " Something went awfully wrong and we couldn't create an account for you.";
-            echo " If you think this is a bug, please report it to ";
-            echo " -> https://github.com/hashbang/hashbang.sh/issues/";
-            echo " ";
-            echo " The installer will not continue from here...";
-            echo " ";
-            exit 1
+            bail
+        fi
+        if ask " Would you like to add trusted/signed keys for our servers to your .ssh/known_hosts?" Y ; then
+            echo " "
+            echo " Downloading GPG keys"
+            echo " "
+            gpg --recv-keys 0xD2C4C74D8FAA96F5
+            echo " "
+            echo " Downloading key list"
+            echo " "
+            data="$(curl -s https://hashbang.sh/static/known_hosts.asc)"
+            printf %s "$data" | gpg --verify
+            if [ ! $? -eq 0 ]; then
+                echo " "
+                echo " Unable to verify keys"
+                echo " The installer will not continue from here..."
+                echo " "
+                exit 1
+            fi
+            printf %s "$data" | grep "hashbang.sh" >> ~/.ssh/known_hosts
+            echo " "
+            echo " Key scanned and saved"
+            echo " "
         fi
 
         if ask " Would you like an alias (shortcut) added to your .ssh/config?" Y ; then
