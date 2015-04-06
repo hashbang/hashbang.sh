@@ -22,13 +22,12 @@ checkperms() {
 }
 
 checkutil() {
-	printf " * Checking for $1..."
-	which $1 >/dev/null
-	if [ $? -eq 0 ]; then
+	echo -n " * Checking for $1..."
+	if command -v "$1"; then
 		printf "ok!\n";
 		return 0;
 	else
-		printf "not found!"
+		printf "not found!\n"
 		return 1
 	fi
 }
@@ -45,8 +44,8 @@ checkutil() {
 # pressing Y or N, giving the default answer instead.
 ask() {
 	while true; do
-			prompt=""
-			default=""
+		prompt=""
+		default=""
 
 		if [ "${2}" = "Y" ]; then
 			prompt="Y/n"
@@ -60,7 +59,7 @@ ask() {
 		fi
 
 		# Ask the question
-				printf "%s [%s] " "$1" "$prompt"
+		printf "%s [%s] " "$1" "$prompt"
 		read REPLY
 
 		# Default?
@@ -78,7 +77,7 @@ ask() {
 }
 
 clear;
-echo "   _  _	__  ";
+echo " ";
 echo " _| || |_ |  |  Welcome to #!. This network has three rules:";
 echo "|_  __  _||  | ";
 echo " _| || |_ |  |  1. When people need help, teach. Don't do it for them";
@@ -121,7 +120,6 @@ echo " not installed. Check the list below, and install any";
 echo " missing applications.";
 
 checkutil expr || exit 1
-( checkutil ssh-keygen && checkutil ssh ) || exit 1
 ( checkutil curl || checkutil busybox ) || exit 1
 
 clear;
@@ -178,6 +176,7 @@ for keytype in id_rsa id_dsa id_ecdsa id_ed25519; do
 done
 
 makekey() {
+	( checkutil ssh-keygen && checkutil ssh ) || exit 1
 	if checkperms "$1"; then
 		ssh-keygen -t rsa -C "#! $username" -f "$1"
 		if [ ! $? ]; then
