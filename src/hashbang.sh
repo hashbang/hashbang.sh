@@ -9,6 +9,18 @@ if [ "x$BASH" != "x" ]; then
 	set -o posix
 fi
 
+# check if can write to file
+
+checkperms() {
+	if [ -w $1 ]; then
+		echo " Accessing $1\n"
+		return 0
+	else
+		echo " Unable to access $1"
+		return 1
+	fi
+}
+
 checkutil() {
 	printf " * Checking for $1..."
 	which $1 >/dev/null
@@ -165,21 +177,85 @@ for keytype in id_rsa id_dsa id_ecdsa id_ed25519; do
     fi
 done
 
+makekey() {
+	if checkperms "$1"; then
+		ssh-keygen -t rsa -C "#! $username" -f "$1"
+		if [ ! $? ]; then
+			echo " Unable to make key with that location"
+			echo " "
+		else
+			echo " Successfully generated key"
+			echo " "
+			break
+		fi
+	else
+		if [ -e "$1" ]; then
+			if ask " Unable to generate key, do you want to delete the file?" N; then
+				rm -f "$1"
+				if [ ! $? ]; then
+					echo " "
+					echo " Unable to delete file, resetting"
+				else
+					echo " "
+					echo " File deleted"
+					ssh-keygen -t rsa -C "#! $username" -f "$1"
+					if [ ! $? ]; then
+						echo " Unable to generate key, resetting"
+					fi
+					echo " "
+				fi
+			else
+				echo " "
+				echo " Unable to make key with that path, resetting"
+				echo " "
+			fi
+		else
+			echo "Unable to make key with that path"
+			echo " "
+		fi
+	fi
+}
+
 if [ "x$key" = "x" ]; then
-    if ask " Do you want us to generate a key for you?" Y; then
-        echo -n "Path to file (~/.ssh/id_rsa): ";
-        read keyfile
-        if [ -e "$keyfile" ] ; then
-            if ask " File exists: $keyfile - delete?" Y; then
-               rm "$keyfile"
-               ssh-keygen -t rsa -C "$! $username" -f "$keyfile"
-            fi
-        else
-            ssh-keygen -t rsa -C "#! $username" -f "$keyfile"
-        fi
-        chmod 600 "$keyfile"
-        key=$(cat "$keyfile")
-    fi
+	while true; do
+		echo " "
+    	echo -n " Path to file (~/.ssh/id_rsa): ";
+    	read keyfile
+		if [ "x$keyfile" = "x" ]; then
+			keyfile="~/.ssh/id_rsa"
+			echo "Set $keyfile"
+		fi
+		echo " "
+		if [ ! -e "$keyfile" ] && [ ! -e "$keyfile.pub" ]; then
+			if ask " Do you want us to generate a key for you?" Y; then
+		    	if [ -e "$keyfile" ]; then
+		        	if ask " File exists: $keyfile - delete?" Y; then
+		    			rm "$keyfile"
+						if [ -e "$keyfile.pub" ]; then
+							rm "$keyfile.pub"
+						fi
+		            	makekey "$keyfile"
+		            fi
+		        else
+					makekey "$keyfile"
+		        fi
+		        chmod 600 "$keyfile"
+		        key=$(cat "$keyfile")
+			elif [ ! -e "$keyfile" ] && [ -e "$keyfile.pub" ]; then
+			 	if ask " Found public keyfile, missing private. Do you wish to continue?" N; then
+					echo " Using public key $keyfile.pub"
+					break
+				else
+					echo " Resetting"
+				fi
+			elif [ ! -e "$keyfile.pub" ]; then
+				echo " Unable to find public key $keyfile.pub"
+			else
+				echo " Using public key $keyfile.pub"
+				break
+		    fi
+		fi
+	done
 fi
 
 
