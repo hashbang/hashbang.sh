@@ -44,47 +44,47 @@ checkutil() {
 # resulting in the responder being able to simple press [enter] and skip
 # pressing Y or N, giving the default answer instead.
 ask() {
-    while true; do
+	while true; do
 			prompt=""
 			default=""
 
-        if [ "${2}" = "Y" ]; then
-            prompt="Y/n"
-            default=Y
-        elif [ "${2}" = "N" ]; then
-            prompt="y/N"
-            default=N
-        else
-            prompt="y/n"
-            default=
-        fi
+		if [ "${2}" = "Y" ]; then
+			prompt="Y/n"
+			default=Y
+		elif [ "${2}" = "N" ]; then
+			prompt="y/N"
+			default=N
+		else
+			prompt="y/n"
+			default=
+		fi
 
-        # Ask the question
+		# Ask the question
 				printf "%s [%s] " "$1" "$prompt"
-        read REPLY
+		read REPLY
 
-        # Default?
-        if [ -z "$REPLY" ]; then
-            REPLY=$default
-        fi
+		# Default?
+		if [ -z "$REPLY" ]; then
+			REPLY=$default
+		fi
 
-        # Check if the reply is valid
-        case "$REPLY" in
-            Y*|y*) return 0 ;;
-            N*|n*) return 1 ;;
-        esac
+		# Check if the reply is valid
+		case "$REPLY" in
+			Y*|y*) return 0 ;;
+			N*|n*) return 1 ;;
+		esac
 
-    done
+	done
 }
 
 clear;
-echo "   _  _    __  ";
+echo "   _  _	__  ";
 echo " _| || |_ |  |  Welcome to #!. This network has three rules:";
 echo "|_  __  _||  | ";
 echo " _| || |_ |  |  1. When people need help, teach. Don't do it for them";
 echo "|_  __  _||__|  2. Don't use our resources for closed source projects";
 echo "  |_||_|  (__)  3. Be excellent to each other";
-echo "               ";
+echo "			   ";
 echo " We are a diverse community of people who love teaching, and learning.";
 echo " Putting a #! at the beginning of a \"script\" style program tells a ";
 echo " computer that it needs to \"do something\" or \"execute\" this file.";
@@ -145,16 +145,16 @@ echo " whatever you want";
 echo " ";
 
 while [ "x$username" = "x" ]; do
-    printf " Username: ";
-    read input;
-    if echo "$input" | grep -E "^[a-z][a-z0-9]{0,30}$" >/dev/null; then
-        username=$input
-    else
-        echo " ";
-        echo " \"$input\" is not a valid username."
-        echo " Please read the instructions and try again"
-        echo " ";
-    fi
+	printf " Username: ";
+	read input;
+	if echo "$input" | grep -E "^[a-z][a-z0-9]{0,30}$" >/dev/null; then
+		username=$input
+	else
+		echo " ";
+		echo " \"$input\" is not a valid username."
+		echo " Please read the instructions and try again"
+		echo " ";
+	fi
 done
 
 echo " ";
@@ -168,13 +168,13 @@ echo " over the internet, and thus by nature we won't even know what it is";
 echo " ";
 
 for keytype in id_rsa id_dsa id_ecdsa id_ed25519; do
-    if [ -e ~/.ssh/$keytype.pub  ]; then
-        if ask " We found a public key in [ ~/.ssh/$keytype.pub ]. Use this key?" Y; then
-            keyfile="~/.ssh/$keytype.pub"
-            key=$(cat ~/.ssh/$keytype.pub)
-            break
-        fi
-    fi
+	if [ -e ~/.ssh/$keytype.pub ]; then
+		if ask " We found a public key in [ ~/.ssh/$keytype.pub ]. Use this key?" Y; then
+			keyfile="~/.ssh/$keytype.pub"
+			key=$(cat ~/.ssh/$keytype.pub)
+			break
+		fi
+	fi
 done
 
 makekey() {
@@ -219,27 +219,27 @@ makekey() {
 if [ "x$key" = "x" ]; then
 	while true; do
 		echo " "
-    	echo -n " Path to file (~/.ssh/id_rsa): ";
-    	read keyfile
+		echo -n " Path to file (~/.ssh/id_rsa): ";
+		read keyfile
 		if [ "x$keyfile" = "x" ]; then
 			keyfile="$HOME/.ssh/id_rsa"
 		fi
 		echo " "
 		if [ ! -e "$keyfile" ] && [ ! -e "$keyfile.pub" ]; then
 			if ask " Do you want us to generate a key for you?" Y; then
-		    	if [ -e "$keyfile" ]; then
-		        	if ask " File exists: $keyfile - delete?" Y; then
-		    			rm "$keyfile"
+				if [ -e "$keyfile" ]; then
+					if ask " File exists: $keyfile - delete?" Y; then
+						rm "$keyfile"
 						if [ -e "$keyfile.pub" ]; then
 							rm "$keyfile.pub"
 						fi
-		            	makekey "$keyfile"
-		            fi
-		        else
+						makekey "$keyfile"
+					fi
+				else
 					makekey "$keyfile"
-		        fi
-		        chmod 600 "$keyfile"
-		        key=$(cat "$keyfile")
+				fi
+				chmod 600 "$keyfile"
+				key=$(cat "$keyfile")
 			fi
 		elif [ ! -e "$keyfile" ] && [ -e "$keyfile.pub" ]; then
 			if ask " Found public keyfile, missing private. Do you wish to continue?" N; then
@@ -262,63 +262,63 @@ fi
 host="va1"
 
 if [ "x$key" != "x" -a "x$username" != "x" ]; then
-    echo " ";
-    echo " -------------------------------------------------------------------- ";
-    echo " ";
-    echo " We are going to create an account with the following information";
-    echo " ";
-    echo " Username: $username";
-    echo " Public Key: $keyfile";
-    echo " Host: $host";
-    echo " ";
-    if ask " Does this look correct?" Y ; then
-        echo " ";
-        echo " Creating your account...";
-        echo " ";
+	echo " ";
+	echo " -------------------------------------------------------------------- ";
+	echo " ";
+	echo " We are going to create an account with the following information";
+	echo " ";
+	echo " Username: $username";
+	echo " Public Key: $keyfile";
+	echo " Host: $host";
+	echo " ";
+	if ask " Does this look correct?" Y ; then
+		echo " ";
+		echo " Creating your account...";
+		echo " ";
 
 		if curl -f -H "Content-Type: application/json" \
-        	-d "{\"user\":\"$username\",\"key\":\"$key\",\"host\":\"$host\"}" \
-        	https://hashbang.sh/user/create; then
-            echo " ";
-            echo " Account Created!"
-            echo " ";
-        else
-            echo " ";
-            echo " Account creation failed.";
-            echo " Something went awfully wrong and we couldn't create an account for you.";
-            echo " If you think this is a bug, please report it to ";
-            echo " -> https://github.com/hashbang/hashbang.sh/issues/";
-            echo " ";
-            echo " The installer will not continue from here...";
-            echo " ";
-            exit 1
-        fi
+			-d "{\"user\":\"$username\",\"key\":\"$key\",\"host\":\"$host\"}" \
+			https://hashbang.sh/user/create; then
+			echo " ";
+			echo " Account Created!"
+			echo " ";
+		else
+			echo " ";
+			echo " Account creation failed.";
+			echo " Something went awfully wrong and we couldn't create an account for you.";
+			echo " If you think this is a bug, please report it to ";
+			echo " -> https://github.com/hashbang/hashbang.sh/issues/";
+			echo " ";
+			echo " The installer will not continue from here...";
+			echo " ";
+			exit 1
+		fi
 
-        if ask " Would you like an alias (shortcut) added to your .ssh/config?" Y ; then
-            printf "\nHost hashbang\n  HostName ${host}.hashbang.sh\n  User %s\n  IdentityFile %s\n" \
+		if ask " Would you like an alias (shortcut) added to your .ssh/config?" Y ; then
+			printf "\nHost hashbang\n  HostName ${host}.hashbang.sh\n  User %s\n  IdentityFile %s\n" \
 							"$username" "$keyfile" \
-            >> ~/.ssh/config
-            chmod 600 ~/.ssh/config
-            echo " You can now connect any time by entering the command:";
-            echo " ";
-            echo " > ssh hashbang";
-        else
-            echo " You can now connect any time by entering the command:";
-            echo " ";
-            echo " > ssh ${username}@${host}.hashbang.sh";
-        fi
+			>> ~/.ssh/config
+			chmod 600 ~/.ssh/config
+			echo " You can now connect any time by entering the command:";
+			echo " ";
+			echo " > ssh hashbang";
+		else
+			echo " You can now connect any time by entering the command:";
+			echo " ";
+			echo " > ssh ${username}@${host}.hashbang.sh";
+		fi
 
-        echo " ";
+		echo " ";
 	else
 		echo " "
 		echo " Account not created. Re-run the script to restart"
 		echo " "
 		exit 1
-    fi
+	fi
 
-    if ask " Do you want us to log you in now?" Y; then
-        ssh ${username}@${host}.hashbang.sh -i $keyfile
-    fi
+	if ask " Do you want us to log you in now?" Y; then
+		ssh ${username}@${host}.hashbang.sh -i $keyfile
+	fi
 fi
 # exit [n]. if [n] is not specified, then exit shall use the return code of the
 # last command.
