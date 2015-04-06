@@ -222,8 +222,7 @@ if [ "x$key" = "x" ]; then
     	echo -n " Path to file (~/.ssh/id_rsa): ";
     	read keyfile
 		if [ "x$keyfile" = "x" ]; then
-			keyfile="~/.ssh/id_rsa"
-			echo "Set $keyfile"
+			keyfile="$HOME/.ssh/id_rsa"
 		fi
 		echo " "
 		if [ ! -e "$keyfile" ] && [ ! -e "$keyfile.pub" ]; then
@@ -241,43 +240,23 @@ if [ "x$key" = "x" ]; then
 		        fi
 		        chmod 600 "$keyfile"
 		        key=$(cat "$keyfile")
-			elif [ ! -e "$keyfile" ] && [ -e "$keyfile.pub" ]; then
-			 	if ask " Found public keyfile, missing private. Do you wish to continue?" N; then
-					echo " Using public key $keyfile.pub"
-					break
-				else
-					echo " Resetting"
-				fi
-			elif [ ! -e "$keyfile.pub" ]; then
-				echo " Unable to find public key $keyfile.pub"
-			else
+			fi
+		elif [ ! -e "$keyfile" ] && [ -e "$keyfile.pub" ]; then
+			if ask " Found public keyfile, missing private. Do you wish to continue?" N; then
 				echo " Using public key $keyfile.pub"
 				break
-		    fi
+			else
+				echo " Resetting"
+			fi
+		elif [ ! -e "$keyfile.pub" ]; then
+			echo " Unable to find public key $keyfile.pub"
+		else
+			echo " Using public key $keyfile.pub"
+			break
 		fi
 	done
+	key=$(cat "$keyfile")
 fi
-
-
-
-while [ "x$key" = "x" ]; do
-    echo " ";
-    echo " Please enter path to SSH Public Key: ";
-    read keyfile
-    if [ -f $keyfile ] ; then
-        ssh-keygen -l -f $keyfile > /dev/null 2>&1
-        if [ $? -eq 0 ]; then
-            key=$(cat $keyfile)
-        else
-            echo " ";
-            echo " \"$keyfile\" is not a valid SSH Public Key";
-        fi
-    else
-       echo " ";
-       echo " \"$keyfile\" does not exist";
-    fi
-done
-
 # Insert functions to allow user to select from multiple hosts here
 # hardcoding all users to va1 for now
 host="va1"
