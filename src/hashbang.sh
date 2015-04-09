@@ -241,7 +241,6 @@ if [ "x$key" = "x" ]; then
 				else
 					makekey "$keyfile"
 				fi
-				chmod 600 "$keyfile"
 				key=$(cat "$keyfile.pub")
 			fi
 		elif [ ! -e "$keyfile" ] && [ -e "$keyfile.pub" ]; then
