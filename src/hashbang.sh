@@ -183,6 +183,7 @@ makekey() {
 			echo " Unable to make key with that location"
 			echo " "
 		else
+			chmod 600 "$1"
 			echo " Successfully generated key"
 			echo " "
 			break
