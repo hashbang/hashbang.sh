@@ -217,7 +217,6 @@ makekey() {
 }
 
 if [ "x$key" = "x" ]; then
-
 	echo " "
 	echo " No SSH key found, attempting to generate one"
 	while true; do
