@@ -172,6 +172,7 @@ makekey() {
 			echo " Unable to make key with that location"
 			echo " "
 		else
+			chmod 600 "$1"
 			echo " Successfully generated key"
 			echo " "
 			break
@@ -200,6 +201,8 @@ makekey() {
 }
 
 if [ "x$key" = "x" ]; then
+	echo " "
+	echo " No SSH key found, attempting to generate one"
 	while true; do
 		echo " "
 		echo -n " Path to new or existing key (~/.ssh/id_rsa): ";
@@ -222,8 +225,7 @@ if [ "x$key" = "x" ]; then
 				else
 					makekey "$keyfile"
 				fi
-				chmod 600 "$keyfile"
-				key=$(cat "$keyfile")
+				key=$(cat "$keyfile.pub")
 			fi
 		elif [ ! -e "$keyfile" ] && [ -e "$keyfile.pub" ]; then
 			if ask " Found public keyfile, missing private. Do you wish to continue?" N; then
@@ -239,7 +241,7 @@ if [ "x$key" = "x" ]; then
 			break
 		fi
 	done
-	key=$(cat "$keyfile")
+	key=$(cat "$keyfile.pub")
 fi
 # Insert functions to allow user to select from multiple hosts here
 # hardcoding all users to va1 for now
