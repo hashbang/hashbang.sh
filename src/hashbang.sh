@@ -11,24 +11,14 @@ fi
 
 # check if can write to file
 
-checkperms() {
-	if [ -w $1 ]; then
-		echo " Accessing $1\n"
-		return 0
-	else
-		echo " Unable to access $1"
-		return 1
-	fi
-}
-
 checkutil() {
 	echo -n " * Checking for $1..."
 	if command -v "$1"; then
 		printf "ok!\n";
 		return 0;
 	else
-		printf "not found!\n"
-		return 1
+		printf "not found!\n";
+		return 1;
 	fi
 }
 
@@ -120,8 +110,7 @@ echo " not installed. Check the list below, and install any";
 echo " missing applications.";
 
 checkutil expr || exit 1
-( checkutil curl || checkutil busybox ) || exit 1
-
+checkutil curl || exit 1
 clear;
 
 echo " ";
@@ -177,7 +166,7 @@ done
 
 makekey() {
 	( checkutil ssh-keygen && checkutil ssh ) || exit 1
-	if checkperms "$1"; then
+	if [ ! -e "$1" ]; then
 		ssh-keygen -t rsa -C "#! $username" -f "$1"
 		if [ ! $? ]; then
 			echo " Unable to make key with that location"
@@ -188,28 +177,23 @@ makekey() {
 			break
 		fi
 	else
-		if [ -e "$1" ]; then
-			if ask " Unable to generate key, do you want to delete the file?" N; then
-				rm -f "$1"
-				if [ ! $? ]; then
-					echo " "
-					echo " Unable to delete file, resetting"
-				else
-					echo " "
-					echo " File deleted"
-					ssh-keygen -t rsa -C "#! $username" -f "$1"
-					if [ ! $? ]; then
-						echo " Unable to generate key, resetting"
-					fi
-					echo " "
-				fi
+		if ask " Unable to generate key, do you want to delete the file?" N; then
+			rm -f "$1"
+			if [ ! $? ]; then
+				echo " "
+				echo " Unable to delete file, resetting"
 			else
 				echo " "
-				echo " Unable to make key with that path, resetting"
+				echo " File deleted"
+				ssh-keygen -t rsa -C "#! $username" -f "$1"
+				if [ ! $? ]; then
+					echo " Unable to generate key, resetting"
+				fi
 				echo " "
 			fi
 		else
-			echo "Unable to make key with that path"
+			echo " "
+			echo " Unable to make key with that path, resetting"
 			echo " "
 		fi
 	fi
@@ -218,11 +202,12 @@ makekey() {
 if [ "x$key" = "x" ]; then
 	while true; do
 		echo " "
-		echo -n " Path to file (~/.ssh/id_rsa): ";
+		echo -n " Path to new or existing key (~/.ssh/id_rsa): ";
 		read keyfile
 		if [ "x$keyfile" = "x" ]; then
 			keyfile="$HOME/.ssh/id_rsa"
 		fi
+		keyfile=$(echo "$keyfile" | sed "s@~@$HOME@")
 		echo " "
 		if [ ! -e "$keyfile" ] && [ ! -e "$keyfile.pub" ]; then
 			if ask " Do you want us to generate a key for you?" Y; then
