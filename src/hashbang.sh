@@ -73,8 +73,8 @@ echo "|_  __  _||  | ";
 echo " _| || |_ |  |  1. When people need help, teach. Don't do it for them";
 echo "|_  __  _||__|  2. Don't use our resources for closed source projects";
 echo "  |_||_|  (__)  3. Be excellent to each other";
-echo "			   ";
-echo " We are a diverse community of people who love teaching, and learning.";
+echo " ";
+echo " We are a diverse community of people who love teaching and learning.";
 echo " Putting a #! at the beginning of a \"script\" style program tells a ";
 echo " computer that it needs to \"do something\" or \"execute\" this file.";
 echo " Likewise, we are a community of people that like to \"do stuff\".";
@@ -82,7 +82,7 @@ echo " ";
 echo " If you like technology, and you want to learn to write your first";
 echo " program, learn to use Linux, or even take on interesting challenges";
 echo " with some of the best in the industry, you are in the right place.";
-echo "";
+echo " ";
 echo " The following will set you up with a \"shell\" account on one of our";
 echo " shared systems. From here you can run IRC chat clients to talk to us,";
 echo " access to personal file storage and web hosting, and a wide range of";
@@ -281,10 +281,10 @@ if [ "x$key" != "x" -a "x$username" != "x" ]; then
 		fi
 
 		if ask " Would you like an alias (shortcut) added to your .ssh/config?" Y ; then
+			[ ! -e ~/.ssh/config ] && touch ~/.ssh/config.sh && chmod 600 ~/.ssh/config
 			printf "\nHost hashbang\n  HostName ${host}.hashbang.sh\n  User %s\n  IdentityFile %s\n" \
 							"$username" "$keyfile" \
 			>> ~/.ssh/config
-			chmod 600 ~/.ssh/config
 			echo " You can now connect any time by entering the command:";
 			echo " ";
 			echo " > ssh hashbang";
