@@ -18,6 +18,7 @@ bail() {
 	exit 1
 }
 
+# check if can write to file
 checkutil() {
 	echo -n " * Checking for $1..."
 	if command -v "$1"; then
@@ -270,10 +271,9 @@ if [ "x$key" != "x" -a "x$username" != "x" ]; then
 		echo " ";
 		echo " Creating your account...";
 		echo " ";
-
-	if curl -f -H "Content-Type: application/json" \
-		-d "{\"user\":\"$username\",\"key\":\"$key\",\"host\":\"$host\"}" \
-		https://hashbang.sh/user/create; then
+		if curl -f -H "Content-Type: application/json" \
+			-d "{\"user\":\"$username\",\"key\":\"$key\",\"host\":\"$host\"}" \
+			https://hashbang.sh/user/create; then
 			echo " ";
 			echo " Account Created!"
 			echo " ";
