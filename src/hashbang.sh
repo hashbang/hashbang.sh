@@ -21,7 +21,7 @@ bail() {
 # check if can write to file
 checkutil() {
 	echo -n " * Checking for $1..."
-	if command -v "$1"; then
+	if which "$1"; then
 		printf "ok!\n";
 		return 0;
 	else
@@ -75,7 +75,7 @@ ask() {
 }
 
 clear;
-echo " ";
+echo "   _  _    __ ";
 echo " _| || |_ |  |  Welcome to #!. This network has three rules:";
 echo "|_  __  _||  | ";
 echo " _| || |_ |  |  1. When people need help, teach. Don't do it for them";
@@ -145,7 +145,7 @@ while [ "x$username" = "x" ]; do
 	printf " Username: ";
 	read input;
 	if echo "$input" | grep -E "^[a-z][a-z0-9]{0,30}$" >/dev/null; then
-		username=$input
+		username="$input"
 	else
 		echo " ";
 		echo " \"$input\" is not a valid username."
@@ -327,7 +327,7 @@ if [ "x$key" != "x" -a "x$username" != "x" ]; then
 	fi
 
 	if ask " Do you want us to log you in now?" Y; then
-		ssh ${username}@${host}.hashbang.sh -i $keyfile
+		ssh ${username}@${host}.hashbang.sh -i "$keyfile"
 	fi
 fi
 # exit [n]. if [n] is not specified, then exit shall use the return code of the
