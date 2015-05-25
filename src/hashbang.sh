@@ -203,8 +203,8 @@ while [ "x$key" = "x" ]; do
 done
 
 # Insert functions to allow user to select from multiple hosts here
-# hardcoding all users to va1 for now
-host="va1"
+# hardcoding all users to ny1 for now
+host="ny1"
 
 if [ "x$key" != "x" -a "x$username" != "x" ]; then
     echo " ";
