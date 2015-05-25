@@ -1,2 +1,3 @@
 static/index.html
+static/known_hosts.asc
 certs/*
