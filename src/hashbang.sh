@@ -12,6 +12,7 @@ if [ "x$BASH" != "x" ]; then
 fi
 
 bail() {
+    echo " "
 	echo " If you think this is a bug, please report it to ";
 	echo " -> https://github.com/hashbang/hashbang.sh/issues/";
 	echo " ";
@@ -59,6 +60,7 @@ ask() {
 		fi
 
 		# Ask the question
+        echo " "
 		printf "%s [%s] " "$1" "$prompt"
 		read REPLY
 
@@ -74,6 +76,37 @@ ask() {
 		esac
 
 	done
+    echo " "
+}
+
+# generate ssh kypair
+makekey() {
+	( checkutil ssh-keygen && checkutil ssh ) || exit 1
+	if [ ! -e "$1" ]; then
+		ssh-keygen -t rsa -C "#! $username" -f "$1"
+		if [ ! $? ]; then
+			echo " Unable to make key with that location"
+		else
+			chmod 600 "$1"
+			echo " Successfully generated key"
+			break
+		fi
+	else
+		if ask " Unable to generate key, do you want to delete the file?" N; then
+			rm -f "$1"
+			if [ ! $? ]; then
+				echo " Unable to delete file, resetting"
+			else
+				echo " File deleted"
+				ssh-keygen -t rsa -C "#! $username" -f "$1"
+				if [ ! $? ]; then
+					echo " Unable to generate key, resetting"
+				fi
+			fi
+		else
+			echo " Unable to make key with that path, resetting"
+		fi
+	fi
 }
 
 # Fetch host data for later.
@@ -168,7 +201,6 @@ echo " ";
 echo " SSH Keys are a type of public/private key system that let you identify";
 echo " yourself to systems like this one without ever sending your password ";
 echo " over the internet, and thus by nature we won't even know what it is";
-echo " ";
 
 for keytype in id_rsa id_dsa id_ecdsa id_ed25519; do
 	if [ -e ~/.ssh/${keytype}.pub ] && [ -e ~/.ssh/${keytype} ]; then
@@ -180,44 +212,7 @@ for keytype in id_rsa id_dsa id_ecdsa id_ed25519; do
 	fi
 done
 
-makekey() {
-	( checkutil ssh-keygen && checkutil ssh ) || exit 1
-	if [ ! -e "$1" ]; then
-		ssh-keygen -t rsa -C "#! $username" -f "$1"
-		if [ ! $? ]; then
-			echo " Unable to make key with that location"
-			echo " "
-		else
-			chmod 600 "$1"
-			echo " Successfully generated key"
-			echo " "
-			break
-		fi
-	else
-		if ask " Unable to generate key, do you want to delete the file?" N; then
-			rm -f "$1"
-			if [ ! $? ]; then
-				echo " "
-				echo " Unable to delete file, resetting"
-			else
-				echo " "
-				echo " File deleted"
-				ssh-keygen -t rsa -C "#! $username" -f "$1"
-				if [ ! $? ]; then
-					echo " Unable to generate key, resetting"
-				fi
-				echo " "
-			fi
-		else
-			echo " "
-			echo " Unable to make key with that path, resetting"
-			echo " "
-		fi
-	fi
-}
-
 if [ "x$public_key" = "x" ]; then
-	echo " "
 	echo " No SSH key for login to server found, attempting to generate one"
 	while true; do
 		echo " "
@@ -268,7 +263,8 @@ echo
 echo " Please choose a server to create your account on."
 echo
 printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
-printf "  %-1s | %-4s | %-36s | %-8s | %-8s\n" "#" "Host" "Location" "Users" "Latency"
+printf "  %-1s | %-4s | %-36s | %-8s | %-8s\n" \
+    "#" "Host" "Location" "Users" "Latency"
 printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
 while IFS="|" read host ip location current_users max_users; do
 	host=$(echo $host | sed 's/\([a-z0-9]\+\)\..*/\1/g')
@@ -307,24 +303,19 @@ if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 	echo " Host: $host";
 	echo " ";
 	if ask " Does this look correct?" Y ; then
+	
 	    echo " ";
-	    echo " Creating your account...";
-	    echo " ";
-
-	if curl -f -H "Content-Type: application/json" \
-	    -d "{\"user\":\"$username\",\"key\":\"$public_key\",\"host\":\"$host\"}" \
-	    https://hashbang.sh/user/create; then
-	        echo " ";
+	    echo -n " Creating your account... ";
+	    if curl --silent -f -H "Content-Type: application/json" \
+	        -d "{\"user\":\"$username\",\"key\":\"$public_key\",\"host\":\"$host\"}" \
+	        https://hashbang.sh/user/create; then
 	        echo " Account Created!"
-	        echo " ";
 	    else
-	        echo " ";
 	        echo " Account creation failed.";
-	        echo " Something went awfully wrong and we couldn't create an account for you.";
 	        bail
 	    fi
+
 	    if ask " Would you like to add trusted/signed keys for our servers to your .ssh/known_hosts?" Y ; then
-	        echo " "
 	        echo " Downloading GPG keys"
 	        echo " "
 	        gpg --recv-keys 0xD2C4C74D8FAA96F5
@@ -336,14 +327,11 @@ if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 	        if [ ! $? -eq 0 ]; then
 	            echo " "
 	            echo " Unable to verify keys"
-	            echo " The installer will not continue from here..."
-	            echo " "
-	            exit 1
+	            bail
 	        fi
 	        printf %s "$data" | grep "hashbang.sh" >> ~/.ssh/known_hosts
 	        echo " "
 	        echo " Key scanned and saved"
-	        echo " "
 	    fi
 
 	    if ask " Would you like an alias (shortcut) added to your .ssh/config?" Y ; then
@@ -358,12 +346,10 @@ if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 	        echo " ";
 	        echo " > ssh ${username}@${host}.hashbang.sh";
 	    fi
-		echo " ";
+
 	else
-		echo " "
-		echo " Account not created. Re-run the script to restart"
-		echo " "
-		exit 1
+	    echo " Please re-run script to make corrections.";
+		bail
 	fi
 
 	if ask " Do you want us to log you in now?" Y; then
@@ -374,6 +360,7 @@ if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
         fi
 	fi
 fi
+
 # exit [n]. if [n] is not specified, then exit shall use the return code of the
 # last command.
 exit 0
