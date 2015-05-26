@@ -4,7 +4,7 @@
 # possible to provide an easy gateway for new users.
 
 # Bail out if any curl's fail
-set -euo pipefail
+set -o pipefail
 
 # If we're using bash, we do this
 if [ "x$BASH" != "x" ]; then
@@ -113,7 +113,7 @@ clear
 
 echo " ";
 echo " ";
-echo " -------------------------------------------------------------------- ";
+printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
 echo " ";
 
 echo " First, your system must be properly configured with the required";
@@ -132,7 +132,7 @@ clear;
 
 echo " ";
 echo " ";
-echo " -------------------------------------------------------------------- ";
+printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
 echo " ";
 
 
@@ -162,11 +162,11 @@ while [ "x$username" = "x" ]; do
 done
 
 echo " ";
-echo " -------------------------------------------------------------------- ";
+printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
 echo " ";
 echo " Now we will need an SSH Public Key."
 echo " ";
-echo " SSH Keys are a type of public/private key system that let you identify ";
+echo " SSH Keys are a type of public/private key system that let you identify";
 echo " yourself to systems like this one without ever sending your password ";
 echo " over the internet, and thus by nature we won't even know what it is";
 echo " ";
@@ -211,16 +211,19 @@ done
 
 n=0
 hosts=()
-echo "Please choose a server to create your account on."
 echo
-printf -- '-%.0s' {1..64}; printf '\n'
-printf " %-1s | %-4s | %-30s | %-7s | %-8s\n" "#" "Host" "Location" "Users" "Latency"
-printf -- '-%.0s' {1..64}; printf '\n'
+printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
+echo
+echo " Please choose a server to create your account on."
+echo
+printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
+printf "  %-1s | %-4s | %-36s | %-8s | %-8s\n" "#" "Host" "Location" "Users" "Latency"
+printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
 while IFS="|" read host ip location current_users max_users; do
     host=$(echo $host | sed 's/\([a-z0-9]\+\)\..*/\1/g')
     latency=$(ping -c1 ${host}.hashbang.sh | head -n2 | tail -n1 | sed 's/.*=//g')
     n=$((n+1))
-    printf " %-1s | %-4s | %-30s | %7s | %-8s\n" \
+    printf "  %-1s | %-4s | %-36s | %8s | %-8s\n" \
         "$n" \
         "$host" \
         "$location" \
@@ -228,11 +231,11 @@ while IFS="|" read host ip location current_users max_users; do
         "$latency"
     hosts[$n]=$host
 done <<< "$host_data"
-printf -- '-%.0s' {1..64}; printf '\n'
+printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
 
 echo
 while true; do
-    echo -n "Enter Number 1-$n : "
+    echo -n " Enter Number 1-$n : "
     read choice
     if [[ "$choice" =~ ^[0-9]+$ ]] && \
        [[ "$choice" -ge 1 ]] && \
@@ -244,7 +247,7 @@ host=${hosts[$choice]}
 
 if [ "x$key" != "x" -a "x$username" != "x" ]; then
     echo " ";
-    echo " -------------------------------------------------------------------- ";
+    printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
     echo " ";
     echo " We are going to create an account with the following information";
     echo " ";
