@@ -171,7 +171,7 @@ echo " over the internet, and thus by nature we won't even know what it is";
 echo " ";
 
 for keytype in id_rsa id_dsa id_ecdsa id_ed25519; do
-	if [ -e ~/.ssh/$keytype.pub ]; then
+	if [ -e ~/.ssh/$keytype.pub ] && [ -e ~/.ssh/$keytype ]; then
 		if ask " We found a public key in [ ~/.ssh/$keytype.pub ]. Use this key?" Y; then
 			keyfile="~/.ssh/$keytype"
 			key=$(cat ~/.ssh/$keytype.pub)
