@@ -2,9 +2,10 @@
 
 import os
 import sys
+import csv
 import ldap
 from subprocess import check_call, CalledProcessError
-from flask import Flask, send_from_directory, redirect, request
+from flask import Flask, send_from_directory, redirect, request, make_response
 from flask.ext.restful import Resource, Api
 from flask.ext.restful.reqparse import RequestParser
 from tornado.wsgi import WSGIContainer
@@ -15,6 +16,7 @@ from provisor.utils import validate_pubkey as pubkey
 from provisor.utils import validate_username as username
 
 app = Flask(__name__)
+
 api = Api(app)
 
 p = Provisor(
@@ -22,13 +24,27 @@ p = Provisor(
     user ="cn=provisor,ou=Admin,dc=hashbang,dc=sh",
     password=os.environ['LDAP_PASSWORD'],
     user_base="ou=People,dc=hashbang,dc=sh",
-    group_base="ou=Group,dc=hashbang,dc=sh"
+    group_base="ou=Group,dc=hashbang,dc=sh",
+    servers_base="ou=Servers,dc=hashbang,dc=sh",
 )
 
 certfile = os.path.join(os.getcwd(), "certs/server.crt")
 keyfile = os.path.join(os.getcwd(), "certs/server.key")
 https_port = 4443
 http_port = 8080
+
+@api.representation('text/plain')
+def output_plain(data, code, headers=None):
+    lines=[]
+    for server,stats in data.items():
+        line = [server]
+        for key,val in stats.items():
+            line.append(str(val))
+        lines.append("|".join(line))
+    data = "\n".join(lines)
+    resp = make_response(data, code)
+    resp.headers.extend(headers or {})
+    return resp
 
 class UserCreate(Resource):
     def __init__(self):
@@ -54,7 +70,7 @@ class UserCreate(Resource):
             p.add_user(
                 username=str(args['user']),
                 pubkey=args['key'],
-                hostname='va1.hashbang.sh'
+                hostname="%s.hashbang.sh" % args['host']
             )
         except ldap.SERVER_DOWN:
             return { 'message': 'Unable to connect to LDAP server'}, 400
@@ -66,7 +82,19 @@ class UserCreate(Resource):
 
         return {'message': 'success'}
 
+class ServerStats(Resource):
+
+    def get(self,out_format='json'):
+        try:
+            server_stats = p.server_stats()
+        except ldap.SERVER_DOWN:
+            return { 'message': 'Unable to connect to LDAP server'}, 400
+
+        return server_stats
+                
+
 api.add_resource(UserCreate, '/user/create')
+api.add_resource(ServerStats, '/server/stats')
 
 @app.route('/',methods=["GET"])
 def root():

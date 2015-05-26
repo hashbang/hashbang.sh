@@ -3,6 +3,9 @@
 # Secondly, it attempts to be compatible with as many shell implementations as
 # possible to provide an easy gateway for new users.
 
+# Bail out if any curl's fail
+set -o pipefail
+
 # If we're using bash, we do this
 if [ "x$BASH" != "x" ]; then
 	shopt -s extglob
@@ -74,6 +77,10 @@ ask() {
 	done
 }
 
+# Fetch host data for later.
+# If this fails there is no point in proceeding
+host_data=$(curl -sH 'Accept:text/plain' https://hashbang.sh/server/stats)
+
 clear;
 echo "   _  _    __ ";
 echo " _| || |_ |  |  Welcome to #!. This network has three rules:";
@@ -107,7 +114,7 @@ clear
 
 echo " ";
 echo " ";
-echo " -------------------------------------------------------------------- ";
+printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
 echo " ";
 
 echo " First, your system must be properly configured with the required";
@@ -125,7 +132,7 @@ clear;
 
 echo " ";
 echo " ";
-echo " -------------------------------------------------------------------- ";
+printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
 echo " ";
 
 
@@ -155,11 +162,11 @@ while [ "x$username" = "x" ]; do
 done
 
 echo " ";
-echo " -------------------------------------------------------------------- ";
+printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
 echo " ";
 echo " Now we will need an SSH Public Key."
 echo " ";
-echo " SSH Keys are a type of public/private key system that let you identify ";
+echo " SSH Keys are a type of public/private key system that let you identify";
 echo " yourself to systems like this one without ever sending your password ";
 echo " over the internet, and thus by nature we won't even know what it is";
 echo " ";
@@ -253,13 +260,45 @@ if [ "x$key" = "x" ]; then
 	done
 	key=$(cat "$keyfile.pub")
 fi
-# Insert functions to allow user to select from multiple hosts here
-# hardcoding all users to va1 for now
-host="va1"
+n=0
+hosts=()
+echo
+printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
+echo
+echo " Please choose a server to create your account on."
+echo
+printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
+printf "  %-1s | %-4s | %-36s | %-8s | %-8s\n" "#" "Host" "Location" "Users" "Latency"
+printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
+while IFS="|" read host ip location current_users max_users; do
+	host=$(echo $host | sed 's/\([a-z0-9]\+\)\..*/\1/g')
+	latency=$(ping -c1 ${host}.hashbang.sh | head -n2 | tail -n1 | sed 's/.*=//g')
+	n=$((n+1))
+	printf "  %-1s | %-4s | %-36s | %8s | %-8s\n" \
+	    "$n" \
+	    "$host" \
+	    "$location" \
+	    "$current_users/$max_users" \
+	    "$latency"
+	hosts[$n]=$host
+done <<< "$host_data"
+printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
+
+echo
+while true; do
+	echo -n " Enter Number 1-$n : "
+	read choice
+	if [[ "$choice" =~ ^[0-9]+$ ]] && \
+	   [[ "$choice" -ge 1 ]] && \
+	   [[ "$choice" -le $n ]]; then
+	    break;
+	fi
+done
+host=${hosts[$choice]}
 
 if [ "x$key" != "x" -a "x$username" != "x" ]; then
 	echo " ";
-	echo " -------------------------------------------------------------------- ";
+	printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
 	echo " ";
 	echo " We are going to create an account with the following information";
 	echo " ";
@@ -268,56 +307,58 @@ if [ "x$key" != "x" -a "x$username" != "x" ]; then
 	echo " Host: $host";
 	echo " ";
 	if ask " Does this look correct?" Y ; then
-		echo " ";
-		echo " Creating your account...";
-		echo " ";
-		if curl -f -H "Content-Type: application/json" \
-			-d "{\"user\":\"$username\",\"key\":\"$key\",\"host\":\"$host\"}" \
-			https://hashbang.sh/user/create; then
-			echo " ";
-			echo " Account Created!"
-			echo " ";
-		else
-			echo " ";
-			echo " Account creation failed.";
-			echo " Something went awfully wrong and we couldn't create an account for you.";
-			bail
-		fi
-##		if ask " Would you like to add trusted/signed keys for our servers to your .ssh/known_hosts?" Y ; then
-##			echo " "
-##			echo " Downloading GPG keys"
-##			echo " "
-##			gpg --recv-keys 0xD2C4C74D8FAA96F5
-##			echo " "
-##			echo " Downloading key list"
-##			echo " "
-##			data="$(curl -s https://hashbang.sh/static/known_hosts.asc)"
-##			printf %s "$data" | gpg --verify
-##			if [ ! $? -eq 0 ]; then
-##				echo " "
-##				echo " Unable to verify keys"
-##				echo " The installer will not continue from here..."
-##				echo " "
-##				exit 1
-##			fi
-##			printf %s "$data" | grep "hashbang.sh" >> ~/.ssh/known_hosts
-##			echo " "
-##			echo " Key scanned and saved"
-##			echo " "
-##		fi
-		if ask " Would you like an alias (shortcut) added to your .ssh/config?" Y ; then
-			printf "\nHost hashbang\n  HostName ${host}.hashbang.sh\n  User %s\n  IdentityFile %s\n" \
-							"$username" "$keyfile" \
-			>> ~/.ssh/config
-			echo " You can now connect any time by entering the command:";
-			echo " ";
-			echo " > ssh hashbang";
-		else
-			echo " You can now connect any time by entering the command:";
-			echo " ";
-			echo " > ssh ${username}@${host}.hashbang.sh";
-		fi
+	    echo " ";
+	    echo " Creating your account...";
+	    echo " ";
 
+	if curl -f -H "Content-Type: application/json" \
+	    -d "{\"user\":\"$username\",\"key\":\"$key\",\"host\":\"$host\"}" \
+	    https://hashbang.sh/user/create; then
+	        echo " ";
+	        echo " Account Created!"
+	        echo " ";
+	    else
+	        echo " ";
+	        echo " Account creation failed.";
+	        echo " Something went awfully wrong and we couldn't create an account for you.";
+	        bail
+	    fi
+	    if ask " Would you like to add trusted/signed keys for our servers to your .ssh/known_hosts?" Y ; then
+	        echo " "
+	        echo " Downloading GPG keys"
+	        echo " "
+	        gpg --recv-keys 0xD2C4C74D8FAA96F5
+	        echo " "
+	        echo " Downloading key list"
+	        echo " "
+	        data="$(curl -s https://hashbang.sh/static/known_hosts.asc)"
+	        printf %s "$data" | gpg --verify
+	        if [ ! $? -eq 0 ]; then
+	            echo " "
+	            echo " Unable to verify keys"
+	            echo " The installer will not continue from here..."
+	            echo " "
+	            exit 1
+	        fi
+	        printf %s "$data" | grep "hashbang.sh" >> ~/.ssh/known_hosts
+	        echo " "
+	        echo " Key scanned and saved"
+	        echo " "
+	    fi
+
+	    private_keyfile=$(echo "$keyfile" | sed 's/.pub$//')
+	    if ask " Would you like an alias (shortcut) added to your .ssh/config?" Y ; then
+	        printf "\nHost hashbang\n  HostName ${host}.hashbang.sh\n  User %s\n  IdentityFile %s\n" \
+							"$username" "$private_keyfile" \
+	        >> ~/.ssh/config
+	        echo " You can now connect any time by entering the command:";
+	        echo " ";
+	        echo " > ssh hashbang";
+	    else
+	        echo " You can now connect any time by entering the command:";
+	        echo " ";
+	        echo " > ssh ${username}@${host}.hashbang.sh";
+	    fi
 		echo " ";
 	else
 		echo " "
