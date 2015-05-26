@@ -3,6 +3,9 @@
 # Secondly, it attempts to be compatible with as many shell implementations as
 # possible to provide an easy gateway for new users.
 
+# Bail out if any curl's fail
+set -euo pipefail
+
 # If we're using bash, we do this
 if [ "x$BASH" != "x" ]; then
 	shopt -s extglob
@@ -72,6 +75,10 @@ ask() {
 
     done
 }
+
+# Fetch host data for later.
+# If this fails there is no point in proceeding
+host_data=$(curl -sH 'Accept:text/plain' https://hashbang.sh/server/stats)
 
 clear;
 echo "   _  _    __  ";
@@ -202,9 +209,38 @@ while [ "x$key" = "x" ]; do
     fi
 done
 
-# Insert functions to allow user to select from multiple hosts here
-# hardcoding all users to ny1 for now
-host="ny1"
+n=0
+hosts=()
+echo "Please choose a server to create your account on."
+echo
+printf -- '-%.0s' {1..64}; printf '\n'
+printf " %-1s | %-4s | %-30s | %-7s | %-8s\n" "#" "Host" "Location" "Users" "Latency"
+printf -- '-%.0s' {1..64}; printf '\n'
+while IFS="|" read host ip location current_users max_users; do
+    host=$(echo $host | sed 's/\([a-z0-9]\+\)\..*/\1/g')
+    latency=$(ping -c1 ${host}.hashbang.sh | head -n2 | tail -n1 | sed 's/.*=//g')
+    n=$((n+1))
+    printf " %-1s | %-4s | %-30s | %7s | %-8s\n" \
+        "$n" \
+        "$host" \
+        "$location" \
+        "$current_users/$max_users" \
+        "$latency"
+    hosts[$n]=$host
+done <<< "$host_data"
+printf -- '-%.0s' {1..64}; printf '\n'
+
+echo
+while true; do
+    echo -n "Enter Number 1-$n : "
+    read choice
+    if [[ "$choice" =~ ^[0-9]+$ ]] && \
+       [[ "$choice" -ge 1 ]] && \
+       [[ "$choice" -le $n ]]; then
+        break;
+    fi
+done
+host=${hosts[$choice]}
 
 if [ "x$key" != "x" -a "x$username" != "x" ]; then
     echo " ";
