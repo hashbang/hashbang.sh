@@ -71,8 +71,8 @@ class UserCreate(Resource):
 
     def post(self):
         args = self.reqparse.parse_args()
-
         print(args)
+
         try:
             p.add_user(
                 username=str(args['user']),
