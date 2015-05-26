@@ -61,11 +61,18 @@ class UserCreate(Resource):
             required = True,
             location = 'json'
         )
+        self.reqparse.add_argument(
+            'host',
+            type = str,
+            required = True,
+            location = 'json'
+        )
         super(UserCreate, self).__init__()
 
     def post(self):
         args = self.reqparse.parse_args()
 
+        print(args)
         try:
             p.add_user(
                 username=str(args['user']),
