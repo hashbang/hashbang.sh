@@ -171,10 +171,10 @@ echo " over the internet, and thus by nature we won't even know what it is";
 echo " ";
 
 for keytype in id_rsa id_dsa id_ecdsa id_ed25519; do
-	if [ -e ~/.ssh/$keytype.pub ] && [ -e ~/.ssh/$keytype ]; then
-		if ask " We found a public key in [ ~/.ssh/$keytype.pub ]. Use this key?" Y; then
-			keyfile="~/.ssh/$keytype"
-			key=$(cat ~/.ssh/$keytype.pub)
+	if [ -e ~/.ssh/${keytype}.pub ] && [ -e ~/.ssh/${keytype} ]; then
+		if ask " We found a public key in [ ~/.ssh/${keytype}.pub ]. Use this key?" Y; then
+			private_keyfile="~/.ssh/${keytype}"
+			public_key="$(cat ~/.ssh/${keytype}.pub)"
 			break
 		fi
 	fi
@@ -216,49 +216,50 @@ makekey() {
 	fi
 }
 
-if [ "x$key" = "x" ]; then
+if [ "x$public_key" = "x" ]; then
 	echo " "
 	echo " No SSH key for login to server found, attempting to generate one"
 	while true; do
 		echo " "
 		echo -n " Path to new or existing connection key (~/.ssh/id_rsa): ";
-		read keyfile
-		if [ "x$keyfile" = "x" ]; then
-			keyfile="$HOME/.ssh/id_rsa"
+		read private_keyfile
+		if [ "x$private_keyfile" = "x" ]; then
+			private_keyfile="$HOME/.ssh/id_rsa"
 		fi
-		keyfile=$(echo "$keyfile" | sed "s@~@$HOME@")
+		private_keyfile=$(echo "$private_keyfile" | sed "s@~@$HOME@")
 		echo " "
-		if [ ! -e "$keyfile" ] && [ ! -e "$keyfile.pub" ]; then
+		if [ ! -e "$private_keyfile" ] && [ ! -e "$private_keyfile.pub" ]; then
 			if ask " Do you want us to generate a key for you?" Y; then
-				if [ -e "$keyfile" ]; then
-					if ask " File exists: $keyfile - delete?" Y; then
-						rm "$keyfile"
-						if [ -e "$keyfile.pub" ]; then
-							rm "$keyfile.pub"
+				if [ -e "$private_keyfile" ]; then
+					if ask " File exists: $private_keyfile - delete?" Y; then
+						rm "$private_keyfile"
+						if [ -e "${private_keyfile}.pub" ]; then
+							rm "${private_keyfile}.pub"
 						fi
-						makekey "$keyfile"
+						makekey "$private_keyfile"
 					fi
 				else
-					makekey "$keyfile"
+					makekey "$private_keyfile"
 				fi
-				key=$(cat "$keyfile.pub")
+				public_key=$(cat "${privat_keyfile}.pub")
 			fi
-		elif [ ! -e "$keyfile" ] && [ -e "$keyfile.pub" ]; then
+		elif [ ! -e "$private_keyfile" ] && [ -e "${private_keyfile}.pub" ]; then
 			if ask " Found public keyfile, missing private. Do you wish to continue?" N; then
-				echo " Using public key $keyfile.pub"
+				echo " Using public key ${private_keyfile}.pub"
 				break
 			else
 				echo " Resetting"
 			fi
-		elif [ ! -e "$keyfile.pub" ]; then
-			echo " Unable to find public key $keyfile.pub"
+		elif [ ! -e "${private_keyfile}.pub" ]; then
+			echo " Unable to find public key ${private_keyfile}.pub"
 		else
-			echo " Using public key $keyfile.pub"
+			echo " Using public key ${private_keyfile}.pub"
 			break
 		fi
 	done
-	key=$(cat "$keyfile.pub")
+	public_key=$(cat "${private_keyfile}.pub")
 fi
+
 n=0
 hosts=()
 echo
@@ -295,14 +296,14 @@ while true; do
 done
 host=${hosts[$choice]}
 
-if [ "x$key" != "x" -a "x$username" != "x" ]; then
+if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 	echo " ";
 	printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
 	echo " ";
 	echo " We are going to create an account with the following information";
 	echo " ";
 	echo " Username: $username";
-	echo " Public Key: $keyfile";
+	echo " Public Key: ${private_keyfile}.pub";
 	echo " Host: $host";
 	echo " ";
 	if ask " Does this look correct?" Y ; then
@@ -311,7 +312,7 @@ if [ "x$key" != "x" -a "x$username" != "x" ]; then
 	    echo " ";
 
 	if curl -f -H "Content-Type: application/json" \
-	    -d "{\"user\":\"$username\",\"key\":\"$key\",\"host\":\"$host\"}" \
+	    -d "{\"user\":\"$username\",\"key\":\"$public_key\",\"host\":\"$host\"}" \
 	    https://hashbang.sh/user/create; then
 	        echo " ";
 	        echo " Account Created!"
@@ -345,7 +346,6 @@ if [ "x$key" != "x" -a "x$username" != "x" ]; then
 	        echo " "
 	    fi
 
-	    private_keyfile=$(echo "$keyfile" | sed 's/.pub$//')
 	    if ask " Would you like an alias (shortcut) added to your .ssh/config?" Y ; then
 	        printf "\nHost hashbang\n  HostName ${host}.hashbang.sh\n  User %s\n  IdentityFile %s\n" \
 							"$username" "$private_keyfile" \
@@ -367,7 +367,11 @@ if [ "x$key" != "x" -a "x$username" != "x" ]; then
 	fi
 
 	if ask " Do you want us to log you in now?" Y; then
-		ssh ${username}@${host}.hashbang.sh -i "$keyfile"
+	    if [ -e $private_keyfile ]; then
+	        ssh ${username}@${host}.hashbang.sh -i "$private_keyfile"
+        else
+            ssh ${username}@${host}.hashbang.sh
+        fi
 	fi
 fi
 # exit [n]. if [n] is not specified, then exit shall use the return code of the
