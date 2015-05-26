@@ -3,13 +3,12 @@
 # Secondly, it attempts to be compatible with as many shell implementations as
 # possible to provide an easy gateway for new users.
 
-# Bail out if any curl's fail
-set -o pipefail
-
 # If we're using bash, we do this
 if [ "x$BASH" != "x" ]; then
 	shopt -s extglob
 	set -o posix
+    # Bail out if any curl's fail
+    set -o pipefail 
 fi
 
 bail() {
