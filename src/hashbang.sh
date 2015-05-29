@@ -308,7 +308,7 @@ if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 		echo " ";
 		echo -n " Creating your account... ";
 		format="{\"user\":\"$username\",\"key\":\"$public_key\",\"host\":\"$host\"}"
-		output="$(curl --silent -f -H 'Content-Type: application/json' -d '$format' https://hashbang.sh/user/create)" 2>&-
+		output="$(curl -f -H 'Content-Type: application/json' -d '$format' https://hashbang.sh/user/create)" 2>&-
 		if [ ! $? -eq 0 ]; then
 			echo " Account Created!"
 		else
