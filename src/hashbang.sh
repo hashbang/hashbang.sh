@@ -336,7 +336,7 @@ if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 	    fi
 
 	    if ask " Would you like an alias (shortcut) added to your .ssh/config?" Y ; then
-	        printf "\nHost hashbang\n  HostName ${host}.hashbang.sh\n  User %s\n  IdentityFile %s\n" \
+	        printf "\nHost hashbang\n  HostName ${host}\n  IdentitiesOnly yes\n  User %s\n  IdentityFile %s\n" \
 							"$username" "$private_keyfile" \
 	        >> ~/.ssh/config
 	        echo " You can now connect any time by entering the command:";
