@@ -266,7 +266,7 @@ echo
 printf -- ' %72s\n' | tr ' ' -;
 printf "  %-1s | %-4s | %-36s | %-8s | %-8s\n" \
     "#" "Host" "Location" "Users" "Latency"
-printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
+printf -- ' %72s\n' | tr ' ' -;
 while IFS="|" read host ip location current_users max_users; do
 	host=$(echo $host | sed 's/\([a-z0-9]\+\)\..*/\1/g')
 	latency=$(ping -c1 ${host}.hashbang.sh | head -n2 | tail -n1 | sed 's/.*=//g')
