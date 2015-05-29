@@ -24,6 +24,16 @@ if [ ! "$shell" ]; then
 	exit 1
 fi
 
+if [ "$shell" = "zsh" ]; then
+	printf=$(whereis printf)
+	printline() {
+		$printf ' ' && $printf -- '-%.0s' {1..72}; $printf '\n'
+	}
+else
+	printline() {
+		printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
+	}
+fi
 bail() {
 	echo " "
 	echo " If you think this is a bug, please report it to ";
@@ -159,7 +169,7 @@ clear
 
 echo " ";
 echo " ";
-printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
+printline
 echo " ";
 
 echo " First, your system must be properly configured with the required";
@@ -177,7 +187,7 @@ clear;
 
 echo " ";
 echo " ";
-printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
+printline
 echo " ";
 
 
@@ -207,7 +217,7 @@ while [ "x$username" = "x" ]; do
 done
 
 echo " ";
-printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
+printline
 echo " ";
 echo " Now we will need an SSH Public Key."
 echo " ";
@@ -271,14 +281,14 @@ fi
 n=0
 hosts=()
 echo
-printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
+printline
 echo
 echo " Please choose a server to create your account on."
 echo
-printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
+printline
 printf "  %-1s | %-4s | %-36s | %-8s | %-8s\n" \
 	"#" "Host" "Location" "Users" "Latency"
-printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
+printline
 while IFS="|" read host ip location current_users max_users; do
 	host=$(echo $host | sed 's/\([a-z0-9]\+\)\..*/\1/g')
 	latency=$(ping -c1 ${host}.hashbang.sh | head -n2 | tail -n1 | sed 's/.*=//g')
@@ -291,7 +301,7 @@ while IFS="|" read host ip location current_users max_users; do
 		"$latency"
 	hosts[$n]=$host
 done <<< "$host_data"
-printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
+printline
 
 echo
 while true; do
@@ -307,7 +317,7 @@ host=${hosts[$choice]}
 
 if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 	echo " ";
-	printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
+	printline
 	echo " ";
 	echo " We are going to create an account with the following information";
 	echo " ";
