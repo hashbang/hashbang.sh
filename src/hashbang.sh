@@ -12,7 +12,7 @@ if [ "x$BASH" != "x" ]; then
 fi
 
 bail() {
-    echo " "
+	echo " "
 	echo " If you think this is a bug, please report it to ";
 	echo " -> https://github.com/hashbang/hashbang.sh/issues/";
 	echo " ";
@@ -148,7 +148,7 @@ clear
 
 echo " ";
 echo " ";
-printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
+printf -- ' %72s\n' | tr ' ' -;
 echo " ";
 
 echo " First, your system must be properly configured with the required";
@@ -166,7 +166,7 @@ clear;
 
 echo " ";
 echo " ";
-printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
+printf -- ' %72s\n' | tr ' ' -;
 echo " ";
 
 
@@ -196,7 +196,7 @@ while [ "x$username" = "x" ]; do
 done
 
 echo " ";
-printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
+printf -- ' %72s\n' | tr ' ' -;
 echo " ";
 echo " Now we will need an SSH Public Key."
 echo " ";
@@ -259,11 +259,11 @@ fi
 
 n=0
 echo
-printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
+printf -- ' %72s\n' | tr ' ' -;
 echo
 echo " Please choose a server to create your account on."
 echo
-printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
+printf -- ' %72s\n' | tr ' ' -;
 printf "  %-1s | %-4s | %-36s | %-8s | %-8s\n" \
     "#" "Host" "Location" "Users" "Latency"
 printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
@@ -278,7 +278,7 @@ while IFS="|" read host ip location current_users max_users; do
 	    "$current_users/$max_users" \
 	    "$latency"
 done < $host_data
-printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
+printf -- ' %72s\n' | tr ' ' -;
 
 echo
 while true; do
@@ -295,7 +295,7 @@ host=$(cat $host_data | head -n $choice | tail -n1 | cut -d '|' -f1)
 
 if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 	echo " ";
-	printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
+	printf -- ' %72s\n' | tr ' ' -;
 	echo " ";
 	echo " We are going to create an account with the following information";
 	echo " ";
