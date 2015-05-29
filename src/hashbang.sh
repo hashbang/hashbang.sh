@@ -111,7 +111,8 @@ makekey() {
 
 # Fetch host data for later.
 # If this fails there is no point in proceeding
-host_data=$(curl -sH 'Accept:text/plain' https://hashbang.sh/server/stats)
+host_data=$(mktemp)
+curl -sH 'Accept:text/plain' https://hashbang.sh/server/stats > $host_data
 
 clear;
 echo "   _  _    __ ";
@@ -256,7 +257,6 @@ if [ "x$public_key" = "x" ]; then
 fi
 
 n=0
-hosts=()
 echo
 printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
 echo
@@ -276,21 +276,21 @@ while IFS="|" read host ip location current_users max_users; do
 	    "$location" \
 	    "$current_users/$max_users" \
 	    "$latency"
-	hosts[$n]=$host
-done <<< "$host_data"
+done < $host_data
 printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
 
 echo
 while true; do
 	echo -n " Enter Number 1-$n : "
 	read choice
-	if [[ "$choice" =~ ^[0-9]+$ ]] && \
-	   [[ "$choice" -ge 1 ]] && \
-	   [[ "$choice" -le $n ]]; then
+	number=$(echo "$choice" | awk '$0 ~/[^0-9]/ { print "no" }')
+	if [ "$number" != "no" ] && \
+	   [ "$choice" -ge 1 ] && \
+	   [ "$choice" -le $n ]; then
 	    break;
 	fi
 done
-host=${hosts[$choice]}
+host=$(cat $host_data | head -n $choice | tail -n1 | cut -d '|' -f1)
 
 if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 	echo " ";
