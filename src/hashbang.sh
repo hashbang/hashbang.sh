@@ -113,6 +113,7 @@ makekey() {
 # If this fails there is no point in proceeding
 host_data=$(mktemp)
 curl -sH 'Accept:text/plain' https://hashbang.sh/server/stats > $host_data
+echo >> $host_data
 
 clear;
 echo "   _  _    __ ";
