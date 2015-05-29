@@ -12,18 +12,17 @@ if [ "x$BASH" != "x" ]; then
 	# Bail out if any curl's fail
 	set -o pipefail
 	shell="bash"
-fi
-if [ "x$ZSH_VERSION" != "x" ]; then
+elif [ "x$ZSH_VERSION" != "x" ]; then
 	shell="zsh"
-fi
-if [ ! "$shell" ]; then
+elif [ readlink /proc/$$/exe = "$(whereis dash)" ]; then
+	shell="dash"
+elif [ ! "$shell" ]; then
 	echo " "
 	echo " Your shell is incompatible with this script"
 	echo " Please run one of: zsh, bash" # Find a way to automate this?
 	echo " "
 	exit 1
 fi
-
 if [ "$shell" = "zsh" ]; then
 	printf=$(whereis printf)
 	printline() {
@@ -277,44 +276,64 @@ if [ "x$public_key" = "x" ]; then
 	done
 	public_key=$(cat "${private_keyfile}.pub")
 fi
-
-n=0
-hosts=()
-echo
-printline
-echo
-echo " Please choose a server to create your account on."
-echo
-printline
-printf "  %-1s | %-4s | %-36s | %-8s | %-8s\n" \
-	"#" "Host" "Location" "Users" "Latency"
-printline
-while IFS="|" read host ip location current_users max_users; do
-	host=$(echo $host | sed 's/\([a-z0-9]\+\)\..*/\1/g')
-	latency=$(ping -c1 ${host}.hashbang.sh | head -n2 | tail -n1 | sed 's/.*=//g')
-	n=$((n+1))
-	printf "  %-1s | %-4s | %-36s | %8s | %-8s\n" \
-		"$n" \
-		"$host" \
-		"$location" \
-		"$current_users/$max_users" \
-		"$latency"
-	hosts[$n]=$host
-done <<< "$host_data"
-printline
-
-echo
-while true; do
-	echo -n " Enter Number 1-$n : "
-	read choice
-	if [[ "$choice" =~ ^[0-9]+$ ]] && \
-	   [[ "$choice" -ge 1 ]] && \
-	   [[ "$choice" -le $n ]]; then
-		break;
-	fi
-done
-host=${hosts[$choice]}
-
+if [ ! "$shell" = "dash" ]; then
+	n=0
+	hosts=()
+	echo
+	printline
+	echo
+	echo " Please choose a server to create your account on."
+	echo
+	printline
+	printf "  %-1s | %-4s | %-36s | %-8s | %-8s\n" \
+		"#" "Host" "Location" "Users" "Latency"
+	printline
+	while IFS="|" read host ip location current_users max_users; do
+		host=$(echo $host | sed 's/\([a-z0-9]\+\)\..*/\1/g')
+		latency=$(ping -c1 ${host}.hashbang.sh | head -n2 | tail -n1 | sed 's/.*=//g')
+		n=$((n+1))
+		printf "  %-1s | %-4s | %-36s | %8s | %-8s\n" \
+			"$n" \
+			"$host" \
+			"$location" \
+			"$current_users/$max_users" \
+			"$latency"
+		hosts[$n]=$host
+	done <<< "$host_data"
+	printline
+	
+	echo
+	while true; do
+		echo -n " Enter Number 1-$n : "
+		read choice
+		if [[ "$choice" =~ ^[0-9]+$ ]] && \
+		   [[ "$choice" -ge 1 ]] && \
+		   [[ "$choice" -le $n ]]; then
+			break;
+		fi
+	done
+	host=${hosts[$choice]}
+else
+	echo " "
+	printline
+	echo " "
+	echo " Your shell ($(readlink /proc/$$/exe)) is incapable"
+	echo " of supporting the 'array' feature, and therefore"
+	echo " cannot list servers. Automatically setting server to"
+	echo " the first available server. If you wish to change"
+	echo " this option, exit the script now and start with a"
+	echo " supported shell, such as zsh or bash."
+	echo " "
+	printline
+	echo " Press enter to continue, or terminate shell [Ctrl-C] to exit: "
+	read _
+	while IFS="|" read host ip location current_users max_users; do
+		if [ ! current_users -eq max_users ]; then
+			host=$(echo $host | sed 's/\([a-z0-9]\+\)\..*/\1/g')
+			break
+		fi
+	done <<< "$host_data"
+fi
 if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 	echo " ";
 	printline
