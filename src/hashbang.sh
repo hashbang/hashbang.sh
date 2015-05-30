@@ -308,7 +308,11 @@ if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 		echo " ";
 		echo -n " Creating your account... ";
 		format="{\"user\":\"$username\",\"key\":\"$public_key\",\"host\":\"$host\"}"
-		if curl -H 'Content-Type: application/json' -d '$format' https://hashbang.sh/user/create 2>&-; then
+		headers="$(mktemp)"
+		output="$(curl -H "Content-Type: application/json" -d "$format" https://hashbang.sh/user/create -D $headers 2>&-)"
+		awkpr2='{print $2}'
+		status="$(cat $headers | head -n 1 | awk '{print $2}' )"
+		if [ $status -eq 200 ]; then
 			echo " Account Created!"
 		else
 			echo " Account creation failed: $(echo $output | sed -e 's/.*\"message\": \?\"\([^"]\+\)\".*/\1/')";
