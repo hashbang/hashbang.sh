@@ -11,6 +11,13 @@ if [ "x$BASH" != "x" ]; then
     set -o pipefail 
 fi
 
+# Fetch host data for later.
+# If this fails there is no point in proceeding
+host_data=$(mktemp)
+curl -sH 'Accept:text/plain' https://hashbang.sh/server/stats > $host_data
+err=$?
+echo >> $host_data
+
 bail() {
 	echo " "
 	echo " If you think this is a bug, please report it to ";
@@ -18,8 +25,10 @@ bail() {
 	echo " ";
 	echo " The installer will not continue from here...";
 	echo " ";
+	rm $host_data
 	exit 1
 }
+[ ! $err -eq 0 ] && bail
 
 # check if can write to file
 checkutil() {
@@ -81,7 +90,7 @@ ask() {
 
 # generate ssh kypair
 makekey() {
-	( checkutil ssh-keygen && checkutil ssh ) || exit 1
+	( checkutil ssh-keygen && checkutil ssh ) || bail
 	if [ ! -e "$1" ]; then
 		ssh-keygen -t rsa -C "#! $username" -f "$1"
 		if [ ! $? ]; then
@@ -108,12 +117,6 @@ makekey() {
 		fi
 	fi
 }
-
-# Fetch host data for later.
-# If this fails there is no point in proceeding
-host_data=$(mktemp)
-curl -sH 'Accept:text/plain' https://hashbang.sh/server/stats > $host_data
-echo >> $host_data
 
 clear;
 echo "   _  _    __ ";
@@ -158,10 +161,10 @@ echo " NOTE: If you see this message, it is likely because something is";
 echo " not installed. Check the list below, and install any";
 echo " missing applications.";
 
-checkutil expr || exit 1
-checkutil gpg || exit 1
-( checkutil ssh-keygen && checkutil ssh ) || exit 1
-checkutil curl || exit 1
+checkutil expr || bail
+checkutil gpg || bail
+( checkutil ssh-keygen && checkutil ssh ) || bail
+checkutil curl || bail
 clear;
 
 echo " ";
