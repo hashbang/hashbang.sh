@@ -11,15 +11,24 @@ if [ "x$BASH" != "x" ]; then
     set -o pipefail 
 fi
 
+# Fetch host data for later.
+# If this fails there is no point in proceeding
+host_data=$(mktemp)
+curl -sH 'Accept:text/plain' https://hashbang.sh/server/stats > $host_data
+err=$?
+echo >> $host_data
+
 bail() {
-    echo " "
+	echo " "
 	echo " If you think this is a bug, please report it to ";
 	echo " -> https://github.com/hashbang/hashbang.sh/issues/";
 	echo " ";
 	echo " The installer will not continue from here...";
 	echo " ";
+	rm $host_data
 	exit 1
 }
+[ ! $err -eq 0 ] && bail
 
 # check if can write to file
 checkutil() {
@@ -81,7 +90,7 @@ ask() {
 
 # generate ssh kypair
 makekey() {
-	( checkutil ssh-keygen && checkutil ssh ) || exit 1
+	( checkutil ssh-keygen && checkutil ssh ) || bail
 	if [ ! -e "$1" ]; then
 		ssh-keygen -t rsa -C "#! $username" -f "$1"
 		if [ ! $? ]; then
@@ -108,10 +117,6 @@ makekey() {
 		fi
 	fi
 }
-
-# Fetch host data for later.
-# If this fails there is no point in proceeding
-host_data=$(curl -sH 'Accept:text/plain' https://hashbang.sh/server/stats)
 
 clear;
 echo "   _  _    __ ";
@@ -146,7 +151,7 @@ clear
 
 echo " ";
 echo " ";
-printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
+printf -- ' %72s\n' | tr ' ' -;
 echo " ";
 
 echo " First, your system must be properly configured with the required";
@@ -156,15 +161,15 @@ echo " NOTE: If you see this message, it is likely because something is";
 echo " not installed. Check the list below, and install any";
 echo " missing applications.";
 
-checkutil expr || exit 1
-checkutil gpg || exit 1
-( checkutil ssh-keygen && checkutil ssh ) || exit 1
-checkutil curl || exit 1
+checkutil expr || bail
+checkutil gpg || bail
+( checkutil ssh-keygen && checkutil ssh ) || bail
+checkutil curl || bail
 clear;
 
 echo " ";
 echo " ";
-printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
+printf -- ' %72s\n' | tr ' ' -;
 echo " ";
 
 
@@ -194,7 +199,7 @@ while [ "x$username" = "x" ]; do
 done
 
 echo " ";
-printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
+printf -- ' %72s\n' | tr ' ' -;
 echo " ";
 echo " Now we will need an SSH Public Key."
 echo " ";
@@ -256,16 +261,15 @@ if [ "x$public_key" = "x" ]; then
 fi
 
 n=0
-hosts=()
 echo
-printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
+printf -- ' %72s\n' | tr ' ' -;
 echo
 echo " Please choose a server to create your account on."
 echo
-printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
+printf -- ' %72s\n' | tr ' ' -;
 printf "  %-1s | %-4s | %-36s | %-8s | %-8s\n" \
     "#" "Host" "Location" "Users" "Latency"
-printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
+printf -- ' %72s\n' | tr ' ' -;
 while IFS="|" read host ip location current_users max_users; do
 	host=$(echo $host | sed 's/\([a-z0-9]\+\)\..*/\1/g')
 	latency=$(ping -c1 ${host}.hashbang.sh | head -n2 | tail -n1 | sed 's/.*=//g')
@@ -276,25 +280,25 @@ while IFS="|" read host ip location current_users max_users; do
 	    "$location" \
 	    "$current_users/$max_users" \
 	    "$latency"
-	hosts[$n]=$host
-done <<< "$host_data"
-printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
+done < $host_data
+printf -- ' %72s\n' | tr ' ' -;
 
 echo
 while true; do
 	echo -n " Enter Number 1-$n : "
 	read choice
-	if [[ "$choice" =~ ^[0-9]+$ ]] && \
-	   [[ "$choice" -ge 1 ]] && \
-	   [[ "$choice" -le $n ]]; then
+	number=$(echo "$choice" | awk '$0 ~/[^0-9]/ { print "no" }')
+	if [ "$number" != "no" ] && \
+	   [ "$choice" -ge 1 ] && \
+	   [ "$choice" -le $n ]; then
 	    break;
 	fi
 done
-host=${hosts[$choice]}
+host=$(cat $host_data | head -n $choice | tail -n1 | cut -d '|' -f1)
 
 if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 	echo " ";
-	printf ' ' && printf -- '-%.0s' {1..72}; printf '\n'
+	printf -- ' %72s\n' | tr ' ' -;
 	echo " ";
 	echo " We are going to create an account with the following information";
 	echo " ";
@@ -335,7 +339,7 @@ if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 	    fi
 
 	    if ask " Would you like an alias (shortcut) added to your .ssh/config?" Y ; then
-	        printf "\nHost hashbang\n  HostName ${host}.hashbang.sh\n  User %s\n  IdentityFile %s\n" \
+	        printf "\nHost hashbang\n  HostName ${host}\n  IdentitiesOnly yes\n  User %s\n  IdentityFile %s\n" \
 							"$username" "$private_keyfile" \
 	        >> ~/.ssh/config
 	        echo " You can now connect any time by entering the command:";
