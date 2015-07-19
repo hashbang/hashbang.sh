@@ -8,7 +8,7 @@ if [ "x$BASH" != "x" ]; then
 	shopt -s extglob
 	set -o posix
     # Bail out if any curl's fail
-    set -o pipefail 
+    set -o pipefail
 fi
 
 # Fetch host data for later.
@@ -307,7 +307,7 @@ if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 	echo " Host: $host";
 	echo " ";
 	if ask " Does this look correct?" Y ; then
-	
+
 	    echo " ";
 	    echo -n " Creating your account... ";
 	    if curl --silent -f -H "Content-Type: application/json" \
@@ -348,7 +348,7 @@ if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 	    else
 	        echo " You can now connect any time by entering the command:";
 	        echo " ";
-	        echo " > ssh ${username}@${host}.hashbang.sh";
+	        echo " > ssh ${username}@${host}";
 	    fi
 
 	else
@@ -358,9 +358,9 @@ if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 
 	if ask " Do you want us to log you in now?" Y; then
 	    if [ -e $private_keyfile ]; then
-	        ssh ${username}@${host}.hashbang.sh -i "$private_keyfile"
+	        ssh ${username}@${host} -i "$private_keyfile"
         else
-            ssh ${username}@${host}.hashbang.sh
+            ssh ${username}@${host}
         fi
 	fi
 fi
