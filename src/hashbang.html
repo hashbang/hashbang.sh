@@ -35,7 +35,7 @@
   As an advanced alternative you can bypass using this script and hit our user
   provisioning API directly with an SSH Public Key and desired username:
 
-  > curl -d '{"user":"someuser","key":"'"$(cat ~/.ssh/id_rsa.pub)"'"}' -H 'Content-Type: application/json' https://hashbang.sh/user/create
+  > curl -d '{"user":"someuser","key":"'"$(cat ~/.ssh/id_rsa.pub)"'","host":"yourServer.hashbang.sh"}' -H 'Content-Type: application/json' https://hashbang.sh/user/create
 
   We look forward to seeing you on the other side.
 
