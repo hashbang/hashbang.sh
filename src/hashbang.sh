@@ -8,12 +8,12 @@ if [ "x$BASH" != "x" ]; then
 	shopt -s extglob
 	set -o posix
     # Bail out if any curl's fail
-    set -o pipefail 
+    set -o pipefail
 fi
 
 # Fetch host data for later.
 # If this fails there is no point in proceeding
-host_data=$(mktemp)
+host_data=$(mktemp /tmp/hashbang.XXXXXX)
 curl -sH 'Accept:text/plain' https://hashbang.sh/server/stats > $host_data
 err=$?
 echo >> $host_data
@@ -307,7 +307,6 @@ if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 	echo " Host: $host";
 	echo " ";
 	if ask " Does this look correct?" Y ; then
-	
 		echo " ";
 		echo -n " Creating your account... ";
 		format="{\"user\":\"$username\",\"key\":\"$public_key\",\"host\":\"$host\"}"
@@ -322,7 +321,6 @@ if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 			bail
 		fi
 		# run sed -i 's/    /\t/g' # through this later
-
 	    if ask " Would you like to add trusted/signed keys for our servers to your .ssh/known_hosts?" Y ; then
 	        echo " Downloading GPG keys"
 	        echo " "
@@ -352,7 +350,7 @@ if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 	    else
 	        echo " You can now connect any time by entering the command:";
 	        echo " ";
-	        echo " > ssh ${username}@${host}.hashbang.sh";
+	        echo " > ssh ${username}@${host}";
 	    fi
 
 	else
@@ -362,9 +360,9 @@ if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 
 	if ask " Do you want us to log you in now?" Y; then
 	    if [ -e $private_keyfile ]; then
-	        ssh ${username}@${host}.hashbang.sh -i "$private_keyfile"
+	        ssh ${username}@${host} -i "$private_keyfile"
         else
-            ssh ${username}@${host}.hashbang.sh
+            ssh ${username}@${host}
         fi
 	fi
 fi
