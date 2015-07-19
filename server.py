@@ -4,6 +4,7 @@ import os
 import sys
 import csv
 import ldap
+import ssl
 from subprocess import check_call, CalledProcessError
 from flask import Flask, send_from_directory, redirect, request, make_response
 from flask.ext.restful import Resource, Api
@@ -122,6 +123,7 @@ if __name__ == '__main__':
           ssl_options={
               "certfile": certfile,
               "keyfile": keyfile,
+              "ssl_version": ssl.PROTOCOL_TLSv1
           }
         )
         https_server.listen(https_port)
