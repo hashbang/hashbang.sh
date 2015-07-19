@@ -308,7 +308,7 @@ if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 		echo " ";
 		echo -n " Creating your account... ";
 		format="{\"user\":\"$username\",\"key\":\"$public_key\",\"host\":\"$host\"}"
-		headers="$(mktemp)"
+		headers="$(mktemp /tmp/hashbang.XXXXXX)"
 		output="$(curl -H "Content-Type: application/json" -d "$format" https://hashbang.sh/user/create -D $headers 2>&-)"
 		awkpr2='{print $2}'
 		status="$(cat $headers | head -n 1 | awk '{print $2}' )"
