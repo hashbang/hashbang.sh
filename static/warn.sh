@@ -3,7 +3,7 @@
 clear;
 echo "Blindly running unsecured one liners from the internet is ill advised."
 echo ""
-echo "This script could of easily run 'rm -rf /' on your computer and deleted"
+echo "This script could easily have run 'rm -rf /' on your computer and deleted"
 echo "all of your things. That would be a pretty mean thing to do, but not"
 echo "everyone has your best interests in mind on the internet. Instead, let's"
 echo "take this chance to learn a little about security."
