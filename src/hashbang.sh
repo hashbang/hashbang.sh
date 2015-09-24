@@ -176,7 +176,7 @@ echo " ";
 echo " To create your account we first need a username.";
 echo " ";
 echo " A valid username must:";
-echo "  * be between between 1-31 characters long";
+echo "  * be between between 1 and 31 characters long";
 echo "  * consist of only 0-9 and a-z (lowercase only)";
 echo "  * begin with a letter";
 echo " ";
@@ -188,6 +188,9 @@ echo " ";
 while [ "x$username" = "x" ]; do
 	printf " Username: ";
 	read input;
+
+	# Keep in sync with the description and
+	#  https://github.com/hashbang/provisor/blob/master/provisor/utils.py#L77
 	if echo "$input" | grep -E "^[a-z][a-z0-9]{0,30}$" >/dev/null; then
 		username="$input"
 	else
