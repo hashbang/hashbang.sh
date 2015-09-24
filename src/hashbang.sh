@@ -307,18 +307,20 @@ if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 	echo " Host: $host";
 	echo " ";
 	if ask " Does this look correct?" Y ; then
-
-	    echo " ";
-	    echo -n " Creating your account... ";
-	    if curl --silent -f -H "Content-Type: application/json" \
-	        -d "{\"user\":\"$username\",\"key\":\"$public_key\",\"host\":\"$host\"}" \
-	        https://hashbang.sh/user/create; then
-	        echo " Account Created!"
-	    else
-	        echo " Account creation failed.";
-	        bail
-	    fi
-
+		echo " ";
+		echo -n " Creating your account... ";
+		format="{\"user\":\"$username\",\"key\":\"$public_key\",\"host\":\"$host\"}"
+		headers="$(mktemp /tmp/hashbang.XXXXXX)"
+		output="$(curl -H "Content-Type: application/json" -d "$format" https://hashbang.sh/user/create -D $headers 2>&-)"
+		awkpr2='{print $2}'
+		status="$(cat $headers | head -n 1 | awk '{print $2}' )"
+		if [ $status -eq 200 ]; then
+			echo " Account Created!"
+		else
+			echo " Account creation failed: $(echo $output | sed -e 's/.*\"message\": \?\"\([^"]\+\)\".*/\1/')";
+			bail
+		fi
+		# run sed -i 's/    /\t/g' # through this later
 	    if ask " Would you like to add trusted/signed keys for our servers to your .ssh/known_hosts?" Y ; then
 	        echo " Downloading GPG keys"
 	        echo " "
