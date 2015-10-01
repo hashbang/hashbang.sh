@@ -20,4 +20,4 @@ RUN pip install -r requirements.txt
 
 EXPOSE 4443
 
-CMD ["python2.7", "server.py"]
+CMD ["python2.7", "-m", "http.server", "80"]
