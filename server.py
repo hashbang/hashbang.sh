@@ -84,6 +84,8 @@ class UserCreate(Resource):
             return { 'message': 'Unable to connect to LDAP server'}, 400
         except ldap.ALREADY_EXISTS:
             return { 'message': 'User already exists'}, 400
+        except provisor.UNKNOWN_HOST:
+            return { 'message': 'Unknown shell server' }, 400
         except:
             sys.stderr.write("Unexpected Error: %s\n" % sys.exc_info()[0])
             return { 'message': 'User creation script failed'}, 400
