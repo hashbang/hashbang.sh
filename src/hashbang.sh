@@ -7,8 +7,8 @@
 if [ "x$BASH" != "x" ]; then
 	shopt -s extglob
 	set -o posix
-    # Bail out if any curl's fail
-    set -o pipefail
+	# Bail out if any curl fails
+	set -o pipefail
 fi
 
 # Fetch host data for later.
@@ -69,7 +69,7 @@ ask() {
 		fi
 
 		# Ask the question
-        echo " "
+		echo " "
 		printf "%s [%s] " "$1" "$prompt"
 		read REPLY
 
@@ -85,7 +85,7 @@ ask() {
 		esac
 
 	done
-    echo " "
+	echo " "
 }
 
 # generate ssh kypair
@@ -271,18 +271,18 @@ echo " Please choose a server to create your account on."
 echo
 printf -- ' %72s\n' | tr ' ' -;
 printf "  %-1s | %-4s | %-36s | %-8s | %-8s\n" \
-    "#" "Host" "Location" "Users" "Latency"
+	"#" "Host" "Location" "Users" "Latency"
 printf -- ' %72s\n' | tr ' ' -;
 while IFS="|" read host ip location current_users max_users; do
 	host=$(echo $host | sed 's/\([a-z0-9]\+\)\..*/\1/g')
 	latency=$(ping -c1 ${host}.hashbang.sh | head -n2 | tail -n1 | sed 's/.*=//g')
 	n=$((n+1))
 	printf "  %-1s | %-4s | %-36s | %8s | %-8s\n" \
-	    "$n" \
-	    "$host" \
-	    "$location" \
-	    "$current_users/$max_users" \
-	    "$latency"
+		"$n" \
+		"$host" \
+		"$location" \
+		"$current_users/$max_users" \
+		"$latency"
 done < $host_data
 printf -- ' %72s\n' | tr ' ' -;
 
@@ -294,7 +294,7 @@ while true; do
 	if [ "$number" != "no" ] && \
 	   [ "$choice" -ge 1 ] && \
 	   [ "$choice" -le $n ]; then
-	    break;
+		break;
 	fi
 done
 host=$(cat $host_data | head -n $choice | tail -n1 | cut -d '|' -f1)
@@ -323,50 +323,50 @@ if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 			echo " Account creation failed: $(echo $output | sed -e 's/.*\"message\": \?\"\([^"]\+\)\".*/\1/')";
 			bail
 		fi
-		# run sed -i 's/    /\t/g' # through this later
-	    if ask " Would you like to add trusted/signed keys for our servers to your .ssh/known_hosts?" Y ; then
-	        echo " Downloading GPG keys"
-	        echo " "
-	        gpg --recv-keys 0xD2C4C74D8FAA96F5
-	        echo " "
-	        echo " Downloading key list"
-	        echo " "
-	        data="$(curl -s https://hashbang.sh/static/known_hosts.asc)"
-	        printf %s "$data" | gpg --verify
-	        if [ ! $? -eq 0 ]; then
-	            echo " "
-	            echo " Unable to verify keys"
-	            bail
-	        fi
-	        printf %s "$data" | grep "hashbang.sh" >> ~/.ssh/known_hosts
-	        echo " "
-	        echo " Key scanned and saved"
-	    fi
 
-	    if ask " Would you like an alias (shortcut) added to your .ssh/config?" Y ; then
-	        printf "\nHost hashbang\n  HostName ${host}\n  IdentitiesOnly yes\n  User %s\n  IdentityFile %s\n" \
+		if ask " Would you like to add trusted/signed keys for our servers to your .ssh/known_hosts?" Y ; then
+			echo " Downloading GPG keys"
+			echo " "
+			gpg --recv-keys 0xD2C4C74D8FAA96F5
+			echo " "
+			echo " Downloading key list"
+			echo " "
+			data="$(curl -s https://hashbang.sh/static/known_hosts.asc)"
+			printf %s "$data" | gpg --verify
+			if [ ! $? -eq 0 ]; then
+				echo " "
+				echo " Unable to verify keys"
+				bail
+			fi
+			printf %s "$data" | grep "hashbang.sh" >> ~/.ssh/known_hosts
+			echo " "
+			echo " Key scanned and saved"
+		fi
+
+		if ask " Would you like an alias (shortcut) added to your .ssh/config?" Y ; then
+			printf "\nHost hashbang\n  HostName ${host}\n  IdentitiesOnly yes\n  User %s\n  IdentityFile %s\n" \
 							"$username" "$private_keyfile" \
-	        >> ~/.ssh/config
-	        echo " You can now connect any time by entering the command:";
-	        echo " ";
-	        echo " > ssh hashbang";
-	    else
-	        echo " You can now connect any time by entering the command:";
-	        echo " ";
-	        echo " > ssh ${username}@${host}";
-	    fi
+			>> ~/.ssh/config
+			echo " You can now connect any time by entering the command:";
+			echo " ";
+			echo " > ssh hashbang";
+		else
+			echo " You can now connect any time by entering the command:";
+			echo " ";
+			echo " > ssh ${username}@${host}";
+		fi
 
 	else
-	    echo " Please re-run script to make corrections.";
+		echo " Please re-run script to make corrections.";
 		bail
 	fi
 
 	if ask " Do you want us to log you in now?" Y; then
-	    if [ -e $private_keyfile ]; then
-	        ssh ${username}@${host} -i "$private_keyfile"
-        else
-            ssh ${username}@${host}
-        fi
+		if [ -e $private_keyfile ]; then
+			ssh ${username}@${host} -i "$private_keyfile"
+		else
+			ssh ${username}@${host}
+		fi
 	fi
 fi
 
