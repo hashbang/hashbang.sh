@@ -210,7 +210,7 @@ echo " SSH Keys are a type of public/private key system that let you identify";
 echo " yourself to systems like this one without ever sending your password ";
 echo " over the internet, and thus by nature we won't even know what it is";
 
-for keytype in id_rsa id_dsa id_ecdsa id_ed25519; do
+for keytype in id_ed25519 id_ecdsa id_rsa id_dsa; do
 	if [ -e ~/.ssh/${keytype}.pub ] && [ -e ~/.ssh/${keytype} ]; then
 		if ask " We found a public key in [ ~/.ssh/${keytype}.pub ]. Use this key?" Y; then
 			private_keyfile="~/.ssh/${keytype}"
