@@ -7,7 +7,7 @@
 if [ "x$BASH" != "x" ]; then
 	shopt -s extglob
 	set -o posix
-	# Bail out if any curl's fail
+	# Bail out if any curl fails
 	set -o pipefail
 fi
 
