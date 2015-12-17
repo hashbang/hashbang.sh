@@ -14,7 +14,7 @@ fi
 # Fetch host data for later.
 # If this fails there is no point in proceeding
 host_data=$(mktemp /tmp/hashbang.XXXXXX)
-curl -sH 'Accept:text/plain' https://hashbang.sh/server/stats > $host_data
+curl -sfH 'Accept:text/plain' https://hashbang.sh/server/stats > $host_data
 err=$?
 echo >> $host_data
 
