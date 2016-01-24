@@ -78,7 +78,7 @@ class UserCreate(Resource):
             p.add_user(
                 username=str(args['user']),
                 pubkey=args['key'],
-                hostname="%s.hashbang.sh" % args['host']
+                hostname=args['host']
             )
         except ldap.SERVER_DOWN:
             return { 'message': 'Unable to connect to LDAP server'}, 400
