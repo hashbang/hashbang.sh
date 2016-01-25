@@ -12,7 +12,7 @@ from flask.ext.restful.reqparse import RequestParser
 from tornado.wsgi import WSGIContainer
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
-from provisor import Provisor
+from provisor import Provisor, UNKNOWN_HOST
 from provisor.utils import validate_pubkey as pubkey
 from provisor.utils import validate_username as username
 
@@ -84,7 +84,7 @@ class UserCreate(Resource):
             return { 'message': 'Unable to connect to LDAP server'}, 400
         except ldap.ALREADY_EXISTS:
             return { 'message': 'User already exists'}, 400
-        except provisor.UNKNOWN_HOST:
+        except UNKNOWN_HOST:
             return { 'message': 'Unknown shell server' }, 400
         except:
             sys.stderr.write("Unexpected Error: %s\n" % sys.exc_info()[0])
