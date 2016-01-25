@@ -2,6 +2,7 @@
 
 import os
 import sys
+import traceback
 import csv
 import ldap
 import ssl
@@ -88,7 +89,10 @@ class UserCreate(Resource):
         except UNKNOWN_HOST:
             return { 'message': 'Unknown shell server' }, 400
         except:
-            sys.stderr.write("Unexpected Error: %s\n" % sys.exc_info()[0])
+            (typ, value, tb) = sys.exc_info()
+            sys.stderr.write("Unexpected Error: %s\n" % typ)
+            sys.stderr.write("\t%s\n" % value)
+            traceback.print_tb(tb)
             return { 'message': 'User creation script failed'}, 400
 
         return {'message': 'success'}
