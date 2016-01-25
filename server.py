@@ -12,7 +12,8 @@ from flask.ext.restful.reqparse import RequestParser
 from tornado.wsgi import WSGIContainer
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
-from provisor import Provisor, UNKNOWN_HOST
+from provisor import Provisor
+from provisor.provisor import UNKNOWN_HOST
 from provisor.utils import validate_pubkey as pubkey
 from provisor.utils import validate_username as username
 
