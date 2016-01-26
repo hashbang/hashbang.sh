@@ -1,0 +1,12 @@
+sudo: false
+
+addons:
+  apt:
+    packages:
+    - gnupg
+    - shellcheck
+
+git:
+  depth: 3
+
+script: ./test.sh

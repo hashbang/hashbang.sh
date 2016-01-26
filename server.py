@@ -2,6 +2,7 @@
 
 import os
 import sys
+import traceback
 import csv
 import ldap
 import ssl
@@ -13,6 +14,7 @@ from tornado.wsgi import WSGIContainer
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 from provisor import Provisor
+from provisor.provisor import UNKNOWN_HOST
 from provisor.utils import validate_pubkey as pubkey
 from provisor.utils import validate_username as username
 
@@ -78,16 +80,19 @@ class UserCreate(Resource):
             p.add_user(
                 username=str(args['user']),
                 pubkey=args['key'],
-                hostname="%s.hashbang.sh" % args['host']
+                hostname=args['host']
             )
         except ldap.SERVER_DOWN:
             return { 'message': 'Unable to connect to LDAP server'}, 400
         except ldap.ALREADY_EXISTS:
             return { 'message': 'User already exists'}, 400
-        except provisor.UNKNOWN_HOST:
+        except UNKNOWN_HOST:
             return { 'message': 'Unknown shell server' }, 400
         except:
-            sys.stderr.write("Unexpected Error: %s\n" % sys.exc_info()[0])
+            (typ, value, tb) = sys.exc_info()
+            sys.stderr.write("Unexpected Error: %s\n" % typ)
+            sys.stderr.write("\t%s\n" % value)
+            traceback.print_tb(tb)
             return { 'message': 'User creation script failed'}, 400
 
         return {'message': 'success'}
