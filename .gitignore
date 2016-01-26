@@ -1,3 +1,5 @@
-static/index.html
-static/known_hosts.asc
 certs/*
+
+index.html.data
+known_hosts
+static/index.html.plain
