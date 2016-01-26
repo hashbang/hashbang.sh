@@ -12,3 +12,8 @@ diff -q index.html.data static/index.html.plain
 
 gpg -d -o known_hosts static/known_hosts.asc
 diff -q known_hosts src/known_hosts
+
+# Shellcheck the script
+#  Do not error-out for now
+#  Ignore warning SC2029 “SSH argument is evaluated client-side”
+shellcheck -e SC2029 src/hashbang.sh || true
