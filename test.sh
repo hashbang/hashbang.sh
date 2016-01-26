@@ -1,8 +1,11 @@
 #!/bin/sh -ev
 
+# Actually rebuild the static pages
 make all
 
-#gpg --recv-keys --keyserver keys.gnupg.net 0xD2C4C74D8FAA96F5
+
+# Check the OpenPGP signatures
+gpg --recv-keys --keyserver keys.gnupg.net 0xD2C4C74D8FAA96F5
 
 gpg -d -o index.html.data static/index.html
 diff -q index.html.data static/index.html.plain
