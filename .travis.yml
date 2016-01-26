@@ -1,10 +1,10 @@
-sudo: false
+sudo: required
+dist: trusty
 
-addons:
-  apt:
-    packages:
-    - gnupg
-    - shellcheck
+before_install:
+  - echo 'deb http://archive.ubuntu.com/ubuntu trusty-backports main restricted universe multiverse' | sudo tee -a /etc/apt/sources.list
+  - sudo apt-get -qq update
+  - sudo apt-get install -y gnupg shellcheck
 
 git:
   depth: 3
