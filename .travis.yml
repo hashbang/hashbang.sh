@@ -1,0 +1,9 @@
+addons:
+  apt:
+    - gnupg
+    - shellcheck
+
+git:
+  depth: 1
+
+script: ./test.sh
