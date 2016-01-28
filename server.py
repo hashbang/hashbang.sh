@@ -108,20 +108,8 @@ class ServerStats(Resource):
         return server_stats
 
 
-class PortsMap(Resource):
-
-    def get(self,out_format='json'):
-        try:
-            ports_map = p.list_userports()
-        except ldap.SERVER_DOWN:
-            return { 'message': 'Unable to connect to LDAP server'}, 400
-
-        return ports_map
-
-
 api.add_resource(UserCreate, '/user/create')
 api.add_resource(ServerStats, '/server/stats')
-api.add_resource(PortsMap, '/server/portsmap')
 
 @app.route('/',methods=["GET"])
 def root():
