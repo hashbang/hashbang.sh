@@ -19,6 +19,7 @@ from provisor.utils import validate_pubkey as pubkey
 from provisor.utils import validate_username as username
 
 app = Flask(__name__)
+app.config['RESTFUL_JSON'] = {"indent": 4}
 
 api = Api(app)
 
