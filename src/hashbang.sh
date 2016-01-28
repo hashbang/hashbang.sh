@@ -341,16 +341,17 @@ if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 			echo " "
 			echo " Downloading key list"
 			echo " "
-			data="$(curl -s https://hashbang.sh/static/known_hosts.asc)"
-			printf '%s' "$data" | gpg --verify
+			curl -s 'https://hashbang.sh/static/known_hosts.asc' |
+			    gpg --decrypt --output "${tmp_hb_dir}/known_hosts"
+
 			if [ ! $? -eq 0 ]; then
 				echo " "
 				echo " Unable to verify keys"
 				bail
 			fi
-			printf '%s' "$data" | grep "hashbang.sh" >> ~/.ssh/known_hosts
+			cat "${tmp_hb_dir}/known_hosts" >> ~/.ssh/known_hosts
 			echo " "
-			echo " Key scanned and saved"
+			echo " Keys downloaded and saved"
 		fi
 
 		if ask " Would you like an alias (shortcut) added to your .ssh/config?" Y ; then
