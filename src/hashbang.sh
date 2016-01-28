@@ -14,9 +14,9 @@ fi
 # Fetch host data for later.
 # If this fails there is no point in proceeding
 host_data=$(mktemp /tmp/hashbang.XXXXXX)
-curl -sfH 'Accept:text/plain' https://hashbang.sh/server/stats > $host_data
+curl -sfH 'Accept:text/plain' https://hashbang.sh/server/stats > "$host_data"
 err=$?
-echo >> $host_data
+echo >> "$host_data"
 
 bail() {
 	echo " "
@@ -25,14 +25,14 @@ bail() {
 	echo " ";
 	echo " The installer will not continue from here...";
 	echo " ";
-	rm $host_data
+	rm -- "$host_data"
 	exit 1
 }
 [ ! $err -eq 0 ] && bail
 
 # check if can write to file
 checkutil() {
-	echo -n " * Checking for $1..."
+	printf '%s' " * Checking for $1..."
 	if which "$1"; then
 		printf "ok!\n";
 		return 0;
@@ -98,7 +98,7 @@ makekey() {
 		else
 			chmod 600 "$1"
 			echo " Successfully generated key"
-			break
+			return
 		fi
 	else
 		if ask " Unable to generate key, do you want to delete the file?" N; then
@@ -213,7 +213,7 @@ echo " over the internet, and thus by nature we won't even know what it is";
 for keytype in id_ed25519 id_ecdsa id_rsa id_dsa; do
 	if [ -e ~/.ssh/${keytype}.pub ] && [ -e ~/.ssh/${keytype} ]; then
 		if ask " We found a public key in [ ~/.ssh/${keytype}.pub ]. Use this key?" Y; then
-			private_keyfile="~/.ssh/${keytype}"
+			private_keyfile="${HOME}/.ssh/${keytype}"
 			public_key="$(cat ~/.ssh/${keytype}.pub)"
 			break
 		fi
@@ -224,7 +224,7 @@ if [ "x$public_key" = "x" ]; then
 	echo " No SSH key for login to server found, attempting to generate one"
 	while true; do
 		echo " "
-		echo -n " Path to new or existing connection key (~/.ssh/id_rsa): ";
+		printf " Path to new or existing connection key (~/.ssh/id_rsa): "
 		read private_keyfile
 		if [ "x$private_keyfile" = "x" ]; then
 			private_keyfile="$HOME/.ssh/id_rsa"
@@ -270,25 +270,25 @@ echo
 echo " Please choose a server to create your account on."
 echo
 printf -- ' %72s\n' | tr ' ' -;
-printf "  %-1s | %-4s | %-36s | %-8s | %-8s\n" \
+printf -- '  %-1s | %-4s | %-36s | %-8s | %-8s\n' \
 	"#" "Host" "Location" "Users" "Latency"
 printf -- ' %72s\n' | tr ' ' -;
-while IFS="|" read host ip location current_users max_users; do
-	host=$(echo $host | sed 's/\([a-z0-9]\+\)\..*/\1/g')
-	latency=$(ping -c 1 ${host}.hashbang.sh | head -n2 | tail -n1 | sed 's/.*=//g')
+while IFS="|" read host _ location current_users max_users; do
+	host=$(echo "$host" | sed 's/\([a-z0-9]\+\)\..*/\1/g')
+	latency=$(ping -c 1 "${host}.hashbang.sh" | head -n2 | tail -n1 | sed 's/.*=//g')
 	n=$((n+1))
-	printf "  %-1s | %-4s | %-36s | %8s | %-8s\n" \
+	printf -- '  %-1s | %-4s | %-36s | %8s | %-8s\n' \
 		"$n" \
 		"$host" \
 		"$location" \
 		"$current_users/$max_users" \
 		"$latency"
-done < $host_data
+done < "$host_data"
 printf -- ' %72s\n' | tr ' ' -;
 
 echo
 while true; do
-	echo -n " Enter Number 1-$n : "
+	printf ' Enter Number 1-%i : ' "$n"
 	read choice
 	number=$(echo "$choice" | awk '$0 ~/[^0-9]/ { print "no" }')
 	if [ "$number" != "no" ] && \
@@ -297,30 +297,29 @@ while true; do
 		break;
 	fi
 done
-host=$(cat $host_data | head -n $choice | tail -n1 | cut -d '|' -f1)
+host=$(head -n "$choice" "$host_data" | tail -n1 | cut -d \| -f1)
 
 if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 	echo " ";
 	printf -- ' %72s\n' | tr ' ' -;
 	echo " ";
 	echo " We are going to create an account with the following information";
-	echo " ";
+	echo
 	echo " Username: $username";
 	echo " Public Key: ${private_keyfile}.pub";
 	echo " Host: $host";
-	echo " ";
+	echo
 	if ask " Does this look correct?" Y ; then
-		echo " ";
-		echo -n " Creating your account... ";
+		echo
+		printf ' Creating your account... '
 		format="{\"user\":\"$username\",\"key\":\"$public_key\",\"host\":\"$host\"}"
 		headers="$(mktemp /tmp/hashbang.XXXXXX)"
-		output="$(curl -H "Content-Type: application/json" -d "$format" https://hashbang.sh/user/create -D $headers 2>&-)"
-		awkpr2='{print $2}'
-		status="$(cat $headers | head -n 1 | awk '{print $2}' )"
-		if [ $status -eq 200 ]; then
+		output=$(curl -H "Content-Type: application/json" -d "$format" https://hashbang.sh/user/create -D "$headers" 2>&-)
+		status=$(head -n 1 "$headers" | awk '{print $2}')
+		if [ "$status" -eq 200 ]; then
 			echo " Account Created!"
 		else
-			echo " Account creation failed: $(echo $output | sed -e 's/.*\"message\": \?\"\([^"]\+\)\".*/\1/')";
+			echo " Account creation failed: $(echo "$output" | sed -e 's/.*\"message\": \?\"\([^\"]\+\)\".*/\1/')";
 			bail
 		fi
 
@@ -332,20 +331,20 @@ if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 			echo " Downloading key list"
 			echo " "
 			data="$(curl -s https://hashbang.sh/static/known_hosts.asc)"
-			printf %s "$data" | gpg --verify
+			printf '%s' "$data" | gpg --verify
 			if [ ! $? -eq 0 ]; then
 				echo " "
 				echo " Unable to verify keys"
 				bail
 			fi
-			printf %s "$data" | grep "hashbang.sh" >> ~/.ssh/known_hosts
+			printf '%s' "$data" | grep "hashbang.sh" >> ~/.ssh/known_hosts
 			echo " "
 			echo " Key scanned and saved"
 		fi
 
 		if ask " Would you like an alias (shortcut) added to your .ssh/config?" Y ; then
-			printf "\nHost hashbang\n  HostName ${host}\n  IdentitiesOnly yes\n  User %s\n  IdentityFile %s\n" \
-							"$username" "$private_keyfile" \
+			printf '\nHost hashbang\n  HostName %s\n  IdentitiesOnly yes\n  User %s\n  IdentityFile %s\n' \
+			       "${host}" "$username" "$private_keyfile" \
 			>> ~/.ssh/config
 			echo " You can now connect any time by entering the command:";
 			echo " ";
@@ -362,10 +361,10 @@ if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 	fi
 
 	if ask " Do you want us to log you in now?" Y; then
-		if [ -e $private_keyfile ]; then
-			ssh ${username}@${host} -i "$private_keyfile"
+		if [ -e "$private_keyfile" ]; then
+			ssh -i "$private_keyfile" "${username}@${host}"
 		else
-			ssh ${username}@${host}
+			ssh "${username}@${host}"
 		fi
 	fi
 fi
