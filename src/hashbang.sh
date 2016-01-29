@@ -11,9 +11,21 @@ if [ "x$BASH" != "x" ]; then
 	set -o pipefail
 fi
 
+# POSIX doesn't specify mktemp(1).
+# This was checked against manpages for:
+#  - OpenBSD: http://www.openbsd.org/cgi-bin/man.cgi/OpenBSD-current/man1/mktemp.1?query=mktemp&sec=1
+#  - FreeBSD: https://www.freebsd.org/cgi/man.cgi?query=mktemp&sektion=1
+#  - OS X 10.9: https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/mktemp.1.html
+#  - Todd Miller's mktemp: http://www.mktemp.org/manual.html
+#  - Solaris 10: https://docs.oracle.com/cd/E23823_01/html/816-5165/mktemp-1.html
+#  - HP Tru64 UNIX: https://web.archive.org/web/20120117215524/http://h30097.www3.hp.com/docs/base_doc/DOCUMENTATION/V51B_HTML/MAN/MAN1/0251____.HTM
+#  - GNU coreutils: https://www.gnu.org/software/coreutils/manual/html_node/mktemp-invocation.html#mktemp-invocation
+tmp_hb_dir="$(mktemp -d -t hashbang.XXXXXX)"
+trap 'rm -rf -- "${tmp_hb_dir}"' EXIT
+
 # Fetch host data for later.
 # If this fails there is no point in proceeding
-host_data=$(mktemp /tmp/hashbang.XXXXXX)
+host_data="${tmp_hb_dir}/server_stats"
 curl -sfH 'Accept:text/plain' https://hashbang.sh/server/stats > "$host_data"
 err=$?
 echo >> "$host_data"
@@ -25,7 +37,6 @@ bail() {
 	echo " ";
 	echo " The installer will not continue from here...";
 	echo " ";
-	rm -- "$host_data"
 	exit 1
 }
 [ ! $err -eq 0 ] && bail
@@ -313,7 +324,7 @@ if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 		echo
 		printf ' Creating your account... '
 		format="{\"user\":\"$username\",\"key\":\"$public_key\",\"host\":\"$host\"}"
-		headers="$(mktemp /tmp/hashbang.XXXXXX)"
+		headers="${tmp_hb_dir}/create_headers"
 		output=$(curl -H "Content-Type: application/json" -d "$format" https://hashbang.sh/user/create -D "$headers" 2>&-)
 		status=$(head -n 1 "$headers" | awk '{print $2}')
 		if [ "$status" -eq 200 ]; then
@@ -330,16 +341,17 @@ if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 			echo " "
 			echo " Downloading key list"
 			echo " "
-			data="$(curl -s https://hashbang.sh/static/known_hosts.asc)"
-			printf '%s' "$data" | gpg --verify
+			curl -s 'https://hashbang.sh/static/known_hosts.asc' |
+			    gpg --decrypt --output "${tmp_hb_dir}/known_hosts"
+
 			if [ ! $? -eq 0 ]; then
 				echo " "
 				echo " Unable to verify keys"
 				bail
 			fi
-			printf '%s' "$data" | grep "hashbang.sh" >> ~/.ssh/known_hosts
+			cat "${tmp_hb_dir}/known_hosts" >> ~/.ssh/known_hosts
 			echo " "
-			echo " Key scanned and saved"
+			echo " Keys downloaded and saved"
 		fi
 
 		if ask " Would you like an alias (shortcut) added to your .ssh/config?" Y ; then

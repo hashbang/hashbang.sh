@@ -138,9 +138,21 @@ if [ "x$BASH" != "x" ]; then
 	set -o pipefail
 fi
 
+# POSIX doesn't specify mktemp(1).
+# This was checked against manpages for:
+#  - OpenBSD: http://www.openbsd.org/cgi-bin/man.cgi/OpenBSD-current/man1/mktemp.1?query=mktemp&sec=1
+#  - FreeBSD: https://www.freebsd.org/cgi/man.cgi?query=mktemp&sektion=1
+#  - OS X 10.9: https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/mktemp.1.html
+#  - Todd Miller's mktemp: http://www.mktemp.org/manual.html
+#  - Solaris 10: https://docs.oracle.com/cd/E23823_01/html/816-5165/mktemp-1.html
+#  - HP Tru64 UNIX: https://web.archive.org/web/20120117215524/http://h30097.www3.hp.com/docs/base_doc/DOCUMENTATION/V51B_HTML/MAN/MAN1/0251____.HTM
+#  - GNU coreutils: https://www.gnu.org/software/coreutils/manual/html_node/mktemp-invocation.html#mktemp-invocation
+tmp_hb_dir="$(mktemp -d -t hashbang.XXXXXX)"
+trap 'rm -rf -- "${tmp_hb_dir}"' EXIT
+
 # Fetch host data for later.
 # If this fails there is no point in proceeding
-host_data=$(mktemp /tmp/hashbang.XXXXXX)
+host_data="${tmp_hb_dir}/server_stats"
 curl -sfH 'Accept:text/plain' https://hashbang.sh/server/stats > "$host_data"
 err=$?
 echo >> "$host_data"
@@ -152,7 +164,6 @@ bail() {
 	echo " ";
 	echo " The installer will not continue from here...";
 	echo " ";
-	rm -- "$host_data"
 	exit 1
 }
 [ ! $err -eq 0 ] && bail
@@ -440,7 +451,7 @@ if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 		echo
 		printf ' Creating your account... '
 		format="{\"user\":\"$username\",\"key\":\"$public_key\",\"host\":\"$host\"}"
-		headers="$(mktemp /tmp/hashbang.XXXXXX)"
+		headers="${tmp_hb_dir}/create_headers"
 		output=$(curl -H "Content-Type: application/json" -d "$format" https://hashbang.sh/user/create -D "$headers" 2>&-)
 		status=$(head -n 1 "$headers" | awk '{print $2}')
 		if [ "$status" -eq 200 ]; then
@@ -457,16 +468,17 @@ if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 			echo " "
 			echo " Downloading key list"
 			echo " "
-			data="$(curl -s https://hashbang.sh/static/known_hosts.asc)"
-			printf '%s' "$data" | gpg --verify
+			curl -s 'https://hashbang.sh/static/known_hosts.asc' |
+			    gpg --decrypt --output "${tmp_hb_dir}/known_hosts"
+
 			if [ ! $? -eq 0 ]; then
 				echo " "
 				echo " Unable to verify keys"
 				bail
 			fi
-			printf '%s' "$data" | grep "hashbang.sh" >> ~/.ssh/known_hosts
+			cat "${tmp_hb_dir}/known_hosts" >> ~/.ssh/known_hosts
 			echo " "
-			echo " Key scanned and saved"
+			echo " Keys downloaded and saved"
 		fi
 
 		if ask " Would you like an alias (shortcut) added to your .ssh/config?" Y ; then
@@ -501,17 +513,17 @@ fi
 exit 0
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBCgAGBQJWqZvJAAoJENLEx02Pqpb11DkQAJ5GqjTGEPGLfoDn7mLmd3dH
-E6k8u5cAoZszAzyMUgLWLX7YWNrKL3nQKkVm7+SX/cRiQCf/owrRSe1LGPvpzSeA
-3RXPOjzEvpgFAeu+IgLBjYWFjad4kFQSMP0m5iE8yKbBO483MqHRK6g9ZscG9Qeg
-F2wriLnJ3ZnuqLRC55InFWU9slVqYfxYZfwIPCqUlxC4aN+CR5BIuf3zjVLoCyMF
-zjHPnaK9boE9crUQI6tOIPSFjLYVqgXkPzenPKVADL0ytHB3DfGK9UifFD6zSbMn
-+jwmzcdyl+mcAaB69T6g9c0Cp/LL+qytqSGMAoJL0596feB55iEJh9AUFHELSUXZ
-/MxPiYKkXyI+k2ZL2fk9nN3RDVD02awuF8U33+FQVPFZLq8P60PEqsRI5fepp+Ht
-Pp2eqq9hERSvx0t88EXXSo9WBlv5knxcqT5QT9kI4NlS5N86ktburERcKLGschQw
-+ltKX0uXtW2MemYviaY/x0Rsj2OZ/sPEVteROaLKihqIhcdlv476y1bYfHQSMss2
-A5aOm5vH/kf8udzLxPFdEMpKDjratmKsTXHde+QiJbTP+jScQvTTR1gS06TkW+7y
-MgVFMLo+qMg8u3SXnfMLHeAx8b0lHKLMylRPiSGqoGoEpmxxf2rXyvPghqyUPISg
-tj+mLXSMPFy85qQSIm1L
-=pUTj
+iQIcBAEBCgAGBQJWqi1TAAoJENLEx02Pqpb1e70QALY0cSAp17nu8F4zKfDvXjds
+bvIlDLjLZFFILeF3q6/siIABwPbCT82P22RQEDCZN2AF91nx8rVw1BtDJtCgiQnQ
+wk+HKwQCFoSGeViWMdNN6luuOwv8sr/OyxLKA3F2ZJGAC3zpsWV4HXWpL9/Rz+DI
+KP/TgVKXDf7tpa5mmxaEQO7zu/snTxO5/XzrX9MQtBBXQxRklCArI6iDE6haPvfH
+zTY00sgqZ5K2nuFHh2uqFghWSgccvCoAi9LropTi0JE2fbCy+XOe8mRDUqkoVXks
+CEjwLjvsjpw50c4kwc0eqYmzq66WtzTAN3usTJ5SzhbO4l+KVNw7Wg90pkH8O0Zb
+c5v0xT7koQsKg3WtxHrxYHwwr4Con1hyF8EhEXX6rlcGDpzAYTZrLlGh7aQPCB7u
+DJ2CDMlBg4LjcHhfEueaEW4BK3E2X7HdI91FWLGJ3bWPfQdS7wCiTorFCgy2/Clr
+1gpBlY+JPKZ5nsSlpi2pDQ8G/U1GxjQ5cWBoLjRgQa3rUww2OTXDUNx0CRV/yGhh
+fKzqzKXQu+L0IrQj7HVIaC5YJPHqb79mRR7pfjgLCsUJVwWedd+4dhHB3s9spKXo
+DZbZRm2QzQSPcZduvoXqpWLm7hE6iiJeRfMlRqh38oKLgvV6Fa8+IuIP/ZyOG3uy
+2NyBNENJor9xyIuFy0hM
+=Rm7I
 -----END PGP SIGNATURE-----
