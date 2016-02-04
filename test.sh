@@ -6,7 +6,7 @@ make all
 
 # Check the OpenPGP signatures
 rm -f -- index.html.data known_hosts
-gpg --quiet -k 0xD2C4C74D8FAA96F6 ||
+gpg --quiet -k 0xD2C4C74D8FAA96F5 ||
     gpg --recv-keys --keyserver keys.gnupg.net 0xD2C4C74D8FAA96F5
 
 gpg -d -o index.html.data static/index.html
