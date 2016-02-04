@@ -337,7 +337,8 @@ if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 		if ask " Would you like to add trusted/signed keys for our servers to your .ssh/known_hosts?" Y ; then
 			echo " Downloading GPG keys"
 			echo " "
-			gpg --recv-keys 0xD2C4C74D8FAA96F5
+			gpg --keyserver keys.gnupg.net \
+			    --recv-keys 0xD2C4C74D8FAA96F5
 			echo " "
 			echo " Downloading key list"
 			echo " "

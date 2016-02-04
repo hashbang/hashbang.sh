@@ -464,7 +464,8 @@ if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 		if ask " Would you like to add trusted/signed keys for our servers to your .ssh/known_hosts?" Y ; then
 			echo " Downloading GPG keys"
 			echo " "
-			gpg --recv-keys 0xD2C4C74D8FAA96F5
+			gpg --keyserver keys.gnupg.net \
+			    --recv-keys 0xD2C4C74D8FAA96F5
 			echo " "
 			echo " Downloading key list"
 			echo " "
@@ -513,17 +514,17 @@ fi
 exit 0
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBCgAGBQJWqi1TAAoJENLEx02Pqpb1e70QALY0cSAp17nu8F4zKfDvXjds
-bvIlDLjLZFFILeF3q6/siIABwPbCT82P22RQEDCZN2AF91nx8rVw1BtDJtCgiQnQ
-wk+HKwQCFoSGeViWMdNN6luuOwv8sr/OyxLKA3F2ZJGAC3zpsWV4HXWpL9/Rz+DI
-KP/TgVKXDf7tpa5mmxaEQO7zu/snTxO5/XzrX9MQtBBXQxRklCArI6iDE6haPvfH
-zTY00sgqZ5K2nuFHh2uqFghWSgccvCoAi9LropTi0JE2fbCy+XOe8mRDUqkoVXks
-CEjwLjvsjpw50c4kwc0eqYmzq66WtzTAN3usTJ5SzhbO4l+KVNw7Wg90pkH8O0Zb
-c5v0xT7koQsKg3WtxHrxYHwwr4Con1hyF8EhEXX6rlcGDpzAYTZrLlGh7aQPCB7u
-DJ2CDMlBg4LjcHhfEueaEW4BK3E2X7HdI91FWLGJ3bWPfQdS7wCiTorFCgy2/Clr
-1gpBlY+JPKZ5nsSlpi2pDQ8G/U1GxjQ5cWBoLjRgQa3rUww2OTXDUNx0CRV/yGhh
-fKzqzKXQu+L0IrQj7HVIaC5YJPHqb79mRR7pfjgLCsUJVwWedd+4dhHB3s9spKXo
-DZbZRm2QzQSPcZduvoXqpWLm7hE6iiJeRfMlRqh38oKLgvV6Fa8+IuIP/ZyOG3uy
-2NyBNENJor9xyIuFy0hM
-=Rm7I
+iQIcBAEBCgAGBQJWs8usAAoJENLEx02Pqpb1c30QAJq+ljpBW61q1HlRU+y0K9rl
+tzuiKNvOWHz5E2TjlCBsJdthKNEv1OQORpm6sJEZe1crxY49tf9cQAJuECJbnoAt
+mZOzyUYTy6Yye2/dinnUWeBtULfq5qpOG0XVBCsPXBC6ZbRuYTk1Z7Ga21u8PzlY
+dXDiClmPnTbTY3gjrETioe3HsoJXEsfHvOwa4pbdeCwLj6hwNIif9z8eW/j+RvWa
+uknkucf8nB2+Z8/SWxEAI4zM+I0blmxjj3697drVYuKhhj9d2C7TYiGUKEvcdp9Y
+jP7nx/QfJLuqpa+mpGTqS4349mhFuwaFsIZOeDjsTYCKM6+oqOIjq8bHusJpE/yC
+DaLxYpC3n3o/1jDvGkFZwAAr0LDieL79OuS12SqbCQl8xsGg2Lke4MshTcRZVyW+
+RCd+vuX/KG2Pr2NNJ0wLhP6FI5dKadtJj3nL82X7A6nezULag3L8yB1tll3+FJSN
+cOO6/WifSrpm8eP3jGT7GITmTU+P4mDARqwn5M43yxpMEkfgo4ljm3/HFpiROHX7
+wz6s89tVuGJrnWLkLEJwen5AE925NExjobm5n2Aatxls4SGDZDLYROJdODEXWbDd
+XaNKl3ivOoZAercDYT1yLpAp8ZHcN7fWS2AIxmO28ptK+cjMkf8l/ORnIe4tnc1t
+aFCHmMFzwmJ78J1NKXg+
+=U/yu
 -----END PGP SIGNATURE-----
