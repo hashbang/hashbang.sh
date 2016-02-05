@@ -23,12 +23,10 @@ Hash: SHA512
 
   The safest method of running a script from a source you don't trust is to:
 
-  Download locally over SSL
-  > curl https://hashbang.sh >> hashbang.sh
 
-  Verify integrty with GPG (If available)
+  Download and verify integrity with GnuPG
   > gpg --recv-keys 0xD2C4C74D8FAA96F5
-  > gpg --verify hashbang.sh
+  > curl https://hashbang.sh | gpg -o hashbang.sh
 
   Inspect source code
   > less hashbang.sh
@@ -40,12 +38,14 @@ Hash: SHA512
   As an advanced alternative you can bypass using this script and hit our user
   provisioning API directly with an SSH Public Key and desired username:
 
-  > curl -d '{"user":"someuser","key":"'"$(cat ~/.ssh/id_rsa.pub)"'","host":"yourServer.hashbang.sh"}' -H 'Content-Type: application/json' https://hashbang.sh/user/create
+  > curl https://hashbang.sh/server/stats
+  { "server.hashbang.sh": { infos ...}, ... }
+  > curl -d '{"user":"someuser","key":"'"$(cat ~/.ssh/id_rsa.pub)"'","host":"someHost.hashbang.sh"}' -H 'Content-Type: application/json' https://hashbang.sh/user/create
 
   We look forward to seeing you on the other side.
 
   Note: #! has never provided user data to any government agency.
-  Pay close attention to the removal of this notice.
+        Pay close attention to the removal of this notice.
 
 - -->
 <!DOCTYPE html>
@@ -514,17 +514,17 @@ fi
 exit 0
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBCgAGBQJWs8usAAoJENLEx02Pqpb1c30QAJq+ljpBW61q1HlRU+y0K9rl
-tzuiKNvOWHz5E2TjlCBsJdthKNEv1OQORpm6sJEZe1crxY49tf9cQAJuECJbnoAt
-mZOzyUYTy6Yye2/dinnUWeBtULfq5qpOG0XVBCsPXBC6ZbRuYTk1Z7Ga21u8PzlY
-dXDiClmPnTbTY3gjrETioe3HsoJXEsfHvOwa4pbdeCwLj6hwNIif9z8eW/j+RvWa
-uknkucf8nB2+Z8/SWxEAI4zM+I0blmxjj3697drVYuKhhj9d2C7TYiGUKEvcdp9Y
-jP7nx/QfJLuqpa+mpGTqS4349mhFuwaFsIZOeDjsTYCKM6+oqOIjq8bHusJpE/yC
-DaLxYpC3n3o/1jDvGkFZwAAr0LDieL79OuS12SqbCQl8xsGg2Lke4MshTcRZVyW+
-RCd+vuX/KG2Pr2NNJ0wLhP6FI5dKadtJj3nL82X7A6nezULag3L8yB1tll3+FJSN
-cOO6/WifSrpm8eP3jGT7GITmTU+P4mDARqwn5M43yxpMEkfgo4ljm3/HFpiROHX7
-wz6s89tVuGJrnWLkLEJwen5AE925NExjobm5n2Aatxls4SGDZDLYROJdODEXWbDd
-XaNKl3ivOoZAercDYT1yLpAp8ZHcN7fWS2AIxmO28ptK+cjMkf8l/ORnIe4tnc1t
-aFCHmMFzwmJ78J1NKXg+
-=U/yu
+iQIcBAEBCgAGBQJWwKhCAAoJENLEx02Pqpb1KUwP/iujdV9jc2Conw1p7nEQF+ZS
+Ruft58eLLQFtIsbpyU9bMgD0ttXAuz72TATY0E+U7vyknMdZlvVLb+5MiTxgTVhN
+6o9Tk5XFlwKCgOJEdV39fjQ32FXlW52KT/gf4GhMQT2kwkZCANjKEJvbWJ4ZoPoN
+85gEEZUj9Ljo+/ItkQld5jouAEOBCXTxDAdr+Z6e1fANhwwLuC4AVrzEL0kDQtkx
+PumEWvesXe+RTMVzgmkc8f6i3euE4BJ7a4kE8t6GMyLskiI+uS5yssCC9j08LubQ
+WnQTic5mwAvl3bfgGA4icGmhwfGQmKyW5CK8PjTufMnyhnUus8fqct1PT947PqDa
+RpZX266rkt7JtP7UUjENM3zQjlcbP2hkLzAWZxlgqTSXDYslRLphz+BHZP6ikl4Z
+5PgPLRgpIDitRTi45hWiexLCwh4Wi6kzYyvHNKEOgjdhCDS61j9ZvUfhYdtHhHil
+4ks97iYpWEGZ2AhXi4FG/cLqSCB9OON78nbzBEha89tvSxk4gA+OHwIEWb2/kawI
+t7kReMfzZ2OMu1tGrJzXSIeIqiAqdHiycHq/xHoro/eTIfjVnQGzuO6WC1f0KrSG
+o4YlK3Ba/iYFiSz7pHEbuMqkCYhHLIKxXO5DKH2XlLmgbUhH/fi2sCNyej66ZgKM
+eKBUc5TBzhYD6qqNLzJM
+=7BYS
 -----END PGP SIGNATURE-----

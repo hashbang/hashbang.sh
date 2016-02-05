@@ -18,12 +18,10 @@
 
   The safest method of running a script from a source you don't trust is to:
 
-  Download locally over SSL
-  > curl https://hashbang.sh >> hashbang.sh
 
-  Verify integrty with GPG (If available)
+  Download and verify integrity with GnuPG
   > gpg --recv-keys 0xD2C4C74D8FAA96F5
-  > gpg --verify hashbang.sh
+  > curl https://hashbang.sh | gpg -o hashbang.sh
 
   Inspect source code
   > less hashbang.sh
@@ -35,12 +33,14 @@
   As an advanced alternative you can bypass using this script and hit our user
   provisioning API directly with an SSH Public Key and desired username:
 
-  > curl -d '{"user":"someuser","key":"'"$(cat ~/.ssh/id_rsa.pub)"'","host":"yourServer.hashbang.sh"}' -H 'Content-Type: application/json' https://hashbang.sh/user/create
+  > curl https://hashbang.sh/server/stats
+  { "server.hashbang.sh": { infos ...}, ... }
+  > curl -d '{"user":"someuser","key":"'"$(cat ~/.ssh/id_rsa.pub)"'","host":"someHost.hashbang.sh"}' -H 'Content-Type: application/json' https://hashbang.sh/user/create
 
   We look forward to seeing you on the other side.
 
   Note: #! has never provided user data to any government agency.
-  Pay close attention to the removal of this notice.
+        Pay close attention to the removal of this notice.
 
 -->
 <!DOCTYPE html>
