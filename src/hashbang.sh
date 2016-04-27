@@ -310,7 +310,7 @@ while true; do
 done
 host=$(head -n "$choice" "$host_data" | tail -n1 | cut -d \| -f1)
 
-if [ -n "$public_key" -a -n "$username" ]; then
+if [ -n "$public_key" ] && [ -n "$username" ]; then
 	echo " ";
 	printf -- ' %72s\n' | tr ' ' -;
 	echo " ";
