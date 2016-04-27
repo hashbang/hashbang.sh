@@ -44,7 +44,7 @@ bail() {
 # check if can write to file
 checkutil() {
 	printf '%s' " * Checking for $1..."
-	if which "$1"; then
+	if command -v "$1" >/dev/null; then
 		printf "ok!\n";
 		return 0;
 	else
@@ -286,7 +286,7 @@ printf -- '  %-1s | %-4s | %-36s | %-8s | %-8s\n' \
 printf -- ' %72s\n' | tr ' ' -;
 while IFS="|" read host _ location current_users max_users; do
 	host=$(echo "$host" | sed 's/\([a-z0-9]\+\)\..*/\1/g')
-	latency=$(ping -c 1 "${host}.hashbang.sh" | head -n2 | tail -n1 | sed 's/.*=//g')
+	latency=$(ping -c 1 "${host}.hashbang.sh" | awk -F'=' '/time=[0-9]+/ { print $NF }')
 	n=$((n+1))
 	printf -- '  %-1s | %-4s | %-36s | %8s | %-8s\n' \
 		"$n" \
@@ -301,7 +301,7 @@ echo
 while true; do
 	printf ' Enter Number 1-%i : ' "$n"
 	read choice
-	number=$(echo "$choice" | awk '$0 ~/[^0-9]/ { print "no" }')
+	number=$(echo "$choice" | awk '/[^0-9]/ { print "no" }')
 	if [ "$number" != "no" ] && \
 	   [ "$choice" -ge 1 ] && \
 	   [ "$choice" -le $n ]; then
@@ -326,7 +326,7 @@ if [ -n "$public_key" -a -n "$username" ]; then
 		format="{\"user\":\"$username\",\"key\":\"$public_key\",\"host\":\"$host\"}"
 		headers="${tmp_hb_dir}/create_headers"
 		output=$(curl -H "Content-Type: application/json" -d "$format" https://hashbang.sh/user/create -D "$headers" 2>&-)
-		status=$(head -n 1 "$headers" | awk '{print $2}')
+		status=$(awk 'NR == 1 { print $2; exit }' "$headers")
 		if [ "$status" -eq 200 ]; then
 			echo " Account Created!"
 		else
