@@ -4,7 +4,7 @@
 # possible to provide an easy gateway for new users.
 
 # If we're using bash, we do this
-if [ "x$BASH" != "x" ]; then
+if [ -n "$BASH" ]; then
 	shopt -s extglob
 	set -o posix
 	# Bail out if any curl fails
@@ -231,13 +231,13 @@ for keytype in id_ed25519 id_ecdsa id_rsa id_dsa; do
 	fi
 done
 
-if [ "x$public_key" = "x" ]; then
+if [ -z "$public_key" ]; then
 	echo " No SSH key for login to server found, attempting to generate one"
 	while true; do
 		echo " "
 		printf " Path to new or existing connection key (~/.ssh/id_rsa): "
 		read private_keyfile
-		if [ "x$private_keyfile" = "x" ]; then
+		if [ -z "$private_keyfile" ]; then
 			private_keyfile="$HOME/.ssh/id_rsa"
 		fi
 		private_keyfile=$(echo "$private_keyfile" | sed "s@~@$HOME@")
@@ -310,7 +310,7 @@ while true; do
 done
 host=$(head -n "$choice" "$host_data" | tail -n1 | cut -d \| -f1)
 
-if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
+if [ -n "$public_key" -a -n "$username" ]; then
 	echo " ";
 	printf -- ' %72s\n' | tr ' ' -;
 	echo " ";
