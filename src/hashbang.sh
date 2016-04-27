@@ -104,7 +104,7 @@ makekey() {
 	( checkutil ssh-keygen && checkutil ssh ) || bail
 	if [ ! -e "$1" ]; then
 		ssh-keygen -t rsa -C "#! $username" -f "$1"
-		if [ ! $? ]; then
+		if [ $? -ne 0 ]; then
 			echo " Unable to make key with that location"
 		else
 			chmod 600 "$1"
@@ -114,12 +114,12 @@ makekey() {
 	else
 		if ask " Unable to generate key, do you want to delete the file?" N; then
 			rm -f "$1"
-			if [ ! $? ]; then
+			if [ $? -ne 0 ]; then
 				echo " Unable to delete file, resetting"
 			else
 				echo " File deleted"
 				ssh-keygen -t rsa -C "#! $username" -f "$1"
-				if [ ! $? ]; then
+				if [ $? -ne 0 ]; then
 					echo " Unable to generate key, resetting"
 				fi
 			fi
@@ -345,7 +345,7 @@ if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 			curl -s 'https://hashbang.sh/static/known_hosts.asc' |
 			    gpg --decrypt --output "${tmp_hb_dir}/known_hosts"
 
-			if [ ! $? -eq 0 ]; then
+			if [ $? -ne 0 ]; then
 				echo " "
 				echo " Unable to verify keys"
 				bail
