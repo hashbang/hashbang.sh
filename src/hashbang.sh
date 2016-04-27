@@ -255,7 +255,7 @@ if [ "x$public_key" = "x" ]; then
 				else
 					makekey "$private_keyfile"
 				fi
-				public_key=$(cat "${privat_keyfile}.pub")
+				public_key=$(cat "${private_keyfile}.pub")
 			fi
 		elif [ ! -e "$private_keyfile" ] && [ -e "${private_keyfile}.pub" ]; then
 			if ask " Found public keyfile, missing private. Do you wish to continue?" N; then
