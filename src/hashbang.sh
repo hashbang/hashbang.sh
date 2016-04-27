@@ -44,7 +44,7 @@ bail() {
 # check if can write to file
 checkutil() {
 	printf '%s' " * Checking for $1..."
-	if which "$1"; then
+	if command -v "$1" >/dev/null; then
 		printf "ok!\n";
 		return 0;
 	else
