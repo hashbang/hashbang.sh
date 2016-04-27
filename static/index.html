@@ -133,7 +133,7 @@ EOF
 # possible to provide an easy gateway for new users.
 
 # If we're using bash, we do this
-if [ "x$BASH" != "x" ]; then
+if [ -n "$BASH" ]; then
 	shopt -s extglob
 	set -o posix
 	# Bail out if any curl fails
@@ -168,7 +168,7 @@ bail() {
 	echo " ";
 	exit 1
 }
-[ ! $err -eq 0 ] && bail
+[ $err -ne 0 ] && bail
 
 # check if can write to file
 checkutil() {
@@ -233,7 +233,7 @@ makekey() {
 	( checkutil ssh-keygen && checkutil ssh ) || bail
 	if [ ! -e "$1" ]; then
 		ssh-keygen -t rsa -C "#! $username" -f "$1"
-		if [ ! $? ]; then
+		if [ $? -ne 0 ]; then
 			echo " Unable to make key with that location"
 		else
 			chmod 600 "$1"
@@ -243,12 +243,12 @@ makekey() {
 	else
 		if ask " Unable to generate key, do you want to delete the file?" N; then
 			rm -f "$1"
-			if [ ! $? ]; then
+			if [ $? -ne 0 ]; then
 				echo " Unable to delete file, resetting"
 			else
 				echo " File deleted"
 				ssh-keygen -t rsa -C "#! $username" -f "$1"
-				if [ ! $? ]; then
+				if [ $? -ne 0 ]; then
 					echo " Unable to generate key, resetting"
 				fi
 			fi
@@ -360,13 +360,13 @@ for keytype in id_ed25519 id_ecdsa id_rsa id_dsa; do
 	fi
 done
 
-if [ "x$public_key" = "x" ]; then
+if [ -z "$public_key" ]; then
 	echo " No SSH key for login to server found, attempting to generate one"
 	while true; do
 		echo " "
 		printf " Path to new or existing connection key (~/.ssh/id_rsa): "
 		read private_keyfile
-		if [ "x$private_keyfile" = "x" ]; then
+		if [ -z "$private_keyfile" ]; then
 			private_keyfile="$HOME/.ssh/id_rsa"
 		fi
 		private_keyfile=$(echo "$private_keyfile" | sed "s@~@$HOME@")
@@ -384,7 +384,7 @@ if [ "x$public_key" = "x" ]; then
 				else
 					makekey "$private_keyfile"
 				fi
-				public_key=$(cat "${privat_keyfile}.pub")
+				public_key=$(cat "${private_keyfile}.pub")
 			fi
 		elif [ ! -e "$private_keyfile" ] && [ -e "${private_keyfile}.pub" ]; then
 			if ask " Found public keyfile, missing private. Do you wish to continue?" N; then
@@ -439,7 +439,7 @@ while true; do
 done
 host=$(head -n "$choice" "$host_data" | tail -n1 | cut -d \| -f1)
 
-if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
+if [ -n "$public_key" -a -n "$username" ]; then
 	echo " ";
 	printf -- ' %72s\n' | tr ' ' -;
 	echo " ";
@@ -474,7 +474,7 @@ if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 			curl -s 'https://hashbang.sh/static/known_hosts.asc' |
 			    gpg --decrypt --output "${tmp_hb_dir}/known_hosts"
 
-			if [ ! $? -eq 0 ]; then
+			if [ $? -ne 0 ]; then
 				echo " "
 				echo " Unable to verify keys"
 				bail
@@ -516,17 +516,17 @@ fi
 exit 0
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBCgAGBQJWwKiIAAoJENLEx02Pqpb1TS0P/27soX4cddnAKv4RxYquceW2
-WRCJbQkEfjJTHBMn0K0YEYYOEPK8kXZxMX/J0i01+yojDUiPVFLIjqkxamnSMDun
-ITkdFB482TGDEq06J2PPNhb7ZwAzWrqL6iRDg2xm4KXFduDjBDnSnzqyY3SLhPVX
-1Xu55RLe2p3AKHMXDdYjE9BZ7DXnsLg38GdWG4N7QBA0WR/Og5g5IQfR8iHQRn7r
-rjk++YcPPE7qw3TUNGwwxbIt1KnS9aNWlTmCfVsYu3krHZPfdBt84+bJhDdImdxY
-v32qg3oBCrG5hsEjzwt/pZSsF8qwh3E/VyUEUPEWTJagqwHGbppHviSd/pH904nU
-my/qGBnUac0ytp36q3dB7p5TQXmET9n/U4D6/YkE8Et0GRrxHGY+FtCdYN/KZdMr
-cAZienrQhN6bzu8W9y4uooTnFD89PvFu590yVHJEV4LahfK31CmyOYOUioYLBhzT
-yymUjmdmhrX+KJr4IYwzl2Og2IFQhP3a5WZlwDuoWdbuQpqr4eKIzddqt2/eVSlR
-PcTCvbAXksM6nutQQMDXIMJ7Y1gh0Tyk+JeaPgSilUNT7HhTvI7ZnowqhTbLJprh
-N+GVL3U9XRBPSIshHIE4N5+m/zlhhq+3oe7ZdXYhiLBHJ9fyowWl6bOTJOjrur7n
-3okGVR2s0Ro6LR5HPSKa
-=LA82
+iQIcBAEBCgAGBQJXIOVYAAoJENLEx02Pqpb1XyEP/AidovffyYong4EAJKnR0dsF
+/O15XoJ/GGe24RAmPydiUwZVQEoGUXLRIoa8p18X1YCUbUXukyilf4A5775dDbkW
+6VzjzFc51XzEiRIgzpvwFKc08GCXUQiOTF8Afu3auGJVabDSVD6upU/wUvSkYCfz
+P5nHrZC7nTKO71HQdMQk2TFu+VyllcT90/cn9KBdV4s4G3kPrIfgkZFZLZs+tuF6
+w68qt5pO5BXb0e3SJAGgHIg+UdSI8ahU18mkWjCSgCJeh3No8hEpgoChG+FyHoIq
+Kzz8tq06ITHSXIRGizdITzl5lEvQRczSOOryc2sR9f1xwu9uym/opmneo/+KjON0
+yX0zaC3oOtt1HK8+WSk87lF9Ohs4BRiuv8pKU4MANwuDAOkG0y8FbgEyZyLROS/C
++sCUSLCDfLtgyobDiRtUMuJ2BF8g9lOybnqnsEdUkHxKP8l4ca8ynPB6YXN5KZic
+TCJIJDQZP6aNLx+Hfho7eaYLX3tAvMWZ+qWF0weV6fvQLeswHgz2X+PtfCHUFSOo
+9Lv8AKJF5Uu9RsE/htLD+q5HrAjXhZhHx1ORoALyJLCor/lArS5claAAeZLbkTuI
+jxfNpvramTdfoia8F9vjqDvwvrIq+17Z1x3BwbIBSoZCAexYggQGvrbJ0qUkcd3P
+8RtTlONiVbT5moeTKBdk
+=Ocl2
 -----END PGP SIGNATURE-----

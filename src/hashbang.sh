@@ -4,7 +4,7 @@
 # possible to provide an easy gateway for new users.
 
 # If we're using bash, we do this
-if [ "x$BASH" != "x" ]; then
+if [ -n "$BASH" ]; then
 	shopt -s extglob
 	set -o posix
 	# Bail out if any curl fails
@@ -39,7 +39,7 @@ bail() {
 	echo " ";
 	exit 1
 }
-[ ! $err -eq 0 ] && bail
+[ $err -ne 0 ] && bail
 
 # check if can write to file
 checkutil() {
@@ -104,7 +104,7 @@ makekey() {
 	( checkutil ssh-keygen && checkutil ssh ) || bail
 	if [ ! -e "$1" ]; then
 		ssh-keygen -t rsa -C "#! $username" -f "$1"
-		if [ ! $? ]; then
+		if [ $? -ne 0 ]; then
 			echo " Unable to make key with that location"
 		else
 			chmod 600 "$1"
@@ -114,12 +114,12 @@ makekey() {
 	else
 		if ask " Unable to generate key, do you want to delete the file?" N; then
 			rm -f "$1"
-			if [ ! $? ]; then
+			if [ $? -ne 0 ]; then
 				echo " Unable to delete file, resetting"
 			else
 				echo " File deleted"
 				ssh-keygen -t rsa -C "#! $username" -f "$1"
-				if [ ! $? ]; then
+				if [ $? -ne 0 ]; then
 					echo " Unable to generate key, resetting"
 				fi
 			fi
@@ -231,13 +231,13 @@ for keytype in id_ed25519 id_ecdsa id_rsa id_dsa; do
 	fi
 done
 
-if [ "x$public_key" = "x" ]; then
+if [ -z "$public_key" ]; then
 	echo " No SSH key for login to server found, attempting to generate one"
 	while true; do
 		echo " "
 		printf " Path to new or existing connection key (~/.ssh/id_rsa): "
 		read private_keyfile
-		if [ "x$private_keyfile" = "x" ]; then
+		if [ -z "$private_keyfile" ]; then
 			private_keyfile="$HOME/.ssh/id_rsa"
 		fi
 		private_keyfile=$(echo "$private_keyfile" | sed "s@~@$HOME@")
@@ -255,7 +255,7 @@ if [ "x$public_key" = "x" ]; then
 				else
 					makekey "$private_keyfile"
 				fi
-				public_key=$(cat "${privat_keyfile}.pub")
+				public_key=$(cat "${private_keyfile}.pub")
 			fi
 		elif [ ! -e "$private_keyfile" ] && [ -e "${private_keyfile}.pub" ]; then
 			if ask " Found public keyfile, missing private. Do you wish to continue?" N; then
@@ -310,7 +310,7 @@ while true; do
 done
 host=$(head -n "$choice" "$host_data" | tail -n1 | cut -d \| -f1)
 
-if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
+if [ -n "$public_key" -a -n "$username" ]; then
 	echo " ";
 	printf -- ' %72s\n' | tr ' ' -;
 	echo " ";
@@ -345,7 +345,7 @@ if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 			curl -s 'https://hashbang.sh/static/known_hosts.asc' |
 			    gpg --decrypt --output "${tmp_hb_dir}/known_hosts"
 
-			if [ ! $? -eq 0 ]; then
+			if [ $? -ne 0 ]; then
 				echo " "
 				echo " Unable to verify keys"
 				bail
