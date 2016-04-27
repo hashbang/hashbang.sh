@@ -39,7 +39,7 @@ bail() {
 	echo " ";
 	exit 1
 }
-[ ! $err -eq 0 ] && bail
+[ $err -ne 0 ] && bail
 
 # check if can write to file
 checkutil() {
