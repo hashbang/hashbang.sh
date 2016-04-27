@@ -17,6 +17,10 @@ gpg -d -o known_hosts static/known_hosts.asc
 diff -q known_hosts src/known_hosts
 rm known_hosts
 
+
 # Shellcheck the script
 #  Ignore warning SC2029 “SSH argument is evaluated client-side”
-shellcheck -e SC2029 src/hashbang.sh
+#  Ignore warning SC2039 “In POSIX sh, 'shopt' is not supported”
+#    (it is gated with `if [ -n "$BASH" ]`)
+
+shellcheck -e SC2029,SC2039 src/hashbang.sh

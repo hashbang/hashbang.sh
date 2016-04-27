@@ -173,7 +173,7 @@ bail() {
 # check if can write to file
 checkutil() {
 	printf '%s' " * Checking for $1..."
-	if which "$1"; then
+	if command -v "$1" >/dev/null; then
 		printf "ok!\n";
 		return 0;
 	else
@@ -415,7 +415,7 @@ printf -- '  %-1s | %-4s | %-36s | %-8s | %-8s\n' \
 printf -- ' %72s\n' | tr ' ' -;
 while IFS="|" read host _ location current_users max_users; do
 	host=$(echo "$host" | sed 's/\([a-z0-9]\+\)\..*/\1/g')
-	latency=$(ping -c 1 "${host}.hashbang.sh" | head -n2 | tail -n1 | sed 's/.*=//g')
+	latency=$(ping -c 1 "${host}.hashbang.sh" | awk -F'=' '/time=[0-9]+/ { print $NF }')
 	n=$((n+1))
 	printf -- '  %-1s | %-4s | %-36s | %8s | %-8s\n' \
 		"$n" \
@@ -430,7 +430,7 @@ echo
 while true; do
 	printf ' Enter Number 1-%i : ' "$n"
 	read choice
-	number=$(echo "$choice" | awk '$0 ~/[^0-9]/ { print "no" }')
+	number=$(echo "$choice" | awk '/[^0-9]/ { print "no" }')
 	if [ "$number" != "no" ] && \
 	   [ "$choice" -ge 1 ] && \
 	   [ "$choice" -le $n ]; then
@@ -455,7 +455,7 @@ if [ "x$public_key" != "x" -a "x$username" != "x" ]; then
 		format="{\"user\":\"$username\",\"key\":\"$public_key\",\"host\":\"$host\"}"
 		headers="${tmp_hb_dir}/create_headers"
 		output=$(curl -H "Content-Type: application/json" -d "$format" https://hashbang.sh/user/create -D "$headers" 2>&-)
-		status=$(head -n 1 "$headers" | awk '{print $2}')
+		status=$(awk 'NR == 1 { print $2; exit }' "$headers")
 		if [ "$status" -eq 200 ]; then
 			echo " Account Created!"
 		else
@@ -516,17 +516,17 @@ fi
 exit 0
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBCgAGBQJWwKiIAAoJENLEx02Pqpb1TS0P/27soX4cddnAKv4RxYquceW2
-WRCJbQkEfjJTHBMn0K0YEYYOEPK8kXZxMX/J0i01+yojDUiPVFLIjqkxamnSMDun
-ITkdFB482TGDEq06J2PPNhb7ZwAzWrqL6iRDg2xm4KXFduDjBDnSnzqyY3SLhPVX
-1Xu55RLe2p3AKHMXDdYjE9BZ7DXnsLg38GdWG4N7QBA0WR/Og5g5IQfR8iHQRn7r
-rjk++YcPPE7qw3TUNGwwxbIt1KnS9aNWlTmCfVsYu3krHZPfdBt84+bJhDdImdxY
-v32qg3oBCrG5hsEjzwt/pZSsF8qwh3E/VyUEUPEWTJagqwHGbppHviSd/pH904nU
-my/qGBnUac0ytp36q3dB7p5TQXmET9n/U4D6/YkE8Et0GRrxHGY+FtCdYN/KZdMr
-cAZienrQhN6bzu8W9y4uooTnFD89PvFu590yVHJEV4LahfK31CmyOYOUioYLBhzT
-yymUjmdmhrX+KJr4IYwzl2Og2IFQhP3a5WZlwDuoWdbuQpqr4eKIzddqt2/eVSlR
-PcTCvbAXksM6nutQQMDXIMJ7Y1gh0Tyk+JeaPgSilUNT7HhTvI7ZnowqhTbLJprh
-N+GVL3U9XRBPSIshHIE4N5+m/zlhhq+3oe7ZdXYhiLBHJ9fyowWl6bOTJOjrur7n
-3okGVR2s0Ro6LR5HPSKa
-=LA82
+iQIcBAEBCgAGBQJXIQCqAAoJENLEx02Pqpb13BAP/3rjnbpCtrE0AcsyAzjptiqu
+BHgeeqWlc5tynL0gg1yCwaNugB1LqYMrN3IVGSNZqz4z1wg1+rjAs5zv4NwgmeGf
+pUHGLw+jNLxPfAOUy9jyHKNG4/Z2mYXInx/H+D+nvijemqqB3P0UDa3PLjBOz8/p
+N8h0fyUPYIzANQ7KEu+I1ir0khLpUyfpRBI8hfoDF9Bg3niH6zI6vn+qOVQequ42
+GUW6euqutohpriD3st8N1eFptz88TNBSKLX4u3jvdAKoT8giWTZzacAzLbHo7OwU
+6RO9rJJa+CedtR7ktEMaRrKtgwbHIt/Wa9vTqD21UY257Ot3liq0zj96HtpSfpiW
+eaK6dz/092/Lw1vySW5XUe6cc/XZnL2SFSmh9QoLUamLkzVEuAsrbvklxo3bEJEi
+Xnsfn8qoXs4/d3F/UjI3086Ubt3w5c/hPUJ3rTvi/IYwlYkOGxQZFPHDWqaU2VLX
+ubHQ4NQPh81BV2IeM0rwm3Kq2MmXNKPd1jv+9asCuN0htjjlweQIvc3t8pfOZVH2
+2plaucWTYbDx3WzptWk+kijAvNEJIGZnoa38SAxnJY8mqlCg/rPoDh1/2KZYi9SG
+BjYhQGvL5OgTZP3L9hmtWKJl1LuyTaUSzzuZxyG/LopqlB+gCTbvBPAuovOWcdje
+vwwKPETnSYQVut+C10em
+=HICo
 -----END PGP SIGNATURE-----
