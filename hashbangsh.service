@@ -12,9 +12,9 @@ ExecStart=/usr/bin/docker run \
   -p 80:80 \
   --env-file="/home/core/hashbang/hashbang.sh/env" \
   -v /home/core/hashbang.sh/certs:/opt/app/certs \
-  --name="hashbangsh-http" \
+  --name="hashbangsh" \
   hashbang/hashbang.sh
-ExecStop=/usr/bin/docker stop hashbangsh-http
+ExecStop=/usr/bin/docker stop hashbangsh
 
 [Install]
 WantedBy=multi-user.target
