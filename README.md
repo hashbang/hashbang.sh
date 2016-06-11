@@ -1,27 +1,45 @@
-This serves as the landing page for [hashbang.sh](http://hashbang.sh).
+# hashbang.sh #
 
-The index.html is both an html page, and a bash script, which is done by:
+  <http://github.com/hashbang/hashbang.sh>
 
-1.  Wrapping the html inside a bash multiline string that is ignored.
-2.  Having the the bash script inside of an html comment.
+## About ##
 
-This allows both bash and browsers to render this document appropriately.
+This is the source for the public facing shell request process for hashbang.sh
+
+It consists of:
+
+ - A simple static html landing page ( https://hashbang.sh )
+ - A bot that submits account requests to IRC for approval (#!invites)
+ - A ssh server that accept invite codes and sets up accounts (ssh hashbang.sh)
+
+The sign-up flow is as follows:
+
+1. User visits https://hashbang.sh which instructs them to `ssh hashbang.sh`
+2. User opens a terminal and types `ssh hashbang.sh`
+3. User is asked to provide a reason for joining and email, or an invite code.
+4. User submits reason/email.
+5. Account request is sent to IRC channel #!invites with an id such as 23.
+6. Privileged user in #!invites accepts invite with `!accept #23`
+7. User is emailed with an invite code
+8. User once again does `ssh hashbang.sh` and uses the invite code to proceed.
+9. User verifies server/sshkey/username, edits if needed, and submits
+10. Server creates account, and informs user of command to connect
+11. User connects to their shell via command like `ssh user@ny1.hashbang.sh`
+
+## Current Features ##
+
+ - None! The above is currently all lies, and WIP.
+ - The below is also all lies, but how it should work when complete
 
 ## Deployment
 
-1. Build/sign index.html (requires hashbang team private key in gpg ring)
+1. Push latest code to master branch
 
     ```
-    make
-    ```
-2. Build/push new docker container
-
-    ```
-    docker build -t hashbang/hashbang.sh .
-    docker push hashbang/hashbang.sh
+    git push origin master
     ```
 
-3. Restart systemd service on production CoreOS machine
+2. Restart systemd service on production machine
 
     ```
     ssh core@hashbang.sh sudo systemctl restart hashbangsh
