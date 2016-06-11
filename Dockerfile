@@ -1,25 +1,20 @@
 FROM debian:jessie
 
-RUN echo "deb http://nginx.org/packages/mainline/debian/ jessie nginx" >> /etc/apt/sources.list.d/nginx.list
-RUN apt-key adv --fetch-keys "http://nginx.org/keys/nginx_signing.key"
+# Install Nginx
+RUN apt-get install -y --force-yes nginx
+RUN rm -rf /etc/nginx/conf.d/*
 
-RUN apt-get update -y --fix-missing
-RUN apt-get upgrade -y --fix-missing
-
-RUN apt-get install -y --force-yes \
-  nginx \
-  ca-certificates \
-
+# Location Nginx expects certs to be in
+# Must be named server.key and server.crt
 VOLUME /opt/app/certs
+
+WORKDIR /opt/app
 
 EXPOSE 80
 EXPOSE 443
 
-WORKDIR /app
-
-RUN rm -rf /etc/nginx/conf.d/*
 ADD nginx.conf /etc/nginx/nginx.conf
 
-ADD index.html /opt/app/
+ADD static/ /opt/app/
 
-CMD ["nginx"]
+CMD ["nginx"] 
