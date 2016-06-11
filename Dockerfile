@@ -1,23 +1,20 @@
-FROM debian:wheezy
+FROM debian:jessie
 
-RUN LC_ALL=C \
-    DEBIAN_FRONTEND=noninteractive \
-    apt-get update && \
-    apt-get install -y \
-        git \
-        python-dev \
-        python-pip \
-        build-essential \
-        libldap2-dev \
-        libsasl2-dev \
-        libssl-dev && \
-    apt-get clean && \
-    rm -rf /tmp/* /var/tmp/*
+# Install Nginx
+RUN apt-get install -y --force-yes nginx
+RUN rm -rf /etc/nginx/conf.d/*
 
-ADD ./ /opt/app/
+# Location Nginx expects certs to be in
+# Must be named server.key and server.crt
+VOLUME /opt/app/certs
+
 WORKDIR /opt/app
-RUN pip install -r requirements.txt
 
-EXPOSE 4443
+EXPOSE 80
+EXPOSE 443
 
-CMD ["python2.7", "server.py"]
+ADD nginx.conf /etc/nginx/nginx.conf
+
+ADD static/ /opt/app/
+
+CMD ["nginx"] 

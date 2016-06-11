@@ -1,28 +1,22 @@
-This serves as the landing page for [hashbang.sh](http://hashbang.sh).
+# hashbang.sh #
 
-The index.html is both an html page, and a bash script, which is done by:
+  <http://github.com/hashbang/hashbang.sh>
 
-1.  Wrapping the html inside a bash multiline string that is ignored.
-2.  Having the the bash script inside of an html comment.
+## About ##
 
-This allows both bash and browsers to render this document appropriately.
+This is the source for the http://hashbang.sh website including any static
+files we wish to make available on it.
 
 ## Deployment
 
-1. Build/sign index.html (requires hashbang team private key in gpg ring)
+1. Push latest code to master branch
 
     ```
-    make
-    ```
-2. Build/push new docker container
-
-    ```
-    docker build -t hashbang/hashbang.sh .
-    docker push hashbang/hashbang.sh
+    git push origin master
     ```
 
-3. Restart systemd service on production CoreOS machine
+2. Restart systemd service on production machine
 
     ```
-    ssh core@hashbang.sh sudo systemctl restart hashbangsh
+    ssh core@hashbang.sh sudo systemctl restart hashbangs-http
     ```

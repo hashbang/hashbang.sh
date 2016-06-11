@@ -8,12 +8,13 @@ ExecStartPre=-/usr/bin/docker pull hashbang/hashbang.sh
 ExecStartPre=-/usr/bin/docker kill hashbang.sh
 ExecStartPre=-/usr/bin/docker rm hashbang.sh
 ExecStart=/usr/bin/docker run \
-  -p 443:4443 \
-  -p 80:8080 \
+  -p 443:443 \
+  -p 80:80 \
   --env-file="/home/core/hashbang/hashbang.sh/env" \
   -v /home/core/hashbang.sh/certs:/opt/app/certs \
-  --name="hashbang.sh" \
+  --name="hashbangsh" \
   hashbang/hashbang.sh
+ExecStop=/usr/bin/docker stop hashbangsh
 
 [Install]
 WantedBy=multi-user.target
