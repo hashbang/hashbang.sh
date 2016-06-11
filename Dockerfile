@@ -1,23 +1,25 @@
-FROM debian:wheezy
+FROM debian:jessie
 
-RUN LC_ALL=C \
-    DEBIAN_FRONTEND=noninteractive \
-    apt-get update && \
-    apt-get install -y \
-        git \
-        python-dev \
-        python-pip \
-        build-essential \
-        libldap2-dev \
-        libsasl2-dev \
-        libssl-dev && \
-    apt-get clean && \
-    rm -rf /tmp/* /var/tmp/*
+RUN echo "deb http://nginx.org/packages/mainline/debian/ jessie nginx" >> /etc/apt/sources.list.d/nginx.list
+RUN apt-key adv --fetch-keys "http://nginx.org/keys/nginx_signing.key"
 
-ADD ./ /opt/app/
-WORKDIR /opt/app
-RUN pip install -r requirements.txt
+RUN apt-get update -y --fix-missing
+RUN apt-get upgrade -y --fix-missing
 
-EXPOSE 4443
+RUN apt-get install -y --force-yes \
+  nginx \
+  ca-certificates \
 
-CMD ["python2.7", "server.py"]
+VOLUME /opt/app/certs
+
+EXPOSE 80
+EXPOSE 443
+
+WORKDIR /app
+
+RUN rm -rf /etc/nginx/conf.d/*
+ADD nginx.conf /etc/nginx/nginx.conf
+
+ADD index.html /opt/app/
+
+CMD ["nginx"]
