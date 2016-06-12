@@ -98,14 +98,25 @@ class UserCreate(Resource):
 
         return {'message': 'success'}
 
-class ServerStats(Resource):
 
+class ServerStats(Resource):
+    LOCATIONS = {
+        "da1.hashbang.sh": {"lat": 32.8, "lon": -96.8},
+        "ny1.hashbang.sh": {"lat": 40.7, "lon": -74},
+        "sf1.hashbang.sh": {"lat": 37.8, "lon": -122.4},
+        "to1.hashbang.sh": {"lat": 43.7, "lon": -79.4}
+    }
+    
     def get(self,out_format='json'):
         try:
             server_stats = p.server_stats()
         except ldap.SERVER_DOWN:
             return { 'message': 'Unable to connect to LDAP server'}, 400
 
+        for s in server_stats.keys():
+            if s in self.LOCATIONS.keys():
+                server_stats[s]['coordinates'] = self.LOCATIONS[s]
+        
         return server_stats
 
 
