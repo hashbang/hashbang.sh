@@ -25,11 +25,6 @@ trap 'rm -rf -- "${tmp_hb_dir}"' EXIT
 
 # Fetch host data for later.
 # If this fails there is no point in proceeding
-host_data="${tmp_hb_dir}/server_stats"
-curl -sfH 'Accept:text/plain' https://hashbang.sh/server/stats > "$host_data"
-err=$?
-echo >> "$host_data"
-
 bail() {
 	echo " "
 	echo " If you think this is a bug, please report it to ";
@@ -39,7 +34,10 @@ bail() {
 	echo " ";
 	exit 1
 }
-[ $err -ne 0 ] && bail
+
+host_data="${tmp_hb_dir}/server_stats"
+curl -sfH 'Accept:text/plain' https://hashbang.sh/server/stats > "$host_data" || bail
+echo >> "$host_data"
 
 # check if can write to file
 checkutil() {
@@ -103,8 +101,7 @@ ask() {
 makekey() {
 	( checkutil ssh-keygen && checkutil ssh ) || bail
 	if [ ! -e "$1" ]; then
-		ssh-keygen -t rsa -C "#! $username" -f "$1"
-		if [ $? -ne 0 ]; then
+		if ! ssh-keygen -t rsa -C "#! $username" -f "$1"; then
 			echo " Unable to make key with that location"
 		else
 			chmod 600 "$1"
@@ -113,13 +110,11 @@ makekey() {
 		fi
 	else
 		if ask " Unable to generate key, do you want to delete the file?" N; then
-			rm -f "$1"
-			if [ $? -ne 0 ]; then
+			if ! rm "$1"; then
 				echo " Unable to delete file, resetting"
 			else
 				echo " File deleted"
-				ssh-keygen -t rsa -C "#! $username" -f "$1"
-				if [ $? -ne 0 ]; then
+				if ! ssh-keygen -t rsa -C "#! $username" -f "$1"; then
 					echo " Unable to generate key, resetting"
 				fi
 			fi
@@ -342,10 +337,9 @@ if [ -n "$public_key" ] && [ -n "$username" ]; then
 			echo " "
 			echo " Downloading key list"
 			echo " "
-			curl -s 'https://hashbang.sh/static/known_hosts.asc' |
-			    gpg --decrypt --output "${tmp_hb_dir}/known_hosts"
 
-			if [ $? -ne 0 ]; then
+			if ! curl -s 'https://hashbang.sh/static/known_hosts.asc' |
+				gpg --decrypt --output "${tmp_hb_dir}/known_hosts"; then
 				echo " "
 				echo " Unable to verify keys"
 				bail
