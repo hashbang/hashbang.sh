@@ -1,4 +1,4 @@
-FROM debian:jessie
+FROM debian:stretch
 
 RUN LC_ALL=C \
     DEBIAN_FRONTEND=noninteractive \
