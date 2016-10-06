@@ -1,4 +1,4 @@
-FROM debian:wheezy
+FROM debian:jessie
 
 RUN LC_ALL=C \
     DEBIAN_FRONTEND=noninteractive \
