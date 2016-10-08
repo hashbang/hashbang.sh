@@ -60,67 +60,10 @@ Hash: SHA512
     <meta name="HandheldFriendly" content="true"/>
     <meta name="MobileOptimized" content="320"/>
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
-    <style type="text/css">
-        * {
-        text-indent:-9999px;
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        -khtml-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-      }
-      html {
-        background:black;
-        color:black;
-      }
-      body {
-        display:block;
-        position:fixed;
-        top:50%;
-        left:50%;
-        margin-top:-160px;
-        margin-left:-160px;
-        width:320px;
-        height:320px;
-        color:#DDD;
-        overflow:hidden;
-      }
-      h1 {
-        text-indent:0px;
-        font-family: 'Montserrat', cursive;
-        position:absolute;
-        top:-50px;
-        left:10px;
-        right:0px;
-        line-height:0px;
-        font-size:280px;
-      }
-      a {
-        color:white;
-        text-decoration:none;
-      }
-      code {
-        text-indent:0px;
-        display:block;
-        position:absolute;
-        bottom:0px;
-        left:0px;
-        right:0px;
-        text-align:center;
-        font-size:20px;
-      }
-    </style>
+    <link href='/assets/local.css' rel='stylesheet' type='text/css'>
   </head>
   <body>
-    <script>
-      window.location="#!"
-      var link = document.createElement("link");
-      link.type = "image/png";
-      link.rel = "icon";
-      link.href = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQAAAAA3iMLMAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QAAd2KE6QAAAAYSURBVAjXY2CAAck+EKp/B0II9gMoGwYA4+MJkeae/NUAAAAldEVYdGRhdGU6Y3JlYXRlADIwMTQtMDUtMTdUMTM6MzI6MTMtMDQ6MDB7pieOAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDE0LTA1LTE3VDEzOjMxOjQ4LTA0OjAwqyt+rwAAAABJRU5ErkJggg==";
-      document.getElementsByTagName("head")[0].appendChild(link);
-    </script>
+    <script src='/assets/icon.js'></script>
     <h1>#!</h1>
     <a href="view-source:https://hashbang.sh">
       <code>curl hashbang.sh | gpg > hashbang.sh</code>
@@ -512,17 +455,17 @@ fi
 exit 0
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBCgAGBQJX+YfrAAoJENLEx02Pqpb12q8QAI0Yzq5H1aCF/Z+RRZwTacul
-EIyTtQFaF3Vl0kIAR8z4qUI9SPKndm32ilDe9AsXDspvENozyqC5M8QFoHnP2nTI
-sLmN6YQXwUqZea3zmjMmSv1pcimvTj0SbFdkRecF1rFvOyM2QVp/lybpWzIdlqQp
-LOwJsCGACBr4cyq62CN1TpF1uxKa6qYCB9HD2uUJLR6X04sn6s4XVgN0LXZnPe0Y
-gCcz72elr+SBSYIan+5vxLa4Y1t5LaVQ7RR8zrc0pnymF2QZpv/ALh+BEWkICJ+X
-Pe3b4lPpYWHpXRDDPXZGPzRM6GvlK36NUNuMcT/XkggBP+x6EzpaY6R7nDKrvGhY
-/Yu3/PTAKUXef8jzJ1JEt00eUic8pcKY4mNi2JiHK0aEB/HOWD6g0PpllMUh76Ky
-cLTJlDhQ65o2o1t/0F+BOsKJqoyOMEAwQthlIG0AFyBOXz0dJkQsF4jVNNUk04VJ
-mGX/Docou91dIKg97YnSI3xyveuRec+73FPrgN6/Hl9QY39Y0ntxDD7ytUlrfSIG
-98N+AsDz3XBPKiFnF3M5lyWXabecfPhToTGpOhjcSR0eP4EJikt4PzHsq5GOuQ6k
-U3ghILADFSH2fg7G1yJS5VREk+o10KiLJap6WJhXkjD4oChw6ud5L6hFEcraCDP2
-Wlwy2H4/j5vWcM1WjxZf
-=Fd3b
+iQIcBAEBCgAGBQJX+ZRWAAoJENLEx02Pqpb1puIQAKqm1bSoTrgcwPGgNoxhS5nd
+KWc0+tg+pI6nZC+F9Mm7mw33Lry2UACzsWQyPgfsvcBMib56bBiUdlkunBoU+kHG
+5Y96ut87y/3GM1JqPfhcp9figyKL1lFONZsg7JHI8We6eUI35wSLMlpStSoPwcLS
+LfAFMilyp893EJRjPCULX9qYC05bkjIvz2sgPA9nKwDTFDQz/IgxPBy8IF2syF6c
+oALsAp9lBaF52GSXEYhBxD+jd7UBMAe95l3hnwMW/kQZ+WyiAUfuqI+gxYDOTB8x
++MisB/Olpfj85iEOcLA3Co71/yor9TTo8LpWJzKXE5HikEHDBkP/gb4Aw6UhAKmg
+wlsqlykIon7mtNmmgnpwQGNcUDIh50fFlYj9h/5b5oAzUhSJmYhk7FjKy5ALT2YH
+x77kP0oapj1/w278bKAijbPomCCBCIAbHyLdjQFLGGCSB9H3FDPR7B6TVSDGb9ca
+0ZJDaSeZn+WEqc5MrHwQ4lL1ABN6Ei5tXWidGyk+j2tgkxk0nibGaSR4uRNF/pUs
+jPXp2YY5xti3vGq+i4fG0WmpTTYenLDw1cMu/6w4Rb4Ehx9NrMJto3QNElQ75WW+
+azTju9Iw5WJgJFLAcSzdZdYO7YEmRlkAtUNzspSS+S5EddGV3k+fwwHfAAtgx0X5
+9O8isOtKYs9GlhOH+ZYJ
+=J0jC
 -----END PGP SIGNATURE-----

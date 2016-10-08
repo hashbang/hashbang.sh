@@ -125,10 +125,10 @@ api.add_resource(ServerStats, '/server/stats')
 
 
 def security_headers(response, secure=False):
-    csp = "default-src 'none'; "                                     \
-          "style-src https://fonts.googleapis.com 'unsafe-inline'; " \
-          "font-src https://fonts.gstatic.com; "                     \
-          "img-src data:; script-src 'unsafe-inline'"
+    csp = "default-src 'none'; "                            \
+          "style-src https://fonts.googleapis.com 'self'; " \
+          "font-src https://fonts.gstatic.com; "            \
+          "img-src data:; script-src 'self'"
     response.headers['Content-Security-Policy-Report-Only'] = csp
 
     response.headers['X-Content-Type-Options'] = 'nosniff'
@@ -161,6 +161,10 @@ def license():
     return security_headers(send_file('LICENSE.md', mimetype='text/markdown'),
                             secure=request.is_secure)
 
+@app.route('/assets/<path:filename>', methods=['GET'])
+def assets(filename):
+    return security_headers(send_from_directory('src', filename),
+                            secure=request.is_secure)
 
 if __name__ == '__main__':
 
