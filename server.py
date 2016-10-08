@@ -125,9 +125,9 @@ api.add_resource(ServerStats, '/server/stats')
 
 
 def security_headers(response, secure=False):
-    csp = "default-src 'none'; "                     \
-          "style-src https://fonts.googleapis.com; " \
-          "fonts-src https://fonts.gstatic.com; "    \
+    csp = "default-src 'none'; "                                     \
+          "style-src https://fonts.googleapis.com 'unsafe-inline'; " \
+          "font-src https://fonts.gstatic.com; "                     \
           "img-src data:; script-src 'unsafe-inline'"
     response.headers['Content-Security-Policy-Report-Only'] = csp
 
