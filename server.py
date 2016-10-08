@@ -135,7 +135,7 @@ def root():
         return send_from_directory('static', 'index.html')
     return redirect(request.url.replace("http://", "https://"))
 
-@app.route('/LICENSE.txt', methods=['GET'])
+@app.route('/LICENSE.md', methods=['GET'])
 def license():
     return send_file('LICENSE.md', mimetype='text/markdown')
 
