@@ -127,13 +127,14 @@ api.add_resource(ServerStats, '/server/stats')
 @app.route('/', methods=["GET"])
 def root():
     useragent = request.headers.get('User-Agent')
+    has_https = not 'https_server' in globals()
+
     if 'curl' in useragent and not request.is_secure:
         return send_from_directory('static', 'warn.sh')
-    if not os.path.isfile(certfile) and not os.path.isfile(keyfile):
+    elif not has_https or request.is_secure:
         return send_from_directory('static', 'index.html')
-    if request.is_secure:
-        return send_from_directory('static', 'index.html')
-    return redirect(request.url.replace("http://", "https://"))
+    else:
+        return redirect(request.url.replace("http://", "https://"))
 
 @app.route('/LICENSE.md', methods=['GET'])
 def license():
