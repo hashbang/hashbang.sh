@@ -135,6 +135,10 @@ def root():
         return send_from_directory('static', 'index.html')
     return redirect(request.url.replace("http://", "https://"))
 
+@app.route('/LICENSE.txt', methods=['GET'])
+def license():
+    return send_file('LICENSE.md', mimetype='text/markdown')
+
 if __name__ == '__main__':
 
     if os.path.isfile(certfile) and os.path.isfile(keyfile):
