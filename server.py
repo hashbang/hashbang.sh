@@ -128,7 +128,8 @@ def security_headers(response, secure=False):
     csp = "default-src 'none'; "                            \
           "style-src https://fonts.googleapis.com 'self'; " \
           "font-src https://fonts.gstatic.com; "            \
-          "img-src data:; script-src 'self'"
+          "img-src data:; script-src 'self'; "              \
+          "sandbox allow-same-origin allow-scripts"
     response.headers['Content-Security-Policy-Report-Only'] = csp
 
     response.headers['X-Content-Type-Options'] = 'nosniff'
