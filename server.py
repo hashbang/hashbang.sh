@@ -124,20 +124,43 @@ api.add_resource(UserCreate, '/user/create')
 api.add_resource(ServerStats, '/server/stats')
 
 
+def security_headers(response, secure=False):
+    csp = "default-src 'none'; "                     \
+          "style-src https://fonts.googleapis.com; " \
+          "fonts-src https://fonts.gstatic.com; "    \
+          "img-src data:; script-src 'unsafe-inline'"
+    response.headers['Content-Security-Policy-Report-Only'] = csp
+
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['X-Frame-Options']        = 'DENY'
+    response.headers['X-XSS-Protection']       = '1; mode=block'
+
+    if secure:
+        response.headers['Strict-Transport-Security'] = 'max-age=31536000'
+
+    return response
+
+
 @app.route('/', methods=["GET"])
 def root():
     useragent = request.headers.get('User-Agent')
+    has_https = not 'https_server' in globals()
+
     if 'curl' in useragent and not request.is_secure:
-        return send_from_directory('static', 'warn.sh')
-    if not os.path.isfile(certfile) and not os.path.isfile(keyfile):
-        return send_from_directory('static', 'index.html')
-    if request.is_secure:
-        return send_from_directory('static', 'index.html')
-    return redirect(request.url.replace("http://", "https://"))
+        resp = send_from_directory('static', 'warn.sh')
+    elif not has_https or request.is_secure:
+        resp = send_from_directory('static', 'index.html')
+    else:
+        return redirect(request.url.replace("http://", "https://"))
+
+    return security_headers(resp, secure=request.is_secure)
+
 
 @app.route('/LICENSE.md', methods=['GET'])
 def license():
-    return send_file('LICENSE.md', mimetype='text/markdown')
+    return security_headers(send_file('LICENSE.md', mimetype='text/markdown'),
+                            secure=request.is_secure)
+
 
 if __name__ == '__main__':
 
@@ -147,7 +170,8 @@ if __name__ == '__main__':
             ssl_options={
                 "certfile": certfile,
                 "keyfile": keyfile,
-                "ssl_version": ssl.PROTOCOL_TLSv1_2
+                "ssl_version": ssl.PROTOCOL_TLSv1_2,
+                "ciphers": "ECDH+AESGCM128:ECDH+AESGCM256:ECDH+AES128:ECDH+AES256:!aNULL:!MD5:!RC4:!DSS:!EXPORT"
             }
         )
         https_server.listen(https_port)
