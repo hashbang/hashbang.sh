@@ -5,7 +5,7 @@ import sys
 import traceback
 import ldap
 import ssl
-from flask import Flask, send_from_directory, redirect, request, make_response
+from flask import Flask, send_file, send_from_directory, redirect, request, make_response
 from flask.ext.restful import Resource, Api
 from flask.ext.restful.reqparse import RequestParser
 from tornado.wsgi import WSGIContainer
