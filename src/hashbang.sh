@@ -80,7 +80,7 @@ ask() {
 		# Ask the question
 		echo " "
 		printf "%s [%s] " "$1" "$prompt"
-		read REPLY
+		read -r REPLY
 
 		# Default?
 		if [ -z "$REPLY" ]; then
@@ -152,7 +152,7 @@ echo " Please report any issues here: ";
 echo "   -> https://github.com/hashbang/hashbang.sh/issues/";
 echo " ";
 printf " If you agree with the above and wish to continue, hit [Enter] ";
-read _
+read -r _
 clear
 
 echo " ";
@@ -193,7 +193,7 @@ echo " ";
 
 while [ "x$username" = "x" ]; do
 	printf " Username: ";
-	read input;
+	read -r input;
 
 	# Keep in sync with the description and
 	#  https://github.com/hashbang/provisor/blob/master/provisor/utils.py#L77
@@ -231,7 +231,7 @@ if [ -z "$public_key" ]; then
 	while true; do
 		echo " "
 		printf " Path to new or existing connection key (~/.ssh/id_rsa): "
-		read private_keyfile
+		read -r private_keyfile
 		if [ -z "$private_keyfile" ]; then
 			private_keyfile="$HOME/.ssh/id_rsa"
 		fi
@@ -279,7 +279,7 @@ printf -- ' %72s\n' | tr ' ' -;
 printf -- '  %-1s | %-4s | %-36s | %-8s | %-8s\n' \
 	"#" "Host" "Location" "Users" "Latency"
 printf -- ' %72s\n' | tr ' ' -;
-while IFS="|" read host _ location current_users max_users; do
+while IFS="|" read -r host _ location current_users max_users; do
 	host=$(echo "$host" | sed 's/\([a-z0-9]\+\)\..*/\1/g')
 	latency=$(ping -c 1 "${host}.hashbang.sh" | awk -F'=' '/time=[0-9]+/ { print $NF }')
 	n=$((n+1))
@@ -295,7 +295,7 @@ printf -- ' %72s\n' | tr ' ' -;
 echo
 while true; do
 	printf ' Enter Number 1-%i : ' "$n"
-	read choice
+	read -r choice
 	number=$(echo "$choice" | awk '/[^0-9]/ { print "no" }')
 	if [ "$number" != "no" ] && \
 	   [ "$choice" -ge 1 ] && \
