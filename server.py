@@ -147,7 +147,8 @@ if __name__ == '__main__':
             ssl_options={
                 "certfile": certfile,
                 "keyfile": keyfile,
-                "ssl_version": ssl.PROTOCOL_TLSv1_2
+                "ssl_version": ssl.PROTOCOL_TLSv1_2,
+                "ciphers": "ECDH+AESGCM128:ECDH+AESGCM256:ECDH+AES128:ECDH+AES256:!aNULL:!MD5:!RC4:!DSS:!EXPORT"
             }
         )
         https_server.listen(https_port)
