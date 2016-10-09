@@ -1,0 +1,49 @@
+ * {
+  text-indent:-9999px;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+html {
+  background:black;
+  color:black;
+}
+body {
+  display:block;
+  position:fixed;
+  top:50%;
+  left:50%;
+  margin-top:-160px;
+  margin-left:-160px;
+  width:320px;
+  height:320px;
+  color:#DDD;
+  overflow:hidden;
+}
+h1 {
+  text-indent:0px;
+  font-family: 'Montserrat', cursive;
+  position:absolute;
+  top:-50px;
+  left:10px;
+  right:0px;
+  line-height:0px;
+  font-size:280px;
+}
+a {
+  color:white;
+  text-decoration:none;
+}
+code {
+  text-indent:0px;
+  display:block;
+  position:absolute;
+  bottom:0px;
+  left:0px;
+  right:0px;
+  text-align:center;
+  font-size:20px;
+}
