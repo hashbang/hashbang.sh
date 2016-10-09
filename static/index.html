@@ -319,12 +319,13 @@ if [ -z "$public_key" ]; then
 						if [ -e "${private_keyfile}.pub" ]; then
 							rm "${private_keyfile}.pub"
 						fi
-						makekey "$private_keyfile"
+					else
+						continue
 					fi
-				else
-					makekey "$private_keyfile"
 				fi
-				public_key=$(cat "${private_keyfile}.pub")
+				if makekey "${private_keyfile}"; then
+					break
+				fi
 			fi
 		elif [ ! -e "$private_keyfile" ] && [ -e "${private_keyfile}.pub" ]; then
 			if ask " Found public keyfile, missing private. Do you wish to continue?" N; then
@@ -455,17 +456,17 @@ fi
 exit 0
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBCgAGBQJX+ZRWAAoJENLEx02Pqpb1puIQAKqm1bSoTrgcwPGgNoxhS5nd
-KWc0+tg+pI6nZC+F9Mm7mw33Lry2UACzsWQyPgfsvcBMib56bBiUdlkunBoU+kHG
-5Y96ut87y/3GM1JqPfhcp9figyKL1lFONZsg7JHI8We6eUI35wSLMlpStSoPwcLS
-LfAFMilyp893EJRjPCULX9qYC05bkjIvz2sgPA9nKwDTFDQz/IgxPBy8IF2syF6c
-oALsAp9lBaF52GSXEYhBxD+jd7UBMAe95l3hnwMW/kQZ+WyiAUfuqI+gxYDOTB8x
-+MisB/Olpfj85iEOcLA3Co71/yor9TTo8LpWJzKXE5HikEHDBkP/gb4Aw6UhAKmg
-wlsqlykIon7mtNmmgnpwQGNcUDIh50fFlYj9h/5b5oAzUhSJmYhk7FjKy5ALT2YH
-x77kP0oapj1/w278bKAijbPomCCBCIAbHyLdjQFLGGCSB9H3FDPR7B6TVSDGb9ca
-0ZJDaSeZn+WEqc5MrHwQ4lL1ABN6Ei5tXWidGyk+j2tgkxk0nibGaSR4uRNF/pUs
-jPXp2YY5xti3vGq+i4fG0WmpTTYenLDw1cMu/6w4Rb4Ehx9NrMJto3QNElQ75WW+
-azTju9Iw5WJgJFLAcSzdZdYO7YEmRlkAtUNzspSS+S5EddGV3k+fwwHfAAtgx0X5
-9O8isOtKYs9GlhOH+ZYJ
-=J0jC
+iQIcBAEBCgAGBQJX+rybAAoJENLEx02Pqpb1zC0QAINFZC0VJYOL+daYStqGxi4t
+z0motl46qMxPkXuigLRi2hsHTivxQQBuak3HCcNpAyihz5ZeotB+ttS+CNkyCwzC
+rIvQuZHrknZ99ypcqRlv7ewcHiETEol5TYIj59g0vU+Ehg2bKWcDYikHxAd5E9zB
+WF8W2mSGM9/NlXWWC2cgNR/A35EAQLA51UB5TJm+CBwLt5PsfMoR1dIYVaj5vu81
+NxyH54ME93X/X8KtfgpqRLV6QUr6+8BIURLSz7fMLmmUf74INaAGZrGnjZX4OeGm
+sVyT6YuFRTf1Sy1XNvpFVr5b4bfU6JyAiypdzsHMXytyIzenOUu3ZP2O5d4QtL/M
+8PQWMtpNqr1IVTWlRSBZFlydwEV02iLk9gIVY9f7bACJdMV7JWbLi46gcFA60VUf
+uwcOXeCH2HLXdwHHOPNXdPhbN6TWsX8tDBIaT+xQspw7Q3mNQ7r8jx5cjuVpBPIA
+vc+SUaZWIGbU4a4PfZxpAui0LfMpB1fsiFDfWsyrfS4Mp2Lq8zBQqiFtC3vt+P05
+y9Jz0q5SQWLJYvva8SFSrq/jhyO1VDnqD+P8hNGADkVgB6Jg9/jWBACfRZQv1uRT
+3fgHXkNBVSDVNDnTJRoMX4v/KwmMCSK9JmnKr+V03YGtupfJMs3hAfcBaktNYPtU
+3IAxxQKYBZ1IxLf0UP4J
+=DFw3
 -----END PGP SIGNATURE-----
