@@ -16,3 +16,5 @@ echo "3. Look over the code and any comments to see what it does."
 echo "4. Follow the safer directions found there to see what we are about."
 echo ""
 echo "Hope to see you soon."
+
+exit 1
