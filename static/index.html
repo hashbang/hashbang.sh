@@ -28,12 +28,19 @@ Hash: SHA512
   > gpg --recv-keys 0xD2C4C74D8FAA96F5
   > curl https://hashbang.sh | gpg -o hashbang.sh
 
+  Note that piping to sh there is dangerous:
+  you do not know, before gpg returns,
+  whether the signature is valid.
+
+
   Inspect source code
   > less hashbang.sh
+
 
   Run
   > chmod +x hashbang.sh
   > ./hashbang.sh
+
 
   As an advanced alternative you can bypass using this script and hit our user
   provisioning API directly with an SSH Public Key and desired username:
@@ -41,6 +48,7 @@ Hash: SHA512
   > curl https://hashbang.sh/server/stats
   { "server.hashbang.sh": { infos ...}, ... }
   > curl -d '{"user":"someuser","key":"'"$(cat ~/.ssh/id_rsa.pub)"'","host":"someHost.hashbang.sh"}' -H 'Content-Type: application/json' https://hashbang.sh/user/create
+
 
   We look forward to seeing you on the other side.
 
@@ -66,7 +74,7 @@ Hash: SHA512
     <script src='/assets/icon.js'></script>
     <h1>#!</h1>
     <a href="view-source:https://hashbang.sh">
-      <code>curl hashbang.sh | gpg > hashbang.sh</code>
+      <code>sh <(curl hashbang.sh | gpg)</code>
     </a>
   </body>
 </html>
@@ -456,17 +464,17 @@ fi
 exit 0
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBCgAGBQJX+rybAAoJENLEx02Pqpb1zC0QAINFZC0VJYOL+daYStqGxi4t
-z0motl46qMxPkXuigLRi2hsHTivxQQBuak3HCcNpAyihz5ZeotB+ttS+CNkyCwzC
-rIvQuZHrknZ99ypcqRlv7ewcHiETEol5TYIj59g0vU+Ehg2bKWcDYikHxAd5E9zB
-WF8W2mSGM9/NlXWWC2cgNR/A35EAQLA51UB5TJm+CBwLt5PsfMoR1dIYVaj5vu81
-NxyH54ME93X/X8KtfgpqRLV6QUr6+8BIURLSz7fMLmmUf74INaAGZrGnjZX4OeGm
-sVyT6YuFRTf1Sy1XNvpFVr5b4bfU6JyAiypdzsHMXytyIzenOUu3ZP2O5d4QtL/M
-8PQWMtpNqr1IVTWlRSBZFlydwEV02iLk9gIVY9f7bACJdMV7JWbLi46gcFA60VUf
-uwcOXeCH2HLXdwHHOPNXdPhbN6TWsX8tDBIaT+xQspw7Q3mNQ7r8jx5cjuVpBPIA
-vc+SUaZWIGbU4a4PfZxpAui0LfMpB1fsiFDfWsyrfS4Mp2Lq8zBQqiFtC3vt+P05
-y9Jz0q5SQWLJYvva8SFSrq/jhyO1VDnqD+P8hNGADkVgB6Jg9/jWBACfRZQv1uRT
-3fgHXkNBVSDVNDnTJRoMX4v/KwmMCSK9JmnKr+V03YGtupfJMs3hAfcBaktNYPtU
-3IAxxQKYBZ1IxLf0UP4J
-=DFw3
+iQIcBAEBCgAGBQJX+14ZAAoJENLEx02Pqpb1oFQP/3/uqGMI+gIYGlG0lQeB+t32
+V7RgjLj6M/5bG6i/L2ZfM1jhMBei/K5FELO5KPXgq4OoIymcKJBEcEFCF8b/R/YB
+Q9DEZ/XNThO/wSIk4ewusu0muWbZSAt4fRtbQNa10RSAIeoKNol82ru0kDd+R7AE
+BjsfOVNXaRN7MjjKFIWfiziUIp5yu1ZMoQQR+H88dLc3lLmap04Lqg95j3rhwuaF
+XzJ7R6VJv1TsYol77Dk37T2VYy9sY0EszVfO5pMVx4pBCOoF2SkCupZ3G0SVMGeD
+ekhrD4BdG2fCZeeN/SFgSK3rw8AHX3bnpMhHYlvD3R0jUVIZYE9Nd2sW/QofZgPN
+1Sk8QPwxd64afqz/w7NSHOKW96MfbtbdxBXubJvd9KgGu08bbaluh+WMx6NtVEmG
+kbU9pfaX6cZzBkqli9YcU3/Zrg9vJfl0QU3Z/r/vs0PsZLIh3SNgDAaWhRZv+zPf
+47xCIgdLpLnNIp0TBIgD6VIkTJucsP8bQrvd41KbRtopHdi+Qv1qStV9yd+RYFNE
+49Vm/7b0Kqj/wKDhBbpoyaURSseyNyRZ8aR8avCm9298whIBxcMUishGNC1XPRhn
+03pPh5MJomeD7het2sPkCrEbKIKyddOM5SkRCYJnyKZwxYIu04fSTn4A5kKtOOp9
+mZI6+JEqLUcphPESlUCT
+=hYpn
 -----END PGP SIGNATURE-----

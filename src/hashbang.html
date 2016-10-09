@@ -23,12 +23,19 @@
   > gpg --recv-keys 0xD2C4C74D8FAA96F5
   > curl https://hashbang.sh | gpg -o hashbang.sh
 
+  Note that piping to sh there is dangerous:
+  you do not know, before gpg returns,
+  whether the signature is valid.
+
+
   Inspect source code
   > less hashbang.sh
+
 
   Run
   > chmod +x hashbang.sh
   > ./hashbang.sh
+
 
   As an advanced alternative you can bypass using this script and hit our user
   provisioning API directly with an SSH Public Key and desired username:
@@ -36,6 +43,7 @@
   > curl https://hashbang.sh/server/stats
   { "server.hashbang.sh": { infos ...}, ... }
   > curl -d '{"user":"someuser","key":"'"$(cat ~/.ssh/id_rsa.pub)"'","host":"someHost.hashbang.sh"}' -H 'Content-Type: application/json' https://hashbang.sh/user/create
+
 
   We look forward to seeing you on the other side.
 
@@ -61,7 +69,7 @@
     <script src='/assets/icon.js'></script>
     <h1>#!</h1>
     <a href="view-source:https://hashbang.sh">
-      <code>curl hashbang.sh | gpg > hashbang.sh</code>
+      <code>sh <(curl hashbang.sh | gpg)</code>
     </a>
   </body>
 </html>
