@@ -211,7 +211,7 @@ ask() {
 		# Ask the question
 		echo " "
 		printf "%s [%s] " "$1" "$prompt"
-		read REPLY
+		read -r REPLY
 
 		# Default?
 		if [ -z "$REPLY" ]; then
@@ -283,7 +283,7 @@ echo " Please report any issues here: ";
 echo "   -> https://github.com/hashbang/hashbang.sh/issues/";
 echo " ";
 printf " If you agree with the above and wish to continue, hit [Enter] ";
-read _
+read -r _
 clear
 
 echo " ";
@@ -324,7 +324,7 @@ echo " ";
 
 while [ "x$username" = "x" ]; do
 	printf " Username: ";
-	read input;
+	read -r input;
 
 	# Keep in sync with the description and
 	#  https://github.com/hashbang/provisor/blob/master/provisor/utils.py#L77
@@ -362,7 +362,7 @@ if [ -z "$public_key" ]; then
 	while true; do
 		echo " "
 		printf " Path to new or existing connection key (~/.ssh/id_rsa): "
-		read private_keyfile
+		read -r private_keyfile
 		if [ -z "$private_keyfile" ]; then
 			private_keyfile="$HOME/.ssh/id_rsa"
 		fi
@@ -410,7 +410,7 @@ printf -- ' %72s\n' | tr ' ' -;
 printf -- '  %-1s | %-4s | %-36s | %-8s | %-8s\n' \
 	"#" "Host" "Location" "Users" "Latency"
 printf -- ' %72s\n' | tr ' ' -;
-while IFS="|" read host _ location current_users max_users; do
+while IFS="|" read -r host _ location current_users max_users; do
 	host=$(echo "$host" | sed 's/\([a-z0-9]\+\)\..*/\1/g')
 	latency=$(ping -c 1 "${host}.hashbang.sh" | awk -F'=' '/time=[0-9]+/ { print $NF }')
 	n=$((n+1))
@@ -426,7 +426,7 @@ printf -- ' %72s\n' | tr ' ' -;
 echo
 while true; do
 	printf ' Enter Number 1-%i : ' "$n"
-	read choice
+	read -r choice
 	number=$(echo "$choice" | awk '/[^0-9]/ { print "no" }')
 	if [ "$number" != "no" ] && \
 	   [ "$choice" -ge 1 ] && \
@@ -512,17 +512,17 @@ fi
 exit 0
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBCgAGBQJX+TsMAAoJENLEx02Pqpb1UOkP/jFic220p935QP2GzOrGaCtW
-rjY4hiqxWkjpLalCIbcacT0nIrzD9xC/toNPEPQuotU1HpCTUh2RE00WueQB/ZhL
-ToL3f6u47Z33GLLZzTeT6oMSN2ahpxPoXSDqDl+aaeNYAkMa73eO68O3yiqaToid
-SBunBIZ75fVHCLUTKFw8G6oaAlKo0NhCIVjCY97stnd6ufN8/lIjCLIw9Flc+yJ9
-oWB3UEc14b8dXl2WjhaHi/XNnIwQ8x7VzRrhcnGxhU8MKmKnPuORhPRHWCHel7iV
-ZIS2LAu4GIvfLBgT/AHcaDUHpATelI77YDAgGTyTR9CqVwtNbC+oRkw1hbUhcOgQ
-iQbw2+t+6JiIp3RZ7Ayw/Ou14T2M7a1evJJSLtDLSKCkcOqVEc4NEerr/EH/1DMi
-4CHshjq5JdYuJbZ9kmBC3n0ca0KMDtBalk8YlqJODSgnscZ72u6QHsDeLUgvOybL
-QdyeTeXID/x+ln9wVZ3t0IGWvMccpMRcRE34z9yUox8uW0oXqbU6HuQ1KcGr9X4u
-jyTRV3dfx7T84YZxJK8Tvppi0fg7FZL59jrCBmIKGvLvc29iu+BhMWFFxtlRMcoX
-SzjXvRBvgHEwn6ZXHHgQq8mCFFCFdPz3P2fgIN3kaJD3Pg3WEabId2yTDQSz2uU0
-kXW1W2V2X79jTR337Fam
-=nmQW
+iQIcBAEBCgAGBQJX+YfrAAoJENLEx02Pqpb12q8QAI0Yzq5H1aCF/Z+RRZwTacul
+EIyTtQFaF3Vl0kIAR8z4qUI9SPKndm32ilDe9AsXDspvENozyqC5M8QFoHnP2nTI
+sLmN6YQXwUqZea3zmjMmSv1pcimvTj0SbFdkRecF1rFvOyM2QVp/lybpWzIdlqQp
+LOwJsCGACBr4cyq62CN1TpF1uxKa6qYCB9HD2uUJLR6X04sn6s4XVgN0LXZnPe0Y
+gCcz72elr+SBSYIan+5vxLa4Y1t5LaVQ7RR8zrc0pnymF2QZpv/ALh+BEWkICJ+X
+Pe3b4lPpYWHpXRDDPXZGPzRM6GvlK36NUNuMcT/XkggBP+x6EzpaY6R7nDKrvGhY
+/Yu3/PTAKUXef8jzJ1JEt00eUic8pcKY4mNi2JiHK0aEB/HOWD6g0PpllMUh76Ky
+cLTJlDhQ65o2o1t/0F+BOsKJqoyOMEAwQthlIG0AFyBOXz0dJkQsF4jVNNUk04VJ
+mGX/Docou91dIKg97YnSI3xyveuRec+73FPrgN6/Hl9QY39Y0ntxDD7ytUlrfSIG
+98N+AsDz3XBPKiFnF3M5lyWXabecfPhToTGpOhjcSR0eP4EJikt4PzHsq5GOuQ6k
+U3ghILADFSH2fg7G1yJS5VREk+o10KiLJap6WJhXkjD4oChw6ud5L6hFEcraCDP2
+Wlwy2H4/j5vWcM1WjxZf
+=Fd3b
 -----END PGP SIGNATURE-----
