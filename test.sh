@@ -1,7 +1,7 @@
 #!/bin/sh -ev
 
 # Actually rebuild the static pages
-make all
+make default
 
 
 # Check the OpenPGP signatures
