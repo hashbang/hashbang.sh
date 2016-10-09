@@ -245,12 +245,13 @@ if [ -z "$public_key" ]; then
 						if [ -e "${private_keyfile}.pub" ]; then
 							rm "${private_keyfile}.pub"
 						fi
-						makekey "$private_keyfile"
+					else
+						continue
 					fi
-				else
-					makekey "$private_keyfile"
 				fi
-				public_key=$(cat "${private_keyfile}.pub")
+				if makekey "${private_keyfile}"; then
+					break
+				fi
 			fi
 		elif [ ! -e "$private_keyfile" ] && [ -e "${private_keyfile}.pub" ]; then
 			if ask " Found public keyfile, missing private. Do you wish to continue?" N; then
