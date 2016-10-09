@@ -149,7 +149,7 @@ def root():
     has_https = 'https_server' in globals()
 
     if 'curl' in useragent and not request.is_secure:
-        resp = send_from_directory('static', 'warn.sh')
+        resp = send_from_directory('static', 'warn.sh.asc')
     elif not has_https or request.is_secure:
         resp = send_from_directory('static', 'index.html')
     else:

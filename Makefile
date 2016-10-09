@@ -1,9 +1,18 @@
-all:
-	sed -f src/template.sed src/template > static/index.html.plain
+GPG:= gpg --default-key 0xD2C4C74D8FAA96F5 --clearsign
 
-sign: all
-	gpg --default-key 0xD2C4C74D8FAA96F5 --clearsign static/index.html.plain
+.PHONY: sign default
+
+default: static/index.html.plain
+static/index.html.plain: $(wildcard src/template* src/hashbang.*)
+	sed -f src/template.sed src/template > $@
+
+
+sign: static/index.html static/known_hosts.asc static/warn.sh.asc
+
+static/index.html: static/index.html.plain
+	$(GPG) static/index.html.plain
 	mv static/index.html.plain.asc static/index.html
 
-	gpg --default-key 0xD2C4C74D8FAA96F5 --clearsign src/known_hosts
-	mv src/known_hosts.asc static/
+static/%.asc: src/%
+	$(GPG) $^
+	mv $^.asc $@

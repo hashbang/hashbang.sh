@@ -1,11 +1,11 @@
 #!/bin/sh -ev
 
 # Actually rebuild the static pages
-make all
+make default
 
 
 # Check the OpenPGP signatures
-rm -f -- index.html.data known_hosts
+rm -f -- index.html.data known_hosts warn.sh
 gpg --quiet -k 0xD2C4C74D8FAA96F5 ||
     gpg --recv-keys --keyserver keys.gnupg.net 0xD2C4C74D8FAA96F5
 
@@ -16,6 +16,10 @@ rm index.html.data
 gpg -d -o known_hosts static/known_hosts.asc
 diff -q known_hosts src/known_hosts
 rm known_hosts
+
+gpg -d -o warn.sh static/warn.sh.asc
+diff -q warn.sh src/warn.sh
+rm warn.sh
 
 
 # Shellcheck the script
