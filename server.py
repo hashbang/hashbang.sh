@@ -171,7 +171,7 @@ def assets(filename):
 if __name__ == '__main__':
 
     if os.path.isfile(certfile) and os.path.isfile(keyfile):
-        ssl_ctx = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+        ssl_ctx = ssl.create_default_context()
         ssl_ctx.load_cert_chain(certfile, keyfile)
 
         # Protocol options: allow TLSv1.1 and later
