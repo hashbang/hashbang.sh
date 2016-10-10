@@ -171,14 +171,25 @@ def assets(filename):
 if __name__ == '__main__':
 
     if os.path.isfile(certfile) and os.path.isfile(keyfile):
+        ssl_ctx = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+        ssl_ctx.load_cert_chain(certfile, keyfile)
+
+        # Protocol options: allow TLSv1.1 and later
+        ssl_ctx.options |= ssl.OP_NO_SSLv2
+        ssl_ctx.options |= ssl.OP_NO_SSLv3
+        ssl_ctx.options |= ssl.OP_NO_TLSv1
+
+        # Cipher options: strong ciphers, follow server preferences
+        ssl_ctx.set_ciphers("ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA384")
+        ssl_ctx.options |= ssl.OP_CIPHER_SERVER_PREFERENCE
+
+        # Key exchange: strong prime curve, no point reuse
+        ssl_ctx.set_ecdh_curve('secp521r1')
+        ssl_ctx.options |= ssl.OP_SINGLE_ECDH_USE
+
         https_server = HTTPServer(
             WSGIContainer(app),
-            ssl_options={
-                "certfile": certfile,
-                "keyfile": keyfile,
-                "ssl_version": ssl.PROTOCOL_TLSv1_2,
-                "ciphers": "ECDH+AESGCM128:ECDH+AESGCM256:ECDH+AES128:ECDH+AES256:!aNULL:!MD5:!RC4:!DSS:!EXPORT"
-            }
+            ssl_options=ssl_ctx
         )
         https_server.listen(https_port)
 
