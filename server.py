@@ -180,7 +180,7 @@ if __name__ == '__main__':
         ssl_ctx.options |= ssl.OP_NO_TLSv1
 
         # Cipher options: strong ciphers, follow server preferences
-        ssl_ctx.set_ciphers("ECDH+AESGCM128:ECDH+AESGCM256:ECDH+AES128:ECDH+AES256:!aNULL:!MD5:!RC4:!DSS:!EXPORT")
+        ssl_ctx.set_ciphers("ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA384")
         ssl_ctx.options |= ssl.OP_CIPHER_SERVER_PREFERENCE
 
         # Key exchange: strong prime curve, no point reuse
