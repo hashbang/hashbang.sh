@@ -4,6 +4,7 @@ RUN LC_ALL=C \
     DEBIAN_FRONTEND=noninteractive \
     apt-get update && \
     apt-get install -y \
+        ca-certificates \
         git \
         python-flask-restful \
         python-ldap \
