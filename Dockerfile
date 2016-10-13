@@ -5,12 +5,13 @@ RUN LC_ALL=C \
     apt-get update && \
     apt-get install -y \
         git \
-        python-dev \
+        python-backports.ssl-match-hostname \
+        python-certifi \
+        python-flask-restful \
+        python-ldap \
+        python-tornado \
         python-pip \
-        build-essential \
-        libldap2-dev \
-        libsasl2-dev \
-        libssl-dev && \
+        && \
     apt-get clean && \
     rm -rf /tmp/* /var/tmp/*
 
