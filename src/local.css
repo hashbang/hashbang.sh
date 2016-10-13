@@ -25,7 +25,8 @@ body {
 }
 h1 {
   text-indent:0px;
-  font-family: 'Montserrat', cursive;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
   position:absolute;
   top:-50px;
   left:10px;
