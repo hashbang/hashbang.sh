@@ -5,8 +5,6 @@ RUN LC_ALL=C \
     apt-get update && \
     apt-get install -y \
         git \
-        python-backports.ssl-match-hostname \
-        python-certifi \
         python-flask-restful \
         python-ldap \
         python-tornado \
