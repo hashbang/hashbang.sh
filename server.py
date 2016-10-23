@@ -165,7 +165,7 @@ def license():
 
 # HE.net domain validation
 @app.route('/s73rmwh.txt', methods=['GET'])
-def license():
+def he_net():
     return security_headers(make_response('', 204),
                             secure=request.is_secure)
 
