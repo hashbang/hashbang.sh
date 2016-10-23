@@ -163,6 +163,12 @@ def license():
     return security_headers(send_file('LICENSE.md', mimetype='text/markdown'),
                             secure=request.is_secure)
 
+# HE.net domain validation
+@app.route('/s73rmwh.txt', methods=['GET'])
+def license():
+    return security_headers(make_response('', 204),
+                            secure=request.is_secure)
+
 @app.route('/assets/<path:filename>', methods=['GET'])
 def assets(filename):
     return security_headers(send_from_directory('src', filename),
