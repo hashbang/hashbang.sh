@@ -4,13 +4,13 @@ RUN LC_ALL=C \
     DEBIAN_FRONTEND=noninteractive \
     apt-get update && \
     apt-get install -y \
+        ca-certificates \
         git \
-        python-dev \
+        python-flask-restful \
+        python-ldap \
+        python-tornado \
         python-pip \
-        build-essential \
-        libldap2-dev \
-        libsasl2-dev \
-        libssl-dev && \
+        && \
     apt-get clean && \
     rm -rf /tmp/* /var/tmp/*
 
