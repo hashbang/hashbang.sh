@@ -32,8 +32,8 @@ Section 1. Annual Meeting
 An annual meeting shall be held once each calendar year for the purpose
 of electing directors and for the transaction of such other business as
 may properly come before the meeting. The annual meeting shall be held
-at the time and place designated by the Board of Directors from time to
-time.
+at the time and place designated by the Board of Directors.
+
 
 Section 2. Special Meetings
 ---------------------------
