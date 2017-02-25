@@ -133,6 +133,7 @@ def security_headers(response, secure=False):
           "frame-ancestors 'none'"
 
     response.headers['Content-Security-Policy'] = csp
+    response.headers['Referrer-Policy']         = 'no-referrer'
     response.headers['X-Content-Type-Options']  = 'nosniff'
     response.headers['X-Frame-Options']         = 'DENY'
     response.headers['X-XSS-Protection']        = '1; mode=block'
