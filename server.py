@@ -190,7 +190,7 @@ if __name__ == '__main__':
         ssl_ctx.options |= ssl.OP_CIPHER_SERVER_PREFERENCE
 
         # Key exchange: strong prime curve, no point reuse
-        ssl_ctx.set_ecdh_curve('secp521r1')
+        ssl_ctx.set_ecdh_curve('prime256v1')
         ssl_ctx.options |= ssl.OP_SINGLE_ECDH_USE
 
         https_server = HTTPServer(
