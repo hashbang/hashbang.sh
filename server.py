@@ -125,11 +125,11 @@ api.add_resource(ServerStats, '/server/stats')
 
 
 def security_headers(response, secure=False):
-    csp = "default-src 'none'; "                            \
-          "style-src https://fonts.googleapis.com 'self'; " \
-          "font-src https://fonts.gstatic.com; "            \
-          "img-src data:; script-src 'self'; "              \
-          "sandbox allow-same-origin allow-scripts; "       \
+    csp = "default-src 'none'; "                                   \
+          "style-src https://fonts.googleapis.com 'self'; "        \
+          "font-src https://fonts.gstatic.com; "                   \
+          "img-src data:; script-src 'self'; connect-src 'self'; " \
+          "sandbox allow-same-origin allow-scripts; "              \
           "frame-ancestors 'none'"
 
     response.headers['Content-Security-Policy']     = csp
