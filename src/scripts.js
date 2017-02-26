@@ -6,7 +6,7 @@ window.onload = function(){
     sourceEl.removeAttribute("href");
     sourceEl.onclick = function(){
         var client = new XMLHttpRequest();
-        client.open('GET', 'http://localhost:8080/');
+        client.open('GET', 'https://hashbang.sh/');
         client.onreadystatechange = function() {
             console.log(client.responseText)
             var div = document.createElement("div");
