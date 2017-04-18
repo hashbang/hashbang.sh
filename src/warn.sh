@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 clear;
 echo "Blindly running unsecured one liners from the internet is ill advised."
