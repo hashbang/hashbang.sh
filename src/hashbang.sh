@@ -35,6 +35,10 @@ bail() {
 	exit 1
 }
 
+hbar() {
+    printf -- ' %72s\n' ' ' | tr ' ' '-'
+}
+
 host_data="${tmp_hb_dir}/server_stats"
 curl -sfH 'Accept:text/plain' https://hashbang.sh/server/stats > "$host_data" || bail
 echo >> "$host_data"
@@ -157,7 +161,7 @@ clear
 
 echo " ";
 echo " ";
-printf -- ' %72s\n' | tr ' ' -;
+hbar;
 echo " ";
 
 echo " First, your system must be properly configured with the required";
@@ -175,7 +179,7 @@ clear;
 
 echo " ";
 echo " ";
-printf -- ' %72s\n' | tr ' ' -;
+hbar;
 echo " ";
 
 
@@ -208,7 +212,7 @@ while [ "x$username" = "x" ]; do
 done
 
 echo " ";
-printf -- ' %72s\n' | tr ' ' -;
+hbar;
 echo " ";
 echo " Now we will need an SSH Public Key."
 echo " ";
@@ -272,14 +276,14 @@ fi
 
 n=0
 echo
-printf -- ' %72s\n' | tr ' ' -;
+hbar;
 echo
 echo " Please choose a server to create your account on."
 echo
-printf -- ' %72s\n' | tr ' ' -;
+hbar;
 printf -- '  %-1s | %-4s | %-36s | %-8s | %-8s\n' \
 	"#" "Host" "Location" "Users" "Latency"
-printf -- ' %72s\n' | tr ' ' -;
+hbar;
 while IFS="|" read -r host _ location current_users max_users _; do
 	host=$(echo "$host" | cut -d. -f1)
 	latency=$(ping -c 1 "${host}.hashbang.sh" | awk -F'=' '/time=[0-9]+/ { print $NF }')
@@ -291,7 +295,7 @@ while IFS="|" read -r host _ location current_users max_users _; do
 		"$current_users/$max_users" \
 		"$latency"
 done < "$host_data"
-printf -- ' %72s\n' | tr ' ' -;
+hbar;
 
 echo
 while true; do
@@ -308,7 +312,7 @@ host=$(head -n "$choice" "$host_data" | tail -n1 | cut -d \| -f1)
 
 if [ -n "$public_key" ] && [ -n "$username" ]; then
 	echo " ";
-	printf -- ' %72s\n' | tr ' ' -;
+	hbar;
 	echo " ";
 	echo " We are going to create an account with the following information";
 	echo
