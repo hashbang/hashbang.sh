@@ -362,8 +362,8 @@ printf -- ' %72s\n' | tr ' ' -;
 printf -- '  %-1s | %-4s | %-36s | %-8s | %-8s\n' \
 	"#" "Host" "Location" "Users" "Latency"
 printf -- ' %72s\n' | tr ' ' -;
-while IFS="|" read -r host _ location current_users max_users; do
-	host=$(echo "$host" | sed 's/\([a-z0-9]\+\)\..*/\1/g')
+while IFS="|" read -r host _ location current_users max_users _; do
+	host=$(echo "$host" | cut -d. -f1)
 	latency=$(ping -c 1 "${host}.hashbang.sh" | awk -F'=' '/time=[0-9]+/ { print $NF }')
 	n=$((n+1))
 	printf -- '  %-1s | %-4s | %-36s | %8s | %-8s\n' \
@@ -464,17 +464,17 @@ fi
 exit 0
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEERWK8VmkyzxwW8tfM0sTHTY+qlvUFAlj2hHAACgkQ0sTHTY+q
-lvU5Ag/8Dnv//VK8EdLVHlDfzhRvRn0JMToItovAOKC7ypulsVUrWrIUVFeEqIw5
-uzQSrXkauS4ETjOExg3PKEnzCEWWdLBGkCSNTS96VWBhsx2gw4rCznoKZ+ZS5aLF
-//uBOPg1fgyywHcUaW+wlymRU64sTZsopsapxr8wQQmWV3e+pvgcDzznQ34ytufa
-+7aFpAOr2N24tTQNUpzHLm1KTmVcvVzrOExnqktGlb3K6c8RAv+1YBfNR404jj7M
-HQ7/6tpAjYrg1WHOXUU7TaadWPvEbnUR0X7zaQAkAqlRd9B/VxmOPCrqT6LjhwNI
-mwOWYTuz951ETegqSyEh8aUZpRdB2k5Iwda/n5IwBqa1r+GB/Z0UhS4+sW/GuxmW
-fCodsxYRHQ1W6DXM7FUG1TWG/8+37K23ML6c19r4tjopUnIdyQZq6h8+Cb1tWW4Q
-/dO+9kIj3MVJjShIkJfNDiP4JsUomvaha8fUB/gVsqZSvXfvd/ck49TEnEH8P6p+
-Lqg5wDOTVvyWaKw34ndQJyU/V7nZ7E5Tsm9dAiqZJCIOGvLHi7cdK3Df3Jrrn5qj
-MMcGaKs6Kwq5uoRGyjyJQTMdpTIWcUTtfjhaDRO9TiqVzjcQRzixw1NyPLvAyiTN
-HpsP9hZ2hvEGcSJUDnv7Dm5RjFw9ggrDhlqNKPLItizqJWKlW9E=
-=fTcY
+iQIzBAEBCgAdFiEERWK8VmkyzxwW8tfM0sTHTY+qlvUFAlmsHMAACgkQ0sTHTY+q
+lvWSnxAAkPvmD2tVgG8YLNNvLogKYFLK6U0GoOFbEJu85rE8wAnA21+Moi1oEudo
+v9irz/bCaZGzB1/VMQ/fhCTYA5APqoMyRIwUX6fP7UbkpuVYghkWh64YISmJVv2Z
+5ooH7BBQ875lS+zIOFmgaxwb2NTfhMCnRgWfNQlSoVQG5HzwYbbIS4+5M2Z6a0Xy
+7cmGNqAKiuVpdj+BMB7Mfub3BLqubfvKyIFfSnBu4yTS/o2qTwbOFOfikvOOfk0h
+zaPHG3pHd9+Z4NLSLwDHlg/vpguSjMPgBJ7gxRTuXdOHF2/xfftBo9nPIWWgnwBC
+tZ5nDPoDfNCObECytmgJUm26d+b7hnwZAI39jJJKWgqPiHSn5GFsBaWU0s0+xYTR
+EeMaB8kBCPdiy0PXOmJBlu78TUq1+7ieLTsnc1mY1qcYGgIKflL5DnGwR/v9JCS1
+UPnMxxJAy36GCYf6RumLlk188ShMPN8zGX12G3QhkB8QjxXFRUCcWzPOEdL2F+Zm
+PLi4/selyMzBmuqljjbammech3odFld5qhVVsW/mvBQZd0zcwSyX+oiOqZjzUrZR
+tqofB+arFg+2lbB95lvNFSR7TcOpEGy5TVabwfj8jN91+tY/DuLnTwTmFLYpK+hW
+PJWMvdiB1o7+5JTMzh4trsv+H2yghSj/NJ5oY0LT3ESzzq3gmmE=
+=2uwg
 -----END PGP SIGNATURE-----

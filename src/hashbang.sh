@@ -280,8 +280,8 @@ printf -- ' %72s\n' | tr ' ' -;
 printf -- '  %-1s | %-4s | %-36s | %-8s | %-8s\n' \
 	"#" "Host" "Location" "Users" "Latency"
 printf -- ' %72s\n' | tr ' ' -;
-while IFS="|" read -r host _ location current_users max_users; do
-	host=$(echo "$host" | sed 's/\([a-z0-9]\+\)\..*/\1/g')
+while IFS="|" read -r host _ location current_users max_users _; do
+	host=$(echo "$host" | cut -d. -f1)
 	latency=$(ping -c 1 "${host}.hashbang.sh" | awk -F'=' '/time=[0-9]+/ { print $NF }')
 	n=$((n+1))
 	printf -- '  %-1s | %-4s | %-36s | %8s | %-8s\n' \
