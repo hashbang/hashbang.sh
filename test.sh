@@ -3,11 +3,13 @@
 # Actually rebuild the static pages
 make default
 
+# Fetch the signing key if needed or if in the CI environment
+if [ -n "$CI" ] || !gpg --quiet -k 0xD2C4C74D8FAA96F5; then
+    gpg --recv-keys --keyserver keys.gnupg.net 0xD2C4C74D8FAA96F5
+fi
 
 # Check the OpenPGP signatures
 rm -f -- index.html.data known_hosts warn.sh
-gpg --quiet -k 0xD2C4C74D8FAA96F5 ||
-    gpg --recv-keys --keyserver keys.gnupg.net 0xD2C4C74D8FAA96F5
 
 gpg -d -o index.html.data static/index.html
 diff -q index.html.data static/index.html.plain
