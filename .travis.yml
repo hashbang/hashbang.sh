@@ -1,6 +1,10 @@
 sudo: required
 dist: trusty
 
+cache:
+  directories:
+    - $HOME/.gnupg
+
 before_install:
   - echo 'deb http://archive.ubuntu.com/ubuntu trusty-backports main restricted universe multiverse' | sudo tee -a /etc/apt/sources.list
   - sudo apt-get -qq update
