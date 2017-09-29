@@ -1,4 +1,4 @@
- * {
+body {
   text-indent:-9999px;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -47,4 +47,18 @@ code {
   right:0px;
   text-align:center;
   font-size:20px;
+}
+
+#source {
+  display:block;
+  background:black;
+  position:absolute
+  top:0px;
+  left:0px;
+  right:0px;
+  bottom:0px;
+  color:white;
+  font-family: monospace;
+  white-space: pre;
+  overflow:scroll;
 }

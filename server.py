@@ -125,18 +125,19 @@ api.add_resource(ServerStats, '/server/stats')
 
 
 def security_headers(response, secure=False):
-    csp = "default-src 'none'; "                            \
-          "style-src https://fonts.googleapis.com 'self'; " \
-          "font-src https://fonts.gstatic.com; "            \
-          "img-src data:; script-src 'self'; "              \
-          "sandbox allow-same-origin allow-scripts; "       \
+    csp = "default-src 'none'; "                                   \
+          "style-src https://fonts.googleapis.com 'self'; "        \
+          "font-src https://fonts.gstatic.com; "                   \
+          "img-src data:; script-src 'self'; connect-src 'self'; " \
+          "sandbox allow-same-origin allow-scripts; "              \
           "frame-ancestors 'none'"
 
-    response.headers['Content-Security-Policy'] = csp
-    response.headers['Referrer-Policy']         = 'no-referrer'
-    response.headers['X-Content-Type-Options']  = 'nosniff'
-    response.headers['X-Frame-Options']         = 'DENY'
-    response.headers['X-XSS-Protection']        = '1; mode=block'
+    response.headers['Content-Security-Policy']     = csp
+    response.headers['Referrer-Policy']             = 'no-referrer'
+    response.headers['X-Content-Type-Options']      = 'nosniff'
+    response.headers['X-Frame-Options']             = 'DENY'
+    response.headers['X-XSS-Protection']            = '1; mode=block'
+    response.headers['Access-Control-Allow-Origin'] = 'https://hashbang.sh/'
 
     if secure:
         response.headers['Strict-Transport-Security'] = 'max-age=31536000'
