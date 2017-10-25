@@ -206,8 +206,8 @@ while [ "$username" = "" ]; do
 	printf " Username: ";
 	read -r input;
 
-	# Keep in sync with the description and
-	#  https://github.com/hashbang/provisor/blob/master/provisor/utils.py#L56
+	# Keep in sync with the description and the validate_username function in
+	#  https://github.com/hashbang/hashbang.sh/blob/master/server.py
 	if echo "$input" | grep -E "^[a-z][a-z0-9]{0,30}$" >/dev/null; then
 		username="$input"
 	else
