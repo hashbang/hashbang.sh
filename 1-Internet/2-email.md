@@ -12,25 +12,39 @@ with email on the terminal, but here we will dive a bit deeper and use
 telnet to interact directly with our SMTP mail server to send an email in raw
 form like your mail client would normally do for you.
 
-1. Connect to the hashbang mail server with telnet
+### The hard way
+
+1. Install a local smtpd server
+
+```
+apt install openstmpd
+```
+
+2. Start local mail server
+
+```
+sudo systemctl start opensmtpd
+```
+
+3. Connect to your local mail server
     ```
-    > ssh yourusername@sf1.hashbang.sh telnet localhost 25
+    > telnet localhost 25
     Trying ::1...
     Connected to localhost.
     Escape character is '^]'.
     220 sf1.hashbang.sh ESMTP Postfix (Debian/GNU)
     ```
 
-2. Announce yourself to the mail sever
+4. Announce yourself to the mail sever
 
     ```
-    EHLO hashbang.sh
+    EHLO localhost
     ```
 
     The server will respond with a list of protocals it supports:
 
     ```
-    250-sf1.hashbang.sh
+    250-localhost
     250-PIPELINING
     250-SIZE 52428800
     250-VRFY
@@ -41,33 +55,40 @@ form like your mail client would normally do for you.
     250 DSN
     ```
 
-2. Tell the server who you want to send mail as
+4. Tell the server who you want to send mail as
 
     ```
-    MAIL FROM:foo@derp.com
+    MAIL FROM: <jdoe@derp.com>
     ```
     Note: you can put literally any email you want here. This is like a return
     address on an envelope. Most email servers will blindly let you impersonate
     anyone. We call this email "spoofing".
 
-3. Tell the server who you want to receive the mail
+5. Tell the server who you want to receive the mail
 
     ```
-    RCPT TO: your@emailhere.com
+    RCPT TO: <your@emailhere.com>
     ```
 
-4. Tell the server the body of the message you want to send
+6. Tell the server the body of the message you want to send
 
     Note: end with a period on a line by itself
 
+    You need to type everything below in order for the message to be accepted.
+
+    "DATA" announces that you want to send a message, followed by From, to and
+    subject followed by the body of your message.
+
     ```
     DATA
+    From: John Doe <jdoe@derp.com>
+    To: Your Name <your@emailhere.com>
     Subject: some subject
 
     My really awesome message here
     ```
 
-5. Send message
+7. Send message
 
     ```
     .
@@ -77,6 +98,31 @@ form like your mail client would normally do for you.
 
     Go check your inbox!
 
+### The Easy Way
+
+A bash one liner using the "sendmail" command:
+
+```
+echo "Subject: yeah cool\n\n my super rad message" | \
+  sendmail \
+    -F "John Doe <jdoe@somesite.com>" \
+    -f jdoe@somesite.com \
+    youremail@example.com.com
+```
+
+### Notes
+
     Depending on who you spoofed, it may or may not be in spam.
 
+    In practice many mail providers will refuse mail from home IP addresses.
+
+    You will generally have more success from an office or university. You
+    also will only be able to spoof domains that don't have special settings
+    on their domain.
+
+    If spoofing actually works for a real domain like this, it is a sign
+    they have a significant security hole. Point it out to them and collect
+    your first bug bounty as a security researcher!
+
     Please don't abuse this, and be mindful of the laws in your local area ;)
+
