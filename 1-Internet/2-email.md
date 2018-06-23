@@ -24,7 +24,7 @@ form like your mail client would normally do for you.
 2. Announce yourself to the mail sever
 
     ```
-    ELHO hashbang.sh
+    EHLO hashbang.sh
     ```
 
     The server will respond with a list of protocals it supports:
