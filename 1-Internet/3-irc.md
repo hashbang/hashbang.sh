@@ -2,7 +2,8 @@
 
 The chat protocol known as IRC was originally developed in 1988 as a way to
 establish real time synchronous communication on the internet, which previously
-had only been home to asymmetric communication such as E-Mail and forums.
+had only been home to the less mature 'talk' command and asymmetric communication
+such as E-Mail and forums.
 
 IRC has fallen out of favor with the advent of "walled garden" proprietary chat
 systems like Apple iMessage, Google Hangouts, and Facebook Messenger. A little
@@ -103,6 +104,19 @@ Respond with a PONG.
 ```
 PONG :verne.freenode.net
 ```
+
+7. After you've had your fun, quit and return to your shell with the QUIT command.
+
+```
+QUIT
+```
+
+Use an optional reason for quitting, if you're afraid of looking impolite.
+
+```
+QUIT Leaving now. I'll be back later, my new found friends.
+```
+
 ### The easy way
 
 Connect using a common command line application called weechat.
