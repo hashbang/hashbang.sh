@@ -14,7 +14,7 @@ form like your mail client would normally do for you.
 
 1. Connect to the hashbang mail server with telnet
     ```
-    > ssh sf1.hashbang.sh telnet localhost 25
+    > ssh yourusername@sf1.hashbang.sh telnet localhost 25
     Trying ::1...
     Connected to localhost.
     Escape character is '^]'.
