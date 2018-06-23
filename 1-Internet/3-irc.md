@@ -40,12 +40,12 @@ Escape character is '^]'.
 :tolkien.freenode.net NOTICE * :*** Found your hostname
 ```
 
-2. Now tell the server who you are
+2. Now tell the server who you are. 
 
 ```
 PASS none
 NICK jdoe
-USER anything you want here
+USER guest 0 * :John Doe 
 ```
 
 The server should greet you with a long "message of the day" welcoming you.
@@ -66,7 +66,7 @@ It should reply with:
 
 ```
 
-JOIN #linux
+JOIN ##linux
 ```
 
 You should see a giant list of the hundreds of people in this room.
@@ -76,7 +76,7 @@ Stick around for a few minutes and you should see people talking
 5. Send a message to the channel
 
 ```
-PRIVMSG #linux :hello! I am connected from telnet and have no idea what I am doing.
+PRIVMSG ##linux :hello! I am connected from telnet and have no idea what I am doing.
 ```
 
 Everyone should see your message:
