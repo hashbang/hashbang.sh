@@ -23,6 +23,8 @@ how to do it by hand in telnet, which is the basis for making your own IRC
 clients, bots, and connecting with hundreds of thousands of the smartest people
 in the world.
 
+### The hard way
+
 1. Connect to the FreeNode IRC server
 
 ```
@@ -101,7 +103,24 @@ Respond with a PONG.
 ```
 PONG :verne.freenode.net
 ```
+### The easy way
 
+Connect using a common command line application called weechat.
+
+```
+weechat -r " \
+	/server add freenode irc.freenode.net/6697 -ssl;\
+	/set irc.server.freenode.autojoin '##linux';\
+	/connect freenode \
+"
+```
+
+### Notes
 Congratulations, you are functionally using IRC by hand like it is the 80s!
 
 Now go write some IRC bots, talk to industry experts, and take over the world.
+
+### Resources
+
+* [Internet Relay Chat: Client Protocol](https://tools.ietf.org/html/rfc2812)
+* [Weechat quickstart guide](https://weechat.org/files/doc/devel/weechat_quickstart.en.html)
