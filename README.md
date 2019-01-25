@@ -1,12 +1,27 @@
 # Hardening Playbook
 
 ## Threat profile
-* Attacker has unlimited funding
-* Attacker has decades of patience
-* Attacker knows everything you do and more
-* Attacker has no morals and can break any law
-* Attacker can compromise any single system
-* Attacker can compromise any single individual
+
+* Target protects:
+  * Automated air/ground transportation
+  * Nuclear weapons
+  * Electric grid
+  * Medical implants
+  * Secrets that could end any entity
+  * Access to unlimited financial gain
+* Attacker has
+  * No ethics
+  * unlimited funding
+  * decades of patience
+  * Knowledge deeper than yours of every component
+  * 0-days of any currently known class
+* Attacker can
+  * compromise any single system
+  * compromise any single individual
+* Attacker wants
+  * Theft (cryptocurrency, bank accounts, stock tips, blackmail, databases)
+  * Sabotage (to a company or country for any reason)
+  * Chaos (May not be rational)
 
 ## Assumptions
 
