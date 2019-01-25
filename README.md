@@ -48,10 +48,14 @@
 #### Recommendations
 
 ##### Enable: STACKLEAK (Formerly PaX)
+* TL;DR:
 * Talk: https://www.youtube.com/watch?v=5wIniiWSgUc
-* Code:
 * Writeup:
-* TL;DR: Use GCC flag: ``````
+* Code:
+* Usage:
+  ```
+    Use GCC flag: ...
+  ```
 
 #### Background
 * [System Down - exploit discussion](https://news.ycombinator.com/item?id=18873530)
@@ -73,11 +77,15 @@
 ##### Release Management
 
 ##### Memory Management
-* Favor memory safe languages designed for security (Go, Rust, Zig)
-* Hardened Memory allocator (hardened_malloc)
+* Favor memory safe languages designed for security: Go, Rust, Zig
+* Consider a Hardened Memory allocator (hardened_malloc)
 
 ##### Third Party Dependencies
-*
+* Signed reproducible builds must be possible
+* Code must be signed with a well-known key of author and ideally reviewer(s)
+* Consider reviews by any distribution channel maintainers
+* Always assume force pushes and tag clobbers: pin hashes
+* Assume upstreams will dissipear without warning: mirror everything yourself
 
 #### Background
 * OpenBSD coding practices
