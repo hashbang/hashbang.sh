@@ -25,7 +25,7 @@
   * Sabotage (to a company or country for any reason)
   * Chaos (May not be rational)
 
-### Design
+## Design
 
 * Every system is treated as a single purpose immutable appliance
 * Every system is replaced not updated
@@ -34,7 +34,7 @@
 * Every component must be reproducible deterministically by anyone
 * Every component must be audited by multiple reputable third parties.
 * Every component must fail on any unathorized physical tampering attempt
-* Every compoennt must handle cryptographic operations in constant time
+* Every component must handle cryptographic operations in constant time
 * Every component must maintain secret keys physically separate from networks
 * Every component should favor security and privacy over efficiency
 
