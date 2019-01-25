@@ -1,6 +1,6 @@
 # Hardening Playbook
 
-### Threat profile
+## Threat profile
 * Attacker has unlimited funding
 * Attacker has decades of patience
 * Attacker knows everything you do and more
@@ -8,7 +8,7 @@
 * Attacker can compromise any single system
 * Attacker can compromise any single individual
 
-### Assumptions
+## Assumptions
 
 * Human lives depend on Linux system hardening
   * Self driving cars
@@ -25,65 +25,59 @@
 * Always fail safe: uptime and stability be damned
 * Favor security over speed and compatibility always
 
-### Implementation
+## Implementation
 
-## Hardware
+### Hardware
+#### Recommendations
+#### Background
 
-### Recommendations
-### Background
+### RNG
+#### Recommendations
+#### Background
 
-## RNG
+### BIOS
+#### Recommendations
+#### Background
 
-### Recommendations
-### Background
+### Bootloader
+#### Recommendations
+#### Background
 
-## BIOS
+### Kernel
 
-### Recommendations
-### Background
+#### Recommendations
 
-## Bootloader
-
-### Recommendations
-### Background
-
-## Kernel
-
-### Recommendations
-
-#### Enable: STACKLEAK (Formerly PaX)
+##### Enable: STACKLEAK (Formerly PaX)
 * Talk: https://www.youtube.com/watch?v=5wIniiWSgUc
 * Code:
 * Writeup:
 * TL;DR: Use GCC flag: ``````
 
-### Background
+#### Background
 * [System Down - exploit discussion](https://news.ycombinator.com/item?id=18873530)
 
-## Userspace
+### Userspace
 
-## Recommendations
-### System Call Filtering
+#### Recommendations
+##### System Call Filtering
 
-## Compiler
+### Compiler
+#### Recommendations
+#### Background
 
-### Recommendations
-### Background
+### Application
 
-## Application
+#### Recommendations
 
-### Recommendations
+##### Code Signing
+##### Release Management
 
-#### Code Signing
-
-#### Release Management
-
-#### Memory Management
+##### Memory Management
 * Favor memory safe languages designed for security (Go, Rust, Zig)
 * Hardened Memory allocator (hardened_malloc)
 
-#### Third Party Dependencies
+##### Third Party Dependencies
 *
 
-### Background
+#### Background
 * OpenBSD coding practices
