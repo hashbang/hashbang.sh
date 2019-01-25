@@ -1,6 +1,6 @@
 # Hardening Playbook
 
-## Threat profile
+## Threat Profile
 
 * Target protects:
   * Automated air/ground transportation
@@ -9,6 +9,7 @@
   * Medical implants
   * Secrets that could end any entity
   * Access to unlimited financial gain
+  * Human lives
 * Attacker has
   * No ethics
   * unlimited funding
@@ -16,6 +17,7 @@
   * Knowledge deeper than yours of every component
   * 0-days of any currently known class
 * Attacker can
+  * compromise any single point in the supply chain
   * compromise any single system
   * compromise any single individual
 * Attacker wants
@@ -23,22 +25,18 @@
   * Sabotage (to a company or country for any reason)
   * Chaos (May not be rational)
 
-## Assumptions
+### Design
 
-* Human lives depend on Linux system hardening
-  * Self driving cars
-  * Trains
-  * Prison security systems
-  * Nuclear Power Plants
-  * Heavy equipment firmware
-  * Medical implant firmware
-  * Political dissonants and Journalists
-  * War-starting levels of digital assets in both fiat and cryptocurrency
-* Anything that can't be verified is backdoored. Trust, but verify.
-* At least one engineer with push access to every codebase is compromised
-* Any one of every system in a given deployment can be compromised
-* Always fail safe: uptime and stability be damned
-* Favor security over speed and compatibility always
+* Every system is treated as a single purpose immutable appliance
+* Every system is replaced not updated
+* Every system has only the bare minimum to run a given application
+* Every component must be auditable by anyone
+* Every component must be reproducible deterministically by anyone
+* Every component must be audited by multiple reputable third parties.
+* Every component must fail on any unathorized physical tampering attempt
+* Every compoennt must handle cryptographic operations in constant time
+* Every component must maintain secret keys physically separate from networks
+* Every component should favor security and privacy over efficiency
 
 ## Implementation
 
