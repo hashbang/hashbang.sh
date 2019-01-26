@@ -52,6 +52,58 @@ starting point for researching this space.
 
 ## Implementation
 
+#### Toolchain
+
+##### GCC Options
+
+###### Stack Canaries
+* Usage: ```-fstack-protector-strong```
+* Resources:
+  * Writeup: [-fstack-protector-strong][1]
+[1]: https://outflux.net/blog/archives/2014/01/27/fstack-protector-strong/
+
+###### Kernel Address Space Layout Randomization
+* Usage: ```-fPIE -pie```
+
+###### Stack Clash Protection
+* Usage: ```-fstack-clash-protction```
+
+###### Stack Shellcode Execution
+* Usage: ```-z execstack```
+
+###### Run-time buffer overflow detection
+* Usage: ```-DFORTIFY_SOURCE=2```
+
+###### Run-time bounds checking for C++ strings/containers
+* Usage: ```-Wp, -D_GLIBCXX_ASSERTIONS```
+
+###### Table-based thread cancellation
+* Usage: ```-fexceptions```
+
+###### No shared library text relocations
+* Usage: ```-fpic -shared```
+
+###### Hardening Quality Control
+* Usage: ```-plugin=annobin```
+
+###### Control flow integrity
+* Usage: ```-mcet -fcf-protection```
+
+###### Reject potentially unsafe formt string args
+* Usage: ```-Werror=format-security```
+
+###### Reject missing function prototypes
+* Usage: ```-Werror=implicit-function-declaration```
+
+###### Detect and reject underlinking
+* Usage: ```-Wl,-z,defs```
+
+###### Disable lazy binding
+* Usage: ```-Wl,-z,now```
+
+###### RElocation Read-Only ELF Hardening
+* Usage: ```-Wl,-z,relro```
+
 ### Kernel
 
 #### Overview
@@ -71,29 +123,65 @@ document.
 
 #### Recommendations
 
-##### GCC Options
+##### Sysctl Options
 
-###### Stack Canaries (-fstack-protector-strong)
-* Intention:
-  *
+###### Avoid kernel address exposures in /proc files (kallsyms, modules, etc).
+* Usage: ```kernel.kptr_restrict = 1```
+* Notes:
 * Resources:
-  * Writeup: [-fstack-protector-strong][1]
-[1]: https://outflux.net/blog/archives/2014/01/27/fstack-protector-strong/
+  * Writeup:
+[1]:
 
-###### Kernel Address Space Layout Randomization (-fPIE -pie)
-###### Stack Clash Protection  (-fstack-clash-protction)
-###### Stack Shellcode Execution (-z execstack)
-###### Run-time buffer overflow detetion (-DFORTIFY_SOURCE=2)
-###### Run-time bounds checking for C++ strings/containers (-Wp, -D_GLIBCXX_ASSERTIONS)
-###### Table-based thread cancellation ( -fexceptions )
-###### No shared library text relocations (-fpic -shared)
-###### Hardening Quality Control (-plugin=annobin)
-###### Control flow integrity (-mcet -fcf-protection)
-###### Reject potentially unsafe formt string args (-Werror=format-security)
-###### Reject missing function prototypes (-Werror=implicit-function-declaration)
-###### Detect and reject underlinking (-Wl,-z,defs)
-###### Disable lazy binding (-Wl,-z,now)
-###### RElocation Read-Only ELF Hardening (-Wl,-z,relro)
+###### Avoid kernel memory address exposures via dmesg.
+* Usage: ```kernel.dmesg_restrict = 1```
+* Notes:
+* Resources:
+  * Writeup:
+[1]:
+
+###### Block non-uid-0 profiling
+* Usage: ```kernel.perf_event_paranoid = 3```
+* Notes:
+  * needs distro patch, otherwise this is the same as "= 2"
+* Resources:
+  * Writeup:
+[1]:
+
+###### Turn off kexec, even if it's built in.
+* Usage: ```kernel.kexec_load_disabled = 1```
+* Notes:
+* Resources:
+  * Writeup:
+[1]:
+
+###### Avoid non-ancestor ptrace access to running processes and their credentials.
+* Usage: ```kernel.yama.ptrace_scope = 1```
+* Notes:
+* Resources:
+  * Writeup:
+[1]:
+
+
+###### Disable User Namespaces, removing large attack surface to unprivileged users.
+* Usage: ```user.max_user_namespaces = 0```
+* Notes:
+* Resources:
+  * Writeup:
+[1]:
+
+###### Disable unprivileged eBPF access.
+* Usage: ```kernel.unprivileged_bpf_disabled = 1```
+* Notes:
+* Resources:
+  * Writeup:
+[1]:
+
+###### Turn on BPF JIT hardening, if the JIT is enabled.
+* Usage: ```net.core.bpf_jit_harden = 2```
+* Notes:
+* Resources:
+  * Writeup:
+[1]:
 
 ##### Config Flags
 
