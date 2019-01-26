@@ -73,13 +73,27 @@ document.
 
 ##### GCC Options
 
+###### Stack Canaries (-fstack-protector-strong)
+* Intention:
+  *
+* Resources:
+  * Writeup: [-fstack-protector-strong][1]
+[1]: https://outflux.net/blog/archives/2014/01/27/fstack-protector-strong/
+
 ###### Kernel Address Space Layout Randomization (-fPIE -pie)
-###### RElocation Read-Only ELF Hardening (-Wl,-z,relro)
-###### Stack Canaries (-fstack-protector-all)
 ###### Stack Clash Protection  (-fstack-clash-protction)
 ###### Stack Shellcode Execution (-z execstack)
-###### Glibc Hardening (-DFORTIFY_SOURCE=2)
-###### Glibc++ Hardening (-Wp, -D_GLIBCXX_ASSERTIONS)
+###### Run-time buffer overflow detetion (-DFORTIFY_SOURCE=2)
+###### Run-time bounds checking for C++ strings/containers (-Wp, -D_GLIBCXX_ASSERTIONS)
+###### Table-based thread cancellation ( -fexceptions )
+###### No shared library text relocations (-fpic -shared)
+###### Hardening Quality Control (-plugin=annobin)
+###### Control flow integrity (-mcet -fcf-protection)
+###### Reject potentially unsafe formt string args (-Werror=format-security)
+###### Reject missing function prototypes (-Werror=implicit-function-declaration)
+###### Detect and reject underlinking (-Wl,-z,defs)
+###### Disable lazy binding (-Wl,-z,now)
+###### RElocation Read-Only ELF Hardening (-Wl,-z,relro)
 
 ##### Config Flags
 
@@ -129,6 +143,38 @@ document.
   * Patch:
 
 ###### CONFIG_GCC_PLUGIN_RANDSTRUCT=y
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_HARDENED_USERCOPY=y
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_CC_STACKPROTECTOR_STRONG=y
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_STRICT_KERNEL_RWX=y
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_DEBUG_RODATA=y
 * Platforms: x86_64, arm64
 * Intention:
   * 
@@ -219,6 +265,318 @@ document.
   * Writeup:
   * Patch:
 
+###### CONFIG_BUG=y
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_STRICT_KERNEL_RWX=y
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_DEBUG_WX=y
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_STRICT_DEVMEM=y
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_IO_STRICT_DEVMEM=y
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_SYN_COOKIES=y
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_DEBUG_CREDENTIALS=y
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_DEBUG_NOTIFIERS=y
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_DEBUG_LIST=y
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_DEBUG_SG=y
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_BUG_ON_DATA_CORRUPTION=y
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_SCHED_STACK_END_CHECK=y
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_SECCOMP=y
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_SECCOMP_FILTER=y
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_SECURITY=y
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_SECURITY_YAMA=y
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_HARDENED_USERCOPY=y
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_SLAB_FREELIST_RANDOM=y
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_SLAB_FREELIST_HARDENED=y
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_SLUB_DEBUG=y
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_PAGE_POISONING=y
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_PAGE_POISONING_NO_SANITY=y
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_PAGE_POISONING_ZERO=y
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_VMAP_STACK=y
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_REFCOUNT_FULL=y
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_FORTIFY_SOURCE=y
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_ACPI_CUSTOM_METHOD=n
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_COMPAT_BRK=n
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_DEVKMEM=n
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_PROC_KCORE=n
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_COMPAT_VDSO=n
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_KEXEC=n
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_HIBERNATION=n
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_BINFMT_MISC=n
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_LEGACY_PTYS=n
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_SECURITY_SELINUX_DISABLE=n
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_PANIC_ON_OOPS=y
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_PANIC_TIMEOUT=-1
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
+###### CONFIG_MODULES=n
+* Platforms: x86_64, arm64
+* Intention:
+  * 
+* Resources:
+  * Writeup:
+  * Patch:
+
 ##### Boot Options
 
 ###### slub_debug=P
@@ -255,6 +613,8 @@ document.
 
 #### Background
 * [Fedora Hardening Flags](https://fedoraproject.org/wiki/Changes/HardeningFlags28)
+* [Android Kernel Hardening](https://source.android.com/devices/architecture/kernel/hardening)
+* [ChromeOS Kernel Configs](https://chromium.googlesource.com/chromiumos/third_party/kernel/+/80b921861fdfebef21c2841ecc71d40b9d6b5550/chromeos/config/x86_64)
 * [Debian Hardening](https://wiki.debian.org/Hardening)
 * [RedHat: Recommended GCC Compler Flags](https://developers.redhat.com/blog/2018/03/21/compiler-and-linker-flags-gcc/)
 * [Debian Security Checklist](https://hardenedlinux.github.io/system-security/2015/06/09/debian-security-chklist.html)
