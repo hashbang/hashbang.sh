@@ -58,51 +58,81 @@ starting point for researching this space.
 
 ###### Stack Canaries
 * Usage: ```-fstack-protector-strong```
+* Intention:
+  *
 * Resources:
   * Writeup: [-fstack-protector-strong][1]
 [1]: https://outflux.net/blog/archives/2014/01/27/fstack-protector-strong/
 
 ###### Kernel Address Space Layout Randomization
 * Usage: ```-fPIE -pie```
+* Intention:
+  *
 
 ###### Stack Clash Protection
 * Usage: ```-fstack-clash-protction```
+* Intention:
+  *
 
 ###### Stack Shellcode Execution
 * Usage: ```-z execstack```
+* Intention:
+  *
 
 ###### Run-time buffer overflow detection
 * Usage: ```-DFORTIFY_SOURCE=2```
+* Intention:
+  *
 
 ###### Run-time bounds checking for C++ strings/containers
 * Usage: ```-Wp, -D_GLIBCXX_ASSERTIONS```
+* Intention:
+  *
 
 ###### Table-based thread cancellation
 * Usage: ```-fexceptions```
+* Intention:
+  *
 
 ###### No shared library text relocations
 * Usage: ```-fpic -shared```
+* Intention:
+  *
 
 ###### Hardening Quality Control
 * Usage: ```-plugin=annobin```
+* Intention:
+  *
 
 ###### Control flow integrity
 * Usage: ```-mcet -fcf-protection```
+* Intention:
+  *
 
 ###### Reject potentially unsafe formt string args
 * Usage: ```-Werror=format-security```
+* Intention:
+  *
 
 ###### Reject missing function prototypes
 * Usage: ```-Werror=implicit-function-declaration```
+* Intention:
+  *
 
 ###### Detect and reject underlinking
 * Usage: ```-Wl,-z,defs```
+* Intention:
+  *
 
 ###### Disable lazy binding
 * Usage: ```-Wl,-z,now```
+* Intention:
+  *
 
 ###### RElocation Read-Only ELF Hardening
 * Usage: ```-Wl,-z,relro```
+* Intention:
+  *
 
 ### Kernel
 
@@ -127,6 +157,8 @@ document.
 
 ###### Avoid kernel address exposures in /proc files (kallsyms, modules, etc).
 * Usage: ```kernel.kptr_restrict = 1```
+* Intention:
+  *
 * Notes:
 * Resources:
   * Writeup:
@@ -134,6 +166,8 @@ document.
 
 ###### Avoid kernel memory address exposures via dmesg.
 * Usage: ```kernel.dmesg_restrict = 1```
+* Intention:
+  *
 * Notes:
 * Resources:
   * Writeup:
@@ -141,29 +175,35 @@ document.
 
 ###### Block non-uid-0 profiling
 * Usage: ```kernel.perf_event_paranoid = 3```
-* Notes:
-  * needs distro patch, otherwise this is the same as "= 2"
+* Intention:
+  *
+* Notes: needs distro patch, otherwise this is the same as "= 2"
 * Resources:
   * Writeup:
 [1]:
 
 ###### Turn off kexec, even if it's built in.
 * Usage: ```kernel.kexec_load_disabled = 1```
-* Notes:
+* Intention:
+  *
 * Resources:
   * Writeup:
 [1]:
 
 ###### Avoid non-ancestor ptrace access to running processes and their credentials.
 * Usage: ```kernel.yama.ptrace_scope = 1```
+* Intention:
+  * Avoid non-ancestor ptrace access to running processes and their credentials.
 * Notes:
 * Resources:
   * Writeup:
 [1]:
 
 
-###### Disable User Namespaces, removing large attack surface to unprivileged users.
+###### Disable User Namespaces
 * Usage: ```user.max_user_namespaces = 0```
+* Intention:
+  * removing large attack surface to unprivileged users.
 * Notes:
 * Resources:
   * Writeup:
@@ -171,6 +211,8 @@ document.
 
 ###### Disable unprivileged eBPF access.
 * Usage: ```kernel.unprivileged_bpf_disabled = 1```
+* Intention:
+  *
 * Notes:
 * Resources:
   * Writeup:
@@ -178,6 +220,8 @@ document.
 
 ###### Turn on BPF JIT hardening, if the JIT is enabled.
 * Usage: ```net.core.bpf_jit_harden = 2```
+* Intention:
+  *
 * Notes:
 * Resources:
   * Writeup:
@@ -233,7 +277,7 @@ document.
 ###### CONFIG_GCC_PLUGIN_RANDSTRUCT=y
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -241,7 +285,7 @@ document.
 ###### CONFIG_HARDENED_USERCOPY=y
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -249,7 +293,7 @@ document.
 ###### CONFIG_CC_STACKPROTECTOR_STRONG=y
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -257,7 +301,7 @@ document.
 ###### CONFIG_STRICT_KERNEL_RWX=y
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -265,7 +309,7 @@ document.
 ###### CONFIG_DEBUG_RODATA=y
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -273,7 +317,7 @@ document.
 ###### CONFIG_DEFAULT_MMAP_MIN_ADDR=65536
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -281,7 +325,7 @@ document.
 ###### CONFIG_RANDOMIZE_BASE=y
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -289,7 +333,7 @@ document.
 ###### CONFIG_RANDOMIZE_MEMORY=y
 * Platforms: x86_64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -307,7 +351,7 @@ document.
 ###### CONFIG_PAGE_TABLE_ISOLATION=y
 * Platforms: x86_64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -323,7 +367,7 @@ document.
 ###### CONFIG_X86_X32=n
 * Platforms: x86_64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -331,7 +375,7 @@ document.
 ###### CONFIG_MODIFY_LDT_SYSCALL=n
 * Platforms: x86_64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -339,7 +383,7 @@ document.
 ###### CONFIG_ARM64_SW_TTBR0_PAN=y
 * Platforms: arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -356,7 +400,7 @@ document.
 ###### CONFIG_BUG=y
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -364,7 +408,7 @@ document.
 ###### CONFIG_STRICT_KERNEL_RWX=y
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -372,7 +416,7 @@ document.
 ###### CONFIG_DEBUG_WX=y
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -380,7 +424,7 @@ document.
 ###### CONFIG_STRICT_DEVMEM=y
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -388,7 +432,7 @@ document.
 ###### CONFIG_IO_STRICT_DEVMEM=y
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -396,7 +440,7 @@ document.
 ###### CONFIG_SYN_COOKIES=y
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -404,7 +448,7 @@ document.
 ###### CONFIG_DEBUG_CREDENTIALS=y
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -412,7 +456,7 @@ document.
 ###### CONFIG_DEBUG_NOTIFIERS=y
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -420,7 +464,7 @@ document.
 ###### CONFIG_DEBUG_LIST=y
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -428,7 +472,7 @@ document.
 ###### CONFIG_DEBUG_SG=y
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -436,7 +480,7 @@ document.
 ###### CONFIG_BUG_ON_DATA_CORRUPTION=y
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -444,7 +488,7 @@ document.
 ###### CONFIG_SCHED_STACK_END_CHECK=y
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -452,7 +496,7 @@ document.
 ###### CONFIG_SECCOMP=y
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -460,7 +504,7 @@ document.
 ###### CONFIG_SECCOMP_FILTER=y
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -468,7 +512,7 @@ document.
 ###### CONFIG_SECURITY=y
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -476,7 +520,7 @@ document.
 ###### CONFIG_SECURITY_YAMA=y
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -484,7 +528,7 @@ document.
 ###### CONFIG_HARDENED_USERCOPY=y
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -492,7 +536,7 @@ document.
 ###### CONFIG_SLAB_FREELIST_RANDOM=y
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -500,7 +544,7 @@ document.
 ###### CONFIG_SLAB_FREELIST_HARDENED=y
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -508,7 +552,7 @@ document.
 ###### CONFIG_SLUB_DEBUG=y
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -516,7 +560,7 @@ document.
 ###### CONFIG_PAGE_POISONING=y
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -524,7 +568,7 @@ document.
 ###### CONFIG_PAGE_POISONING_NO_SANITY=y
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -532,7 +576,7 @@ document.
 ###### CONFIG_PAGE_POISONING_ZERO=y
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -540,7 +584,7 @@ document.
 ###### CONFIG_VMAP_STACK=y
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -548,7 +592,7 @@ document.
 ###### CONFIG_REFCOUNT_FULL=y
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -556,7 +600,7 @@ document.
 ###### CONFIG_FORTIFY_SOURCE=y
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -564,7 +608,7 @@ document.
 ###### CONFIG_ACPI_CUSTOM_METHOD=n
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -572,7 +616,7 @@ document.
 ###### CONFIG_COMPAT_BRK=n
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -580,7 +624,7 @@ document.
 ###### CONFIG_DEVKMEM=n
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -588,7 +632,7 @@ document.
 ###### CONFIG_PROC_KCORE=n
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -596,7 +640,7 @@ document.
 ###### CONFIG_COMPAT_VDSO=n
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -604,7 +648,7 @@ document.
 ###### CONFIG_KEXEC=n
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -612,7 +656,7 @@ document.
 ###### CONFIG_HIBERNATION=n
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -620,7 +664,7 @@ document.
 ###### CONFIG_BINFMT_MISC=n
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -628,7 +672,7 @@ document.
 ###### CONFIG_LEGACY_PTYS=n
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -636,7 +680,7 @@ document.
 ###### CONFIG_SECURITY_SELINUX_DISABLE=n
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -644,7 +688,7 @@ document.
 ###### CONFIG_PANIC_ON_OOPS=y
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -652,7 +696,7 @@ document.
 ###### CONFIG_PANIC_TIMEOUT=-1
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -660,7 +704,7 @@ document.
 ###### CONFIG_MODULES=n
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -670,7 +714,7 @@ document.
 ###### slub_debug=P
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -678,7 +722,7 @@ document.
 ###### page_poison=1
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -686,7 +730,7 @@ document.
 ###### slab_nomerge
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -694,7 +738,7 @@ document.
 ###### pti=on
 * Platforms: x86_64, arm64
 * Intention:
-  * 
+  *
 * Resources:
   * Writeup:
   * Patch:
@@ -710,6 +754,7 @@ document.
 * [System Down - HN discussion](https://news.ycombinator.com/item?id=18873530)
 * [Why OpenBSD is Important To Me - HN Discussion](https://news.ycombinator.com/item?id=11660003)
 * [Differences Between ASLR KASLR and KARL](http://www.daniloaz.com/en/differences-between-aslr-kaslr-and-karl/)
+* [Linuxkit Security](https://github.com/linuxkit/linuxkit/blob/master/docs/security.md)
 
 ### Userspace
 
@@ -728,7 +773,7 @@ document.
 ##### Release Management
 
 ##### Memory Management
-* Favor memory safe languages designed for security: Go, Rust, Zig
+* Favor memory safe languages designed for security: Rust, Go, OCaml, Zig
 * Consider a Hardened Memory allocator (hardened_malloc)
 
 ##### Third Party Dependencies
