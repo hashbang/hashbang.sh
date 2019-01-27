@@ -704,6 +704,7 @@ document.
 * [Android Kernel Hardening](https://source.android.com/devices/architecture/kernel/hardening)
 * [ChromeOS Kernel Configs](https://chromium.googlesource.com/chromiumos/third_party/kernel/+/80b921861fdfebef21c2841ecc71d40b9d6b5550/chromeos/config/x86_64)
 * [Debian Hardening](https://wiki.debian.org/Hardening)
+* [Securing Debian Howto](https://www.debian.org/doc/manuals/securing-debian-howto/index.en.html#contents)
 * [RedHat: Recommended GCC Compler Flags](https://developers.redhat.com/blog/2018/03/21/compiler-and-linker-flags-gcc/)
 * [Debian Security Checklist](https://hardenedlinux.github.io/system-security/2015/06/09/debian-security-chklist.html)
 * [System Down - HN discussion](https://news.ycombinator.com/item?id=18873530)
