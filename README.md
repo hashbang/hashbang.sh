@@ -52,7 +52,49 @@ starting point for researching this space.
 
 ## Implementation
 
-#### Toolchain
+### Filesystem
+
+Everything on unix is a file, and as such filesystem mount options and
+permissions are one of the most effective ways to restrict what can or can't
+be done in a given directory.
+
+This is managed via /etc/fstab
+
+#### Overview
+
+#### Recommendations
+
+##### Mount options
+
+###### Restrict /proc so users can only see their own processes
+* Usage: ```proc /proc proc defaults,hidepid=2 0 0```
+
+###### Disable suid binaries in /dev
+* Usage: ```udev /dev devtmpfs defaults,nosuid,noexec,noatime 0 0```
+
+###### Force mode 0666 in /dev/pts
+* Usage: ```devpts /dev/pts devpts defaults,newinstance,ptmxmode=0666 0 0```
+
+###### Use tmpfs for /dev/shm and restrict suid, exec, and dev
+* Usage: ```tmpfs /dev/shm tmpfs defaults,nodev,nosuid,noexec 0 0
+```
+###### Use tmpfs for /tmp and disable deices, suid binaries, and exec
+* Usage: ```tmpfs /tmp tmpfs nodev,nosuid,noexec,size=2G 0 0
+
+###### Bind /var/tmp to /tmp and restrict suid, exec, and dev
+* Usage: ```/tmp /var/tmp none rw,noexec,nosuid,nodev,bind 0 0```
+
+##### Encryption
+
+* TODO
+
+### Toolchain
+
+#### Overview
+
+* TODO
+
+#### Recommendations
 
 ##### GCC Options
 
@@ -134,6 +176,10 @@ starting point for researching this space.
 * Intention:
   *
 
+##### C/POSIX Standard Library Implementation
+
+* TODO
+
 ### Kernel
 
 #### Overview
@@ -198,7 +244,6 @@ document.
 * Resources:
   * Writeup:
 [1]:
-
 
 ###### Disable User Namespaces
 * Usage: ```user.max_user_namespaces = 0```
@@ -759,24 +804,30 @@ document.
 ### Userspace
 
 #### Recommendations
-##### System Call Filtering
 
-### Compiler
-#### Recommendations
-#### Background
+##### System Call Filtering
+* TODO
+
+##### Control Groups
+* TODO
 
 ### Application
 
 #### Recommendations
 
 ##### Code Signing
+* TODO
+
 ##### Release Management
+* TODO
 
 ##### Memory Management
+* TODO
 * Favor memory safe languages designed for security: Rust, Go, OCaml, Zig
 * Consider a Hardened Memory allocator (hardened_malloc)
 
 ##### Third Party Dependencies
+* TODO
 * Signed reproducible builds must be possible
 * Code must be signed with a well-known key of author and ideally reviewer(s)
 * Consider reviews by any distribution channel maintainers
@@ -784,4 +835,5 @@ document.
 * Assume upstreams will dissipear without warning: mirror everything yourself
 
 #### Background
+* TODO
 * OpenBSD coding practices
