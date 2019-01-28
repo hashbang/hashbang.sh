@@ -58,7 +58,10 @@ Everything on unix is a file, and as such filesystem mount options and
 permissions are one of the most effective ways to restrict what can or can't
 be done in a given directory.
 
-This is managed via /etc/fstab
+Everything should be either a read-only filesystem like quashfs or a tmpfs.
+Never allow writes to root filesystem.
+
+This is all managed via /etc/fstab
 
 #### Overview
 
