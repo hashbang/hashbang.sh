@@ -76,10 +76,10 @@ This is managed via /etc/fstab
 * Usage: ```devpts /dev/pts devpts defaults,newinstance,ptmxmode=0666 0 0```
 
 ###### Use tmpfs for /dev/shm and restrict suid, exec, and dev
-* Usage: ```tmpfs /dev/shm tmpfs defaults,nodev,nosuid,noexec 0 0
-```
-###### Use tmpfs for /tmp and disable deices, suid binaries, and exec
-* Usage: ```tmpfs /tmp tmpfs nodev,nosuid,noexec,size=2G 0 0
+* Usage: ```tmpfs /dev/shm tmpfs defaults,nodev,nosuid,noexec 0 0```
+
+###### Use tmpfs for /tmp and disable devices, suid binaries, and exec
+* Usage: ```tmpfs /tmp tmpfs nodev,nosuid,noexec,size=2G 0 0```
 
 ###### Bind /var/tmp to /tmp and restrict suid, exec, and dev
 * Usage: ```/tmp /var/tmp none rw,noexec,nosuid,nodev,bind 0 0```
