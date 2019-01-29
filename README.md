@@ -95,49 +95,72 @@ This is all managed via /etc/fstab
 
 #### Overview
 
-* TODO
+
 
 #### Recommendations
 
-##### GCC Options
+##### GCC/Binutils Options
 
 ###### Stack Canaries
 * Usage: ```-fstack-protector-strong```
 * Intention:
-  *
+  * Plant random "canary" integers just before stack return pointers
+  * Buffer overflows hijacking return pointer will normally modify canary
+  * Ensure canary is still present before a routine uses a pointer on stack
 * Resources:
-  * Writeup: [-fstack-protector-strong][1]
-[1]: https://outflux.net/blog/archives/2014/01/27/fstack-protector-strong/
+  * https://outflux.net/blog/archives/2014/01/27/fstack-protector-strong/
+  * https://en.wikipedia.org/wiki/Buffer_overflow_protection#Canaries
 
-###### Kernel Address Space Layout Randomization
+###### Position Independent Execution (PIE)
 * Usage: ```-fPIE -pie```
 * Intention:
-  *
+  * Generated position independant code can only be linked into executables
+  * When used in with ASLR, all program memory is allocated randomly together
+  * Increase difficulty of using exploits that assume a specific memory layout
+* Resources:
+  * http://www.openbsd.org/papers/nycbsdcon08-pie/
+  * https://mropert.github.io/2018/02/02/pic_pie_sanitizers/
 
 ###### Stack Clash Protection
-* Usage: ```-fstack-clash-protction```
+* Usage: ```-fstack-clash-protection```
 * Intention:
-  *
+  * Mitigate attacks that rely on colliding neighboring memory regions
+  * Defeats most historical stack clashing exploits
+* Resources:
+  * https://blog.qualys.com/securitylabs/2017/06/19/the-stack-clash
+  * https://gcc.gnu.org/ml/gcc-patches/2017-07/msg01112.html
 
-###### Stack Shellcode Execution
-* Usage: ```-z execstack```
+###### Data Execution Prevention (DEP)
+* Usage: ```-Wl,-z,noexecstack -Wl,-z,noexecheap```
 * Intention:
-  *
+  * Buffer overflows tend to put code in programs stack and jump to it
+  * If all writable addresses are non-executable, the attack is prevented
+  * Don't mark memory as executable when it is not required
+  * ELF headers are marked with PT_GNU_STACK and PT_GNU_HEAP
+  * Set stacks/heaps to be executable only if segment flag calls for it
+* Resources:
+  * https://www.airs.com/blog/archives/518
+  * https://linux.die.net/man/8/execstack
 
-###### Run-time buffer overflow detection
+###### Source Fortification
 * Usage: ```-DFORTIFY_SOURCE=2```
 * Intention:
-  *
+  * Many programs rely on functions that are not aware of buffer-length
+  * Buffer overflow exploits often take advantage of these functions
+  * Examples include strncpy, strcpy, memcpy, memset
+  * Fail compilation if these are used in obviously unsafe way.
+  * Compile with buffer-length aware checks for added run-time detection
+  * Kill execution if buffer overflow check fires
+* Resources:
+  * https://idea.popcount.org/2013-08-15-fortify_source/
 
 ###### Run-time bounds checking for C++ strings/containers
 * Usage: ```-Wp, -D_GLIBCXX_ASSERTIONS```
 * Intention:
-  *
-
-###### Table-based thread cancellation
-* Usage: ```-fexceptions```
-* Intention:
-  *
+  * Turn on cheap range checks for C++ arrays, vectors, and strings
+  * Add Null pointer checks when dereferencing smart pointers
+* Resources:
+  * https://gcc.gnu.org/onlinedocs/libstdc++/manual/using_macros.html
 
 ###### No shared library text relocations
 * Usage: ```-fpic -shared```
@@ -183,6 +206,11 @@ This is all managed via /etc/fstab
 
 * TODO
 
+#### Background
+
+* https://gcc.gnu.org/onlinedocs/gcc/Code-Gen-Options.html
+* https://www.owasp.org/index.php/C-Based_Toolchain_Hardening#GCC.2FBinutils
+
 ### Kernel
 
 #### Overview
@@ -192,8 +220,8 @@ the most portable for the widest range of use cases and has the largest number
 of deployments so advice in this section will assume it.
 
 If your application does not require a Linux kernel it is suggested the reader
-is encouraged to carefully consider security-focused Operating System projects
-like OpenBSD, FreeBSD, FreeRTOS, or seL4.
+carefully consider security-focused alternatives like OpenBSD, FreeBSD,
+FreeRTOS, or seL4.
 
 Some of these features don't ship with any published binary kernels for any
 major distribution so it is assumed the reader will compile their own kernel
