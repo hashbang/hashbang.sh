@@ -95,8 +95,6 @@ This is all managed via /etc/fstab
 
 #### Overview
 
-
-
 #### Recommendations
 
 ##### GCC/Binutils Options
@@ -111,15 +109,28 @@ This is all managed via /etc/fstab
   * https://outflux.net/blog/archives/2014/01/27/fstack-protector-strong/
   * https://en.wikipedia.org/wiki/Buffer_overflow_protection#Canaries
 
-###### Position Independent Execution (PIE)
-* Usage: ```-fPIE -pie```
+###### Position Independent Executables (PIE)
+* Usage:
+  * Statically compiled: ```-static-pie```
+  * Allow linking PICs: ```-fPIE -pie```
 * Intention:
-  * Generated position independant code can only be linked into executables
+  * Only allow PIC libraries to be linked into executables
   * When used in with ASLR, all program memory is allocated randomly together
   * Increase difficulty of using exploits that assume a specific memory layout
 * Resources:
   * http://www.openbsd.org/papers/nycbsdcon08-pie/
   * https://mropert.github.io/2018/02/02/pic_pie_sanitizers/
+
+###### Position Independant Code (PIC)
+* Usage: ```-fpic -shared```
+* Intention:
+  * Use in conjunction with PIE
+  * Compile shared libraries without text relocations
+  * Allow shared libraries to be safely linked into a PIE
+* Resources:
+  * https://flameeyes.blog/2016/01/16/textrels-text-relocations-and-their-impact-on-hardening-techniques/
+  * https://access.redhat.com/blogs/766093/posts/1975793
+  * http://www.productive-cpp.com/hardening-cpp-programs-executable-space-protection-address-space-layout-randomization-aslr/
 
 ###### Stack Clash Protection
 * Usage: ```-fstack-clash-protection```
@@ -152,6 +163,7 @@ This is all managed via /etc/fstab
   * Compile with buffer-length aware checks for added run-time detection
   * Kill execution if buffer overflow check fires
 * Resources:
+  * https://github.com/intel/safestringlib/wiki/FORTIFY-SOURCE-and-Safe-String-Library
   * https://idea.popcount.org/2013-08-15-fortify_source/
 
 ###### Run-time bounds checking for C++ strings/containers
@@ -162,25 +174,45 @@ This is all managed via /etc/fstab
 * Resources:
   * https://gcc.gnu.org/onlinedocs/libstdc++/manual/using_macros.html
 
-###### No shared library text relocations
-* Usage: ```-fpic -shared```
-* Intention:
-  *
-
 ###### Hardening Quality Control
 * Usage: ```-plugin=annobin```
 * Intention:
-  *
+  * Include extra metadata in binary files to assist static analysis tools
+  * Can be used by scripts to verify hardening options or ABI conflicts
+* Resources:
+  * https://fedoraproject.org/wiki/Changes/Annobin
+  * https://fedoraproject.org/wiki/Toolchain/Watermark
+  * https://developers.redhat.com/blog/2018/02/20/annobin-storing-information-binaries/
 
-###### Control flow integrity
-* Usage: ```-mcet -fcf-protection```
+###### Zero Caller Saved Registers
+* Usage: ```-mzero-caller-saved-regs=all```
+* Notes:
+  * Requires GCC patch
 * Intention:
-  *
+  * Clear caller-saved general registers on function return
+  * Make ROP, COP, and JOP attacks harder
+* Resources:
+  * https://github.com/clearlinux-pkgs/gcc/blob/master/zero-regs-gcc8.patch
+
+###### Control-Flow Enforcement Technology (CET)
+* Usage: ```-mcet -fcf-protection=full```
+* Notes:
+  * Can only be used on Intel CPUs
+* Intention:
+  * Leverage a read-only "shadow stack" preventing injection of special entries
+  * Check for valid target addresses of control-flow transfers
+  * Prevent diverting flow of control to an unexpected target
+  * Intel claims this will replace retpolines to stop Spectre variant-2 attacks
+* Resources:
+  * https://lwn.net/Articles/758245/
+  * https://ai.google/research/pubs/pub42808
+  * https://clang.llvm.org/docs/ControlFlowIntegrity.html
+  * https://clearlinux.org/blogs/gnu-compiler-collection-8-gcc-8-transitioning-new-compiler
 
 ###### Reject potentially unsafe formt string args
 * Usage: ```-Werror=format-security```
 * Intention:
-  *
+  * 
 
 ###### Reject missing function prototypes
 * Usage: ```-Werror=implicit-function-declaration```
