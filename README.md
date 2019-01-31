@@ -99,6 +99,22 @@ This is all managed via /etc/fstab
 
 ##### GCC/Binutils Options
 
+###### Indirect Branching
+* Usage: ```-mindirect-branch=thunk-extern```
+* Intention:
+  * Speculative execution is incompatible with call/return thunks
+  * Convert indirect calls and jumps to call and return thunks
+  * Used in Spectre v2 attack mitigations to prevent CPU branch speculation
+* Notes:
+  * thunk: create one thunk section per input file
+  * thunk-inline: create one per indirect branch or function return
+  * thunk-extern: one thunk section for entire program in separate object file
+* Resources:
+  * https://en.wikipedia.org/wiki/Indirect_branch
+  * https://www.phoronix.com/scan.php?page=article&item=gcc8-mindirect-thunk&num=1
+  * https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v4.14.15&id=3a72bd4b60da338e66922e4f9eded174b3ad147d
+  * https://patchwork.ozlabs.org/patch/856627/
+
 ###### Stack Canaries
 * Usage: ```-fstack-protector-strong```
 * Intention:
@@ -197,51 +213,96 @@ This is all managed via /etc/fstab
 ###### Control-Flow Enforcement Technology (CET)
 * Usage: ```-mcet -fcf-protection=full```
 * Notes:
-  * Can only be used on Intel CPUs
+  * Can only be used -future- Intel CPUs
 * Intention:
   * Leverage a read-only "shadow stack" preventing injection of special entries
   * Check for valid target addresses of control-flow transfers
   * Prevent diverting flow of control to an unexpected target
-  * Intel claims this will replace retpolines to stop Spectre variant-2 attacks
+  * Intel claims this will replace retpolines to stop Spectre v2 attacks
 * Resources:
   * https://lwn.net/Articles/758245/
   * https://ai.google/research/pubs/pub42808
   * https://clang.llvm.org/docs/ControlFlowIntegrity.html
   * https://clearlinux.org/blogs/gnu-compiler-collection-8-gcc-8-transitioning-new-compiler
 
-###### Reject potentially unsafe formt string args
+###### Format Security
 * Usage: ```-Werror=format-security```
 * Intention:
-  * 
+  * Error on poorly defined format functions that can be exploited
+  * Expect string literal and format arguments for sprintf/scanf and similar
+* Resources:
+  * https://fedoraproject.org/wiki/Format-Security-FAQ
+  * https://security.stackexchange.com/questions/45308/is-there-a-way-to-evade-wformat-security
 
 ###### Reject missing function prototypes
 * Usage: ```-Werror=implicit-function-declaration```
 * Intention:
-  *
+  * Undeclared functions can be interpreted by compilers in unexpected ways
+  * Ensure undeclared functions break builds so they can be addressed
+* Intention:
+  * https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html
+  * https://bugzilla.mozilla.org/show_bug.cgi?id=335275
+  * https://devzone.nordicsemi.com/f/nordic-q-a/25277/implicit-declaration-of-function
 
-###### Detect and reject underlinking
+###### Reject undefined symbols
 * Usage: ```-Wl,-z,defs```
 * Intention:
-  *
-
-###### Disable lazy binding
-* Usage: ```-Wl,-z,now```
-* Intention:
-  *
+  * Many attacks rely on taking control of undefined symbols
+  * Disallow undefined symbols when creating object files
+* Resources:
+  * https://bugzilla.mozilla.org/show_bug.cgi?id=333640
+  * https://linux.die.net/man/1/ld
 
 ###### RElocation Read-Only ELF Hardening
-* Usage: ```-Wl,-z,relro```
+* Usage: ```-Wl,-z,relro,-z,now```
 * Intention:
-  *
+  * Lazy binding loads libraries into memory when first accessed
+  * A reference is left in the Global Offset Table in a known location
+  * Having a well known memory addreseses makes an attackers job easier
+  * Make shared libraries read-only after dynamic relocations are applied
+  * Limit ability of attacker to overwrite GOT entries to shared functions
+  * Disable lazy binding and force "now" binding
+* Note:
+  * Will result in slower application startup
+* Resources:
+  * https://www.airs.com/blog/archives/189
+  * http://blog.siphos.be/2011/07/high-level-explanation-on-some-binary-executable-security/
 
 ##### C/POSIX Standard Library Implementation
 
-* TODO
+###### musl
+* Notes:
+  * Small binaries (~13k hello world vs ~600k with glibc)
+  * Small .a/.so footprint (~1MB vs ~10MB for glibc)
+  * Small codebase designed to be easy to audit
+  * Supported by security focused Linux distros (linuxkit, gentoo, alpine)
+  * Low-memory or resource exhaustion conditions are never fatal
+  * Wider support for microcontrollers and embedded targets than glibc
+  * Rapid termination on security violation to limit attacks on error codepaths
+  * Can build itself with ASLR to catching internal stack-smashing
+  * Double-Free protection (as possible)
+  * Moderate heap-overflow detection
+  * Use PIE together with static-linking
+  * Limited machine-specific code minimizing chances of minority arch breakage
+  * Limit buggy translations via forced literal strings without format strings
+  * Block all LD_* for suid/sgid binaries limiting runtime behavior overrides
+  * Non-use of arbitrary-size VLA/alloca, minimal dynamic allocation
+  * Avoid subtle race condition and async-signal safety issues found in glibc
+  * Attempts to remove all undefined behavior. Less code == less bugs
+  * Safe, fully-standards-conforming UTF-8 (source of many security bugs)
+  * Consistent results even under transient errors without silent fallbacks
+  * Lazy/Late allocations that would abort on failure are unsupported
+* Resources:
+  * https://wiki.musl-libc.org/functional-differences-from-glibc.html
+  * https://wiki.gentoo.org/wiki/Project:Hardened_musl
+  * https://www.openwall.com/lists/musl/2016/02/11/4
 
 #### Background
 
+* http://www.etalabs.net/compare_libcs.html
 * https://gcc.gnu.org/onlinedocs/gcc/Code-Gen-Options.html
 * https://www.owasp.org/index.php/C-Based_Toolchain_Hardening#GCC.2FBinutils
+* http://www.trapkit.de/tools/checksec.html
 
 ### Kernel
 
@@ -390,10 +451,28 @@ document.
   * Writeup:
   * Patch:
 
+###### CONFIG_RETPOLINE=y
+* Platforms: x86_64, arm64
+* Intention:
+  * Infinite loops prevent CPUs from speculating the target of an indirect jump
+  * Attach infinite loop to every return call as a "return trampoline"
+  * Never actually execute this infinite loop
+  * Mitigates kernel or cross-process memory disclosure attacks like Spectre
+* Notes:
+  * Use in combination with -mindirect-branch=thunk-extern in GCC8
+  * Edge case: When an RSB empties, Skylake+ uses vulnerable BTB prediction
+  * Also apply vendor firmware mitigations where possible
+* Resources:
+  * https://support.google.com/faqs/answer/7625886
+  * https://cve.mitre.org/cgi-bin/cvename.cgi?name=2017-5715
+  * https://lkml.org/lkml/2018/1/4/724
+  * https://git.kernel.org/pub/scm/linux/kernel/git/ak/linux-misc.git/commit/?h=spec/retpoline-415-1
+  * https://software.intel.com/security-software-guidance/insights/host-firmware-speculative-execution-side-channel-mitigation
+
 ###### CONFIG_HARDENED_USERCOPY=y
 * Platforms: x86_64, arm64
 * Intention:
-  *
+  * 
 * Resources:
   * Writeup:
   * Patch:
@@ -856,6 +935,7 @@ document.
 * [Android Kernel Hardening](https://source.android.com/devices/architecture/kernel/hardening)
 * [ChromeOS Kernel Configs](https://chromium.googlesource.com/chromiumos/third_party/kernel/+/80b921861fdfebef21c2841ecc71d40b9d6b5550/chromeos/config/x86_64)
 * [Debian Hardening](https://wiki.debian.org/Hardening)
+* [Ubuntu Compiler Flags](https://wiki.ubuntu.com/ToolChain/CompilerFlags)
 * [Securing Debian Howto](https://www.debian.org/doc/manuals/securing-debian-howto/index.en.html#contents)
 * [RedHat: Recommended GCC Compler Flags](https://developers.redhat.com/blog/2018/03/21/compiler-and-linker-flags-gcc/)
 * [Debian Security Checklist](https://hardenedlinux.github.io/system-security/2015/06/09/debian-security-chklist.html)
