@@ -328,73 +328,84 @@ document.
 ###### Avoid kernel address exposures in /proc files (kallsyms, modules, etc).
 * Usage: ```kernel.kptr_restrict = 1```
 * Intention:
-  *
-* Notes:
+  * Attackers often seek to write to kernel writable structures
+  * Hide kernel pointers normally present in /proc
+  * Exploits have harder time discovering kernel addresses/symbols
 * Resources:
-  * Writeup:
-[1]:
+  * https://lwn.net/Articles/420403/
+  * http://bits-please.blogspot.com/2015/08/effectively-bypassing-kptrrestrict-on.html
 
-###### Avoid kernel memory address exposures via dmesg.
+###### Restrict Kernel Syslog Access
 * Usage: ```kernel.dmesg_restrict = 1```
 * Intention:
-  *
-* Notes:
+  * Kernel logs often contain sensitive information like memory addresses
+  * Forbid dmesg access to binaries that lack CAP_SYS_ADMIN capability.
 * Resources:
-  * Writeup:
-[1]:
+  * https://wiki.archlinux.org/index.php/security#Restricting_access_to_kernel_logs
+  * https://lwn.net/Articles/414813/
 
-###### Block non-uid-0 profiling
+###### Restrict Performance Event Access
 * Usage: ```kernel.perf_event_paranoid = 3```
 * Intention:
-  *
-* Notes: needs distro patch, otherwise this is the same as "= 2"
+  * Access to kernel perf event interface aids adversaries in targets attacks
+  * Disallow access to CPU events, kernel profiling, tracepoints etc
 * Resources:
-  * Writeup:
-[1]:
+  * https://lwn.net/Articles/696216/
+  * https://patchwork.kernel.org/patch/9249919/
 
-###### Turn off kexec, even if it's built in.
+###### Explicitly Disable Kexec
 * Usage: ```kernel.kexec_load_disabled = 1```
 * Intention:
-  *
+  * The Kexec interface is complex, and allows replacement of kernel in memory
+  * This allows fast "reboots" but is very dangerous if exploited
+  * Kernel memory should be immutable in a conservative security system
+  * Disable /dev/kmem and any potential kernel exploits that may use it
 * Resources:
-  * Writeup:
-[1]:
+  * https://lwn.net/Articles/580269/
+  * https://security.stackexchange.com/questions/139463/why-protect-the-linux-kernel-from-the-root-user
 
 ###### Avoid non-ancestor ptrace access to running processes and their credentials.
-* Usage: ```kernel.yama.ptrace_scope = 1```
+* Usage: ```kernel.yama.ptrace_scope = 3```
 * Intention:
-  * Avoid non-ancestor ptrace access to running processes and their credentials.
+  * Deny ptrace access to any process
+  * Prevent leaking sensitive memory to malware via debug interfaces
 * Notes:
+  * Will make debugging tools like strace and gdb unusuable
 * Resources:
-  * Writeup:
-[1]:
+  * https://www.kernel.org/doc/Documentation/security/Yama.txt
+  * https://linux-audit.com/protect-ptrace-processes-kernel-yama-ptrace_scope/
 
 ###### Disable User Namespaces
 * Usage: ```user.max_user_namespaces = 0```
 * Intention:
-  * removing large attack surface to unprivileged users.
-* Notes:
+  * User namespaces are buggy and have been exploited many times
+  * Bugs have often resulted in privesc exploits
+  * Disable feature if you don't need it
+* Note:
+  * Container systems like docker rely heavily on user namespaces
 * Resources:
-  * Writeup:
-[1]:
+  * https://lwn.net/Articles/673597/
+  * https://docs.docker.com/engine/security/userns-remap/
+  * https://dock.co.nz/post/linux-user-namespaces-security-concerns/
 
-###### Disable unprivileged eBPF access.
+###### Disable Unprivileged eBPF
 * Usage: ```kernel.unprivileged_bpf_disabled = 1```
 * Intention:
-  *
-* Notes:
+  * BPF is a kernel VM that allows unprivileged users to run code in the kernel
+  * This is added attack surface for most use cases, and should be disabled
 * Resources:
-  * Writeup:
-[1]:
+  * https://lwn.net/Articles/660331/
+  * https://kernelnewbies.org/Linux_4.4#Unprivileged_eBPF_.2B-_persistent_eBPF_programs
 
 ###### Turn on BPF JIT hardening, if the JIT is enabled.
 * Usage: ```net.core.bpf_jit_harden = 2```
 * Intention:
-  *
-* Notes:
+  * Use more secure but slower codepaths for BPF JIT for all users
+  * Enables blinding and disables some tracing/debugging functionality
 * Resources:
-  * Writeup:
-[1]:
+  * https://docs.cilium.io/en/v1.3/bpf/#hardening
+  * https://lists.openwall.net/netdev/2018/05/23/84
+  * https://lwn.net/Articles/723872/
 
 ##### Config Flags
 
@@ -402,9 +413,7 @@ document.
 * Intention:
   * Allow usage of static analysis plugins in GCC at kernel compile time
 * Resources:
-  * Writeup: [Kernel building with GCC Plugins][1]
-
-[1]: https://lwn.net/Articles/691102/
+  * [Kernel building with GCC Plugins](https://lwn.net/Articles/691102/)
 
 ###### CONFIG_GCC_PLUGIN_STACKLEAK=y
 * Intention:
@@ -685,8 +694,7 @@ document.
 * Intention:
   *
 * Resources:
-  * Writeup:
-  * Patch:
+  * https://docs.docker.com/engine/security/seccomp/
 
 ###### CONFIG_SECCOMP_FILTER=y
 * Platforms: x86_64, arm64
@@ -936,6 +944,7 @@ document.
 * [ChromeOS Kernel Configs](https://chromium.googlesource.com/chromiumos/third_party/kernel/+/80b921861fdfebef21c2841ecc71d40b9d6b5550/chromeos/config/x86_64)
 * [Debian Hardening](https://wiki.debian.org/Hardening)
 * [Ubuntu Compiler Flags](https://wiki.ubuntu.com/ToolChain/CompilerFlags)
+* [Arch LInux Security](https://wiki.archlinux.org/index.php/security)
 * [Securing Debian Howto](https://www.debian.org/doc/manuals/securing-debian-howto/index.en.html#contents)
 * [RedHat: Recommended GCC Compler Flags](https://developers.redhat.com/blog/2018/03/21/compiler-and-linker-flags-gcc/)
 * [Debian Security Checklist](https://hardenedlinux.github.io/system-security/2015/06/09/debian-security-chklist.html)
