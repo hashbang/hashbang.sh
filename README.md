@@ -431,7 +431,7 @@ document.
 
 #### Recommendations
 
-##### Boot Options
+##### Boot Options (WIP)
 
 ###### slub_debug=FZP
 * Platforms: x86_64, arm64
@@ -444,7 +444,6 @@ document.
 
 [1]: https://www.kernel.org/doc/Documentation/vm/slub.txt
 [2]:
-
 
 ###### page_poison=1
 * Platforms: x86_64, arm64
@@ -563,7 +562,7 @@ document.
   * https://lists.openwall.net/netdev/2018/05/23/84
   * https://lwn.net/Articles/723872/
 
-##### Config Flags
+##### Config Flags (WIP)
 
 ###### CONFIG_GCC_PLUGINS=y
 * Intention:
