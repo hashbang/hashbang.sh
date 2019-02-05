@@ -52,7 +52,110 @@ starting point for researching this space.
 
 ## Implementation
 
-### Filesystem
+### Code Review (WIP)
+
+#### Overview
+#### Recommendations
+
+* Decentralized
+* Multisig
+* Coding practices
+
+### Dependency Management (WIP)
+#### Overview
+#### Recommendations
+
+* review practices
+* Signed reproducible builds must be possible
+* Code must be signed with a well-known key of author and ideally reviewer(s)
+* Consider reviews by any distribution channel maintainers
+* Always assume force pushes and tag clobbers: pin hashes
+* Assume upstreams will vanish without warning: mirror everything yourself
+
+#### Background
+
+### Release Management (WIP)
+#### Overview
+#### Recommendations
+
+* Reproducible builds
+* Signing
+
+#### Background
+
+### Static Application Security Testing (WIP)
+
+#### Overview
+
+Static analysis analyzes source code or compiled binaries for security flaws.
+A critical part of a security focused software development is using tools
+to help catch common human errors before code hits production.
+
+Memory bugs are most common and where possible one should favor memory safe
+languages designed for security: Rust, Go, OCaml, Zig
+
+#### Recommendations
+
+##### Language Agnostic
+
+* Google CodeSearchDiggity
+* Graudit
+* LGTM
+* SonarQube
+* VisualCodeGrepper
+
+##### Bash
+* shellcheck
+
+##### Node.js
+* synode
+
+##### C/C++
+* BOON
+* CQual
+* xg++
+* Eau Claire tool
+* MOPS
+* Split
+* Flawfinder
+* PreFast
+
+##### C#
+* Puma Scan
+* .Net Security Guard
+
+##### Python
+* Bandit
+
+##### Ruby
+* Brakeman
+* Codesake Dawn
+
+##### Java
+* SpotBugs
+* PMD
+
+##### PHP
+* progpilot
+* RIPS
+* pgpcs-security-audit
+
+#### Background
+
+* https://www.owasp.org/index.php/Source_Code_Analysis_Tools
+
+### Sandboxing (WIP)
+
+#### Overview
+#### Recommendations
+
+##### SELinux
+##### Apparmor
+##### Seccomp
+##### cgroups
+##### namespacing
+
+### Filesystem (WIP)
 
 Everything on unix is a file, and as such filesystem mount options and
 permissions are one of the most effective ways to restrict what can or can't
@@ -89,7 +192,12 @@ This is all managed via /etc/fstab
 
 ##### Encryption
 
-* TODO
+* luks
+* luks + sgx
+
+##### Resources
+
+* Cold boot attacks
 
 ### Toolchain
 
@@ -323,6 +431,54 @@ document.
 
 #### Recommendations
 
+##### Boot Options
+
+###### slub_debug=FZP
+* Platforms: x86_64, arm64
+* Intention:
+  * Enable sanity checks (F), Redzoning (Z), and Poisoning (P)
+  * Set slub debugging to poison mode
+* Resources:
+  * [Kernel.org: Short users guide for SLUB][1]
+  * [][2]
+
+[1]: https://www.kernel.org/doc/Documentation/vm/slub.txt
+[2]:
+
+
+###### page_poison=1
+* Platforms: x86_64, arm64
+* Intention:
+  *
+* Resources:
+  * [][1]
+  * [][2]
+
+[1]:
+[2]:
+
+###### slab_nomerge
+* Platforms: x86_64, arm64
+* Intention:
+  *
+* Resources:
+  * [][1]
+  * [][2]
+
+[1]:
+[2]:
+
+###### pti=on
+* Platforms: x86_64, arm64
+* Intention:
+  *
+* Resources:
+  * [][1]
+  * [][2]
+
+[1]:
+[2]:
+
 ##### Sysctl Options
 
 ###### Avoid kernel address exposures in /proc files (kallsyms, modules, etc).
@@ -413,7 +569,21 @@ document.
 * Intention:
   * Allow usage of static analysis plugins in GCC at kernel compile time
 * Resources:
-  * [Kernel building with GCC Plugins](https://lwn.net/Articles/691102/)
+  * [Kernel building with GCC Plugins][1]
+  * [Kernel.org GCC Plugin Documentation][2]
+
+[1]: https://lwn.net/Articles/691102/
+[2]: https://www.kernel.org/doc/Documentation/gcc-plugins.txt)
+
+###### CONFIG_GCC_PLUGIN_STACKINIT=y
+* Platforms: x86_64, arm64
+* Intention:
+  * Exploits often take advantage of uninitalized variables
+  * Force unconditional initialization of all stack variables
+* Resources:
+  * [Patch: Introduce stackinit plugin][1]
+
+[1]: https://patchwork.kernel.org/patch/9518595/
 
 ###### CONFIG_GCC_PLUGIN_STACKLEAK=y
 * Intention:
@@ -421,44 +591,59 @@ document.
   * stack poisoning mitigation
   * runtime stack overflow detection
 * Resources:
-  * Talk: [STACKLEAK: A Long Way to the Linux Kernel Mainline - A. Popov][1]
-  * Writeup: [How STACKLEAK improves Linux Security - A. Popov][2]
-  * Patch: [#9778761](https://patchwork.kernel.org/patch/9778761/)
+  * [STACKLEAK: A Long Way to the Linux Kernel Mainline - A. Popov][1]
+  * [How STACKLEAK improves Linux Security - A. Popov][2]
+  * [Patch: Introduce stackleak plugin][3]
 
 [1]: https://www.youtube.com/watch?v=5wIniiWSgUc
 [2]: https://a13xp0p0v.github.io/2018/11/04/stackleak.html
+[3]: https://patchwork.kernel.org/patch/9518595/
 
 ###### CONFIG_GCC_PLUGIN_STRUCTLEAK=y
 * Platforms: x86_64, arm64
 * Intention:
   * Force all structure initialization before usage by other functions
 * Resources:
-  * Writeup:
-  * Patch:
+  * [Patch: Introduce structleak plugin][1]
+
+[1]: https://lwn.net/Articles/711692/
 
 ###### CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL=y
 * Platforms: x86_64, arm64
 * Intention:
-  *
+  * Extend CONFIG_GCC_PLUGIN_STRUCTLEAK to include pass-by-reference variables
 * Resources:
-  * Writeup:
-  * Patch:
+  * [LKDDB: Force initialize all struct type variables passed by reference][1]
+
+[1]: https://cateee.net/lkddb/web-lkddb/GCC_PLUGIN_STRUCTLEAK_BYREF_ALL.html
 
 ###### CONFIG_GCC_PLUGIN_LATENT_ENTROPY=y
 * Platforms: x86_64, arm64
 * Intention:
-  * Gather additional entropy at boot time as some systems have bad sources
+  * Some systems have known issues generating hardware entropy in early boot
+  * insert local variable in loop counts, cases, branching, etc
+  * Permuate a global variable based on value changes to marked functions
+  * Use global variable to help seed early boot entropy pool
+* Notes:
+  * Many of the sources of entropy here are deterministic.
+  * It is not advised to rely on this plugin alone. Use a TRNG where possible.
 * Resources:
-  * Writeup:
-  * Patch:
+  * [Kernel.org: Add latent_entropy plugin][1]
+  * [Cryptography ML post addressing limitations][2]
+
+[1]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=38addce8b600ca335dc86fa3d48c890f1c6fa1f4
 
 ###### CONFIG_GCC_PLUGIN_RANDSTRUCT=y
 * Platforms: x86_64, arm64
 * Intention:
-  *
+  * Randomize the layout of selected structures at compile time
+  * Defend against attacks rely on struct knowledge
 * Resources:
-  * Writeup:
-  * Patch:
+  * [LWN: Randomizing structure layout][1]
+  * [Openwall: RANDSTRUCT Patches][2]
+
+[1]: https://lwn.net/Articles/722293/
+[2]: https://www.openwall.com/lists/kernel-hardening/2017/04/06/14
 
 ###### CONFIG_RETPOLINE=y
 * Platforms: x86_64, arm64
@@ -472,222 +657,178 @@ document.
   * Edge case: When an RSB empties, Skylake+ uses vulnerable BTB prediction
   * Also apply vendor firmware mitigations where possible
 * Resources:
-  * https://support.google.com/faqs/answer/7625886
-  * https://cve.mitre.org/cgi-bin/cvename.cgi?name=2017-5715
-  * https://lkml.org/lkml/2018/1/4/724
-  * https://git.kernel.org/pub/scm/linux/kernel/git/ak/linux-misc.git/commit/?h=spec/retpoline-415-1
-  * https://software.intel.com/security-software-guidance/insights/host-firmware-speculative-execution-side-channel-mitigation
+  * [Retpoline: a software construct for preventing branch-target-injection][1]
+  * [Mitre: CVE-2017-5715][2]
+  * [lkml Retpoline Discission][3]
+  * [Kernel.org: Retpoline patch][4]
+  * [Intel: Host Firmware Speculative Execution Side Channel Mitigation]
+
+[1]: https://support.google.com/faqs/answer/7625886
+[2]: https://cve.mitre.org/cgi-bin/cvename.cgi?name=2017-5715
+[3]: https://lkml.org/lkml/2018/1/4/724
+[4]: https://git.kernel.org/pub/scm/linux/kernel/git/ak/linux-misc.git/commit/?h=spec/retpoline-415-1
+[5]: https://software.intel.com/security-software-guidance/insights/host-firmware-speculative-execution-side-channel-mitigation
 
 ###### CONFIG_HARDENED_USERCOPY=y
 * Platforms: x86_64, arm64
 * Intention:
   * 
 * Resources:
-  * Writeup:
-  * Patch:
+  * [LWN: Hardened Usercopy][1]
+  * [][2]
+
+[1]: https://lwn.net/Articles/695991/
 
 ###### CONFIG_CC_STACKPROTECTOR_STRONG=y
 * Platforms: x86_64, arm64
 * Intention:
   *
 * Resources:
-  * Writeup:
-  * Patch:
+  * [][1]
+  * [][2]
+
+[1]:
+[2]:
 
 ###### CONFIG_STRICT_KERNEL_RWX=y
 * Platforms: x86_64, arm64
 * Intention:
   *
 * Resources:
-  * Writeup:
-  * Patch:
+  * [][1]
+  * [][2]
+
+[1]:
+[2]:
 
 ###### CONFIG_DEBUG_RODATA=y
 * Platforms: x86_64, arm64
 * Intention:
   *
 * Resources:
-  * Writeup:
-  * Patch:
+  * [][1]
+  * [][2]
+
+[1]:
+[2]:
+
 
 ###### CONFIG_DEFAULT_MMAP_MIN_ADDR=65536
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_RANDOMIZE_BASE=y
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_RANDOMIZE_MEMORY=y
 * Platforms: x86_64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_LEGACY_VSYSCALL_NONE=y
 * Platforms: x86_64
 * Intention:
   * Remove vsyscall entirely avoiding it as a fixed-position ROP target.
 * Resources:
-  * Writeup: [On vsyscalls and the vDSO][1]
-  * Patch:
+  * [LWN: On vsyscalls and the vDSO][1]
+  * [][2]
 
 [1]: https://lwn.net/Articles/446528/
+[2]:
 
 ###### CONFIG_PAGE_TABLE_ISOLATION=y
 * Platforms: x86_64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_IA32_EMULATION=n
 * Platforms: x86_64
 * Intention:
   * Disable 32 bit program emulation and all related attack classes.
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_X86_X32=n
 * Platforms: x86_64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_MODIFY_LDT_SYSCALL=n
 * Platforms: x86_64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_ARM64_SW_TTBR0_PAN=y
 * Platforms: arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_UNMAP_KERNEL_AT_EL0=y
 * Platforms: arm64
 * Intention:
   * Kernel Page Table Isolation
   * Remove an entire class of cache timing side-channels.
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_BUG=y
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_STRICT_KERNEL_RWX=y
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_DEBUG_WX=y
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_STRICT_DEVMEM=y
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_IO_STRICT_DEVMEM=y
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_SYN_COOKIES=y
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_DEBUG_CREDENTIALS=y
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_DEBUG_NOTIFIERS=y
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_DEBUG_LIST=y
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_DEBUG_SG=y
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_BUG_ON_DATA_CORRUPTION=y
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_SCHED_STACK_END_CHECK=y
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_SECCOMP=y
 * Platforms: x86_64, arm64
@@ -700,243 +841,131 @@ document.
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_SECURITY=y
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_SECURITY_YAMA=y
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_HARDENED_USERCOPY=y
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_SLAB_FREELIST_RANDOM=y
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_SLAB_FREELIST_HARDENED=y
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_SLUB_DEBUG=y
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_PAGE_POISONING=y
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_PAGE_POISONING_NO_SANITY=y
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_PAGE_POISONING_ZERO=y
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_VMAP_STACK=y
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_REFCOUNT_FULL=y
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_FORTIFY_SOURCE=y
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_ACPI_CUSTOM_METHOD=n
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_COMPAT_BRK=n
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_DEVKMEM=n
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_PROC_KCORE=n
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_COMPAT_VDSO=n
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_KEXEC=n
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_HIBERNATION=n
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_BINFMT_MISC=n
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_LEGACY_PTYS=n
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_SECURITY_SELINUX_DISABLE=n
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_PANIC_ON_OOPS=y
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_PANIC_TIMEOUT=-1
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
 
 ###### CONFIG_MODULES=n
 * Platforms: x86_64, arm64
 * Intention:
   *
-* Resources:
-  * Writeup:
-  * Patch:
-
-##### Boot Options
-
-###### slub_debug=P
-* Platforms: x86_64, arm64
-* Intention:
-  *
-* Resources:
-  * Writeup:
-  * Patch:
-
-###### page_poison=1
-* Platforms: x86_64, arm64
-* Intention:
-  *
-* Resources:
-  * Writeup:
-  * Patch:
-
-###### slab_nomerge
-* Platforms: x86_64, arm64
-* Intention:
-  *
-* Resources:
-  * Writeup:
-  * Patch:
-
-###### pti=on
-* Platforms: x86_64, arm64
-* Intention:
-  *
-* Resources:
-  * Writeup:
-  * Patch:
 
 #### Background
 * [Fedora Hardening Flags](https://fedoraproject.org/wiki/Changes/HardeningFlags28)
@@ -952,40 +981,3 @@ document.
 * [Why OpenBSD is Important To Me - HN Discussion](https://news.ycombinator.com/item?id=11660003)
 * [Differences Between ASLR KASLR and KARL](http://www.daniloaz.com/en/differences-between-aslr-kaslr-and-karl/)
 * [Linuxkit Security](https://github.com/linuxkit/linuxkit/blob/master/docs/security.md)
-
-### Userspace
-
-#### Recommendations
-
-##### System Call Filtering
-* TODO
-
-##### Control Groups
-* TODO
-
-### Application
-
-#### Recommendations
-
-##### Code Signing
-* TODO
-
-##### Release Management
-* TODO
-
-##### Memory Management
-* TODO
-* Favor memory safe languages designed for security: Rust, Go, OCaml, Zig
-* Consider a Hardened Memory allocator (hardened_malloc)
-
-##### Third Party Dependencies
-* TODO
-* Signed reproducible builds must be possible
-* Code must be signed with a well-known key of author and ideally reviewer(s)
-* Consider reviews by any distribution channel maintainers
-* Always assume force pushes and tag clobbers: pin hashes
-* Assume upstreams will dissipear without warning: mirror everything yourself
-
-#### Background
-* TODO
-* OpenBSD coding practices
