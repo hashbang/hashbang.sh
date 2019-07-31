@@ -17,7 +17,7 @@ form like your mail client would normally do for you.
 1. Install a local smtpd server
 
 ```
-apt install openstmpd
+apt install opensmtpd
 ```
 
 2. Start local mail server
