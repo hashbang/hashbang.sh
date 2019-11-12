@@ -1,4 +1,4 @@
-## Intro
+## Linux Hardening
 
 The following is an opinionated minimal-compromises reference to configuring a
 maximally secure Linux system for high stakes use cases where privacy and
