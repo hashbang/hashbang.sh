@@ -3,32 +3,19 @@
 import os
 import sys
 import traceback
-import ldap
 import ssl
 from flask import Flask, send_file, send_from_directory, redirect, request, make_response
-from flask.ext.restful import Resource, Api
-from flask.ext.restful.reqparse import RequestParser
+from flask_restful import Resource, Api
+from flask_restful.reqparse import RequestParser
+import requests
 from tornado.wsgi import WSGIContainer
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
-from provisor import Provisor
-from provisor.provisor import UNKNOWN_HOST
-from provisor.utils import validate_pubkey as pubkey
-from provisor.utils import validate_username as username
 
 app = Flask(__name__)
 app.config['RESTFUL_JSON'] = {"indent": 4}
 
 api = Api(app)
-
-p = Provisor(
-    uri="ldap://ldap.hashbang.sh",
-    user="cn=provisor,ou=Admin,dc=hashbang,dc=sh",
-    password=os.environ['LDAP_PASSWORD'],
-    user_base="ou=People,dc=hashbang,dc=sh",
-    group_base="ou=Group,dc=hashbang,dc=sh",
-    servers_base="ou=Servers,dc=hashbang,dc=sh",
-)
 
 certfile = os.path.join(os.getcwd(), "certs/server.crt")
 keyfile = os.path.join(os.getcwd(), "certs/server.key")
@@ -75,26 +62,31 @@ class UserCreate(Resource):
 
     def post(self):
         args = self.reqparse.parse_args()
-        print(args)
 
         try:
-            p.add_user(
-                username=str(args['user']),
-                pubkey=args['key'],
-                hostname=args['host']
-            )
-        except ldap.SERVER_DOWN:
-            return {'message': 'Unable to connect to LDAP server'}, 400
-        except ldap.ALREADY_EXISTS:
-            return {'message': 'User already exists'}, 400
-        except UNKNOWN_HOST:
-            return {'message': 'Unknown shell server'}, 400
+            data = requests.post(
+                "https://userdb.hashbang.sh/passwd",
+                data = {
+                    "name": str(args["user"]),
+                    "host": args["host"],
+                    "data": {
+                        "shell": "/bin/bash",
+                        "ssh_keys": [
+                            args["key"]
+                        ]
+                    }
+                }
+            ).json()
+            if data['message'].contains('passwd_name_key'):
+                return {'message': 'User already exists'}, 400
+            if data['message'].contains('passwd_host_fkey'):
+                return {'message': 'Unknown shell server'}, 400
         except:
             (typ, value, tb) = sys.exc_info()
             sys.stderr.write("Unexpected Error: %s\n" % typ)
             sys.stderr.write("\t%s\n" % value)
             traceback.print_tb(tb)
-            return {'message': 'User creation script failed'}, 400
+            return {'message': 'User creation script failed'}, 500
 
         return {'message': 'success'}
 
@@ -104,20 +96,22 @@ class ServerStats(Resource):
         "da1.hashbang.sh": {"lat": 32.8, "lon": -96.8},
         "ny1.hashbang.sh": {"lat": 40.7, "lon": -74},
         "sf1.hashbang.sh": {"lat": 37.8, "lon": -122.4},
-        "to1.hashbang.sh": {"lat": 43.7, "lon": -79.4}
+        "to1.hashbang.sh": {"lat": 43.7, "lon": -79.4},
+        "de1.hashbang.sh": {"lat": 49.4478, "lon": 11.0683},
     }
 
     def get(self, out_format='json'):
         try:
-            server_stats = p.server_stats()
-        except ldap.SERVER_DOWN:
-            return {'message': 'Unable to connect to LDAP server'}, 400
+            data = requests.get("https://userdb.hashbang.sh/hosts").json()
+        except:
+            return {'message': 'Unable to connect to server'}, 500
 
-        for s in server_stats.keys():
-            if s in self.LOCATIONS.keys():
-                server_stats[s]['coordinates'] = self.LOCATIONS[s]
+        for idx, s in enumerate(data):
+            server_host = s['name']
+            if server_host in self.LOCATIONS.keys():
+                data[idx].update({'coordinates': self.LOCATIONS[server_host]})
 
-        return server_stats
+        return data
 
 
 api.add_resource(UserCreate, '/user/create')

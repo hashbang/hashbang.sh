@@ -6,18 +6,17 @@ RUN LC_ALL=C \
     apt-get install -y \
         ca-certificates \
         git \
-        python-flask-restful \
-        python-ldap \
-        python-tornado \
-        python-pip \
+        python3 \
+        python3-flask-restful \
+        python3-tornado \
+        python3-requests \
         && \
     apt-get clean && \
     rm -rf /tmp/* /var/tmp/*
 
 ADD ./ /opt/app/
 WORKDIR /opt/app
-RUN pip install -r requirements.txt
 
 EXPOSE 4443
 
-CMD ["python2.7", "server.py"]
+CMD ["python3", "server.py"]
