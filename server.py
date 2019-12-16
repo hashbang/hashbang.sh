@@ -3,6 +3,8 @@
 import os
 import sys
 import traceback
+import base64
+import re
 import ssl
 from flask import Flask, send_file, send_from_directory, redirect, request, make_response
 from flask_restful import Resource, Api
@@ -11,6 +13,7 @@ import requests
 from tornado.wsgi import WSGIContainer
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
+from reserved import RESERVED_USERNAMES
 
 app = Flask(__name__)
 app.config['RESTFUL_JSON'] = {"indent": 4}
@@ -22,6 +25,34 @@ keyfile = os.path.join(os.getcwd(), "certs/server.key")
 https_port = 4443
 http_port = 8080
 
+
+def validate_pubkey(value):
+    if len(value) > 8192 or len(value) < 80:
+      raise ValueError("Expected length to be between 80 and 8192 characters")
+
+    value = value.replace("\"", "").replace("'", "").replace("\\\"", "")
+    value = value.split(' ')
+    types = [ 'ecdsa-sha2-nistp256', 'ecdsa-sha2-nistp384',
+              'ecdsa-sha2-nistp521', 'ssh-rsa', 'ssh-dss', 'ssh-ed25519' ]
+    if value[0] not in types:
+        raise ValueError(
+            "Expected " + ', '.join(types[:-1]) + ', or ' + types[-1]
+        )
+
+    return "%s %s" % (value[0], value[1])
+
+
+def validate_username(value):
+
+    # Regexp must be kept in sync with
+    #  https://github.com/hashbang/hashbang.sh/blob/master/src/hashbang.sh#L186-196
+    if re.compile(r"^[a-z][a-z0-9]{,30}$").match(value) is None:
+        raise ValueError('Username is invalid')
+
+    if value in RESERVED_USERNAMES:
+        raise ValueError('Username is reserved')
+
+    return value
 
 @api.representation('text/plain')
 def output_plain(data, code, headers=None):
@@ -42,13 +73,13 @@ class UserCreate(Resource):
         self.reqparse = RequestParser()
         self.reqparse.add_argument(
             'user',
-            type = username,
+            type = validate_username,
             required = True,
             location = 'json'
         )
         self.reqparse.add_argument(
             'key',
-            type = pubkey,
+            type = validate_pubkey,
             required = True,
             location = 'json'
         )
@@ -77,9 +108,9 @@ class UserCreate(Resource):
                     }
                 }
             ).json()
-            if data['message'].contains('passwd_name_key'):
+            if 'passwd_name_key' in data['message']:
                 return {'message': 'User already exists'}, 400
-            if data['message'].contains('passwd_host_fkey'):
+            if 'passwd_host_fkey' in data['message']:
                 return {'message': 'Unknown shell server'}, 400
         except:
             (typ, value, tb) = sys.exc_info()
