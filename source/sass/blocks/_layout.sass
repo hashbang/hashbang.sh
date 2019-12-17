@@ -1,0 +1,181 @@
+@import ../mixins/scrollbar
+@import ../colors
+
+$padding: 10px
+
+.layout
+  display: grid
+  grid-template-columns: minmax(252px, calc((100% - 1262px) / 2 + 226px)) minmax(700px, 1010px) 1fr
+  height: 100vh
+  width: 100%
+
+.layout__nav
+  background: linear-gradient(rgba(255,255,255,0.3),rgba(255,255,255,0))
+  background-color: #e8ebef
+  display: flex
+  justify-content: flex-end
+
+.layout__nav__content
+  font-size: 14px
+  height: 100vh
+  overflow-y: auto
+  position: sticky
+  top: 0
+  width: 250px
+  +scrollbar-sm
+
+.layout__nav__content__header
+  align-items: center
+  display: flex
+  line-height: 0
+  padding: $padding * 3 $padding * 2
+
+.layout__nav__content__header img
+  height: 50px
+
+.layout__nav__content__body
+  padding: 0 $padding * 2 $padding * 3
+  line-height: 1.75em
+
+.layout__nav__content__body a
+  color: black
+
+.layout__nav__content__body__items
+  margin-bottom: 20px
+
+.layout__nav__content__body__items__item
+  &--active
+    a
+      color: $color-pink
+
+.layout__nav__content__body__header
+  font-weight: 500
+  margin-top: 20px
+
+  &:first-child
+    margin-top: 0
+
+.layout__main
+
+.layout__main__header
+  padding: $padding $padding * 6
+  display: flex
+  justify-content: center
+  align-items: center
+
+.layout__main__header__search
+  flex: 1
+
+.layout__main__header__buttons
+  padding-left: 20px
+
+.layout__main__body
+  display: flex
+
+.layout__main__body__content
+  box-sizing: border-box
+  padding: $padding * 3 $padding * 4 $padding * 3 $padding * 6
+  max-width: 100%
+  width: calc(100% - 200px)
+
+  &--wide
+    width: 100%
+    padding-right: 60px
+
+.layout__main__body__content > *:first-child
+  margin-top: 0
+
+.layout__main__body__content figcaption
+  background: #f8f8f8
+  border-bottom: 1px solid #CCCCCC
+  color: $color-pink
+  font-family: Inconsolata, monospace;
+  font-size: 13px
+  font-weight: bold
+  padding: 5px 10px
+
+  & + .code pre
+    margin-top: 0
+
+.layout__main__body__content section
+  display: grid
+  grid-gap: 25px
+  grid-template-columns: 1fr 1fr
+  margin: 20px 0 40px
+
+.layout__main__body__content section div
+  // display: flex
+  flex-direction: column
+  overflow-x: auto
+
+.layout__main__body__content section div > div
+  flex-grow: 1
+
+.layout__main__body__content section div > div > pre
+  margin: 0
+
+.layout__main__body__content section do,
+.layout__main__body__content section dont
+  border-top: 15px solid #4caf50
+  font-family: inherit
+  color: #4caf50
+  display: block
+  font-weight: 500
+  margin-top: 10px
+  margin-bottom: 5px
+  padding-top: 5px
+  width: 100%
+
+.layout__main__body__content section dont
+  color: #d32f2f
+  border-top-color: #d32f2f
+
+.layout__main__body__content section label
+  font-size: 13px
+  line-height: 16px
+
+.layout__main__body__side
+  box-sizing: border-box
+  display: flex
+  flex-direction: column
+  font-size: 14px
+  height: calc(100vh)
+  line-height: 16px
+  overflow-y: auto
+  padding: $padding * 3 0
+  position: sticky
+  top: 0
+  width: 200px
+  +scrollbar-sm
+
+  &::-webkit-scrollbar-thumb
+    background: rgba(162,192,218, 0)
+    transition: background 200ms ease
+
+  &:hover
+    &::-webkit-scrollbar-thumb
+      background: rgba(162,192,218, 0.5)
+
+.layout__main__body__content__relative-nav
+  border-top: 1px solid #efefef
+  display: flex
+  justify-content: space-between
+  margin: 50px 0
+  padding-top: 20px
+
+.layout__main__body__side__top__title
+  font-weight: 500
+  margin-bottom: 15px
+
+.layout__main__body__side__top__items
+  line-height: 20px
+  list-style: none
+  margin-bottom: 20px
+  padding: 0
+
+.layout__main__body__side__top__items > *
+  margin-bottom: 5px
+
+  &.active
+    a
+      color: inherit
