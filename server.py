@@ -57,11 +57,15 @@ def validate_username(value):
 @api.representation('text/plain')
 def output_plain(data, code, headers=None):
     lines = []
-    for server, stats in data.items():
-        line = [server]
-        for key, val in stats.items():
-            line.append(str(val))
-        lines.append("|".join(line))
+    for server in data:
+        line = [
+            server['name'],
+            '',
+            'DE',
+            'N/A',
+            str(server['maxusers'])
+        ]
+    lines.append("|".join(line))
     data = "\n".join(lines)
     resp = make_response(data, code)
     resp.headers.extend(headers or {})
