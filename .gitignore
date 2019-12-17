@@ -1,6 +1,4 @@
-certs/*
-
-index.html.data
-known_hosts
-warn.sh
-static/index.html.plain
+.grow
+node_modules
+dist
+build

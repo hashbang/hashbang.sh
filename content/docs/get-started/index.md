@@ -1,5 +1,5 @@
 ---
-$title: Introduction
+$title: Join Us!
 $titles:
   nav: Docs
   side: Welcome
@@ -7,40 +7,25 @@ $path: /
 $category: Get started
 $order: 0
 ---
-# A declarative, file-based static website generator
+## Create an Account
 
-Grow is a static site generator optimized for building highly-interactive,
-localized microsites. With a focus on workflow and building projects that are
-highly maintainable in the long-term, Grow encourages a strong-but-simple
-separation of content and presentation, and makes maintaining content in
-different locales and different environments a snap.
+Create an account on #! and get instant access to our IRC Network, a shell to
+play around with and a great community of people.
 
-## Key features
+##### Dependencies
 
-- YAML-based content management with locale and environment variations
-- Localization built-in (for content, translations, and URLs)
-- Build sharding for massive websites
-- Extensions and integrations with content sources
-- Timed deployments with a companion web server
-- No opinion about the frontend stack
+- curl
+- jq
 
-## Download Grow
-
+##### Command
 ```bash
-# Install using pip.
-pip install grow
-
-# Install with the installer.
-curl https://install.grow.io | bash
+key=$(cat ~/.ssh/id_rsa.pub)
+curl https://userdb.hashbang.sh/passwd -H Content-Type:application/json -d '{"name": "'"$USER"'", "host": "de1.hashbang.sh", "data": {"shell": "/bin/bash", "ssh_keys": ["'"$key"'"]}}' | jq
 ```
 
-## Learning Grow
+### What's going on here?
 
-Grow is simple yet powerful and prefers configuration over code for defining
-your web site's content and architecture. Our goal is to keep Grow simple so
-that you can learn about all its capabilities within an hour or less.
-
-<a href="/codelab/" class="button button--lg button--icon-end">
-  Try the codelab
-  <i class="material-icons">arrow_forward</i>
-</a>
+This curl script will create a user on our servers using your current username.
+If it's not already taken, it's yours! We are pulling your key from your public
+key and making it so that you can immediately drop in. Once your account has
+been created, just `ssh $USER@de1.hashbang.sh` and your in!
