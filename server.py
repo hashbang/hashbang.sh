@@ -111,7 +111,11 @@ class UserCreate(Resource):
                 "https://userdb.hashbang.sh/passwd",
                 json = post_data
             )
-            print(f"{r.status_code} - {args['user']} - {r.text}")
+            print("{status_code} - {user} - {text}".format(
+                status_code=r.status_code,
+                user=args['user'],
+                text=r.text
+            ))
             if r.status_code >= 400:
                 data = r.json()
                 return {'message': data['message']}, r.status_code
