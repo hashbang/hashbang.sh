@@ -95,23 +95,22 @@ class UserCreate(Resource):
         args = self.reqparse.parse_args()
 
         try:
-            data = requests.post(
-                "https://userdb.hashbang.sh/passwd",
-                data = {
-                    "name": str(args["user"]),
-                    "host": args["host"],
-                    "data": {
-                        "shell": "/bin/bash",
-                        "ssh_keys": [
-                            args["key"]
-                        ]
-                    }
+            post_data = {
+                "name": str(args["user"]),
+                "host": args["host"],
+                "data": {
+                    "shell": "/bin/bash",
+                    "ssh_keys": [args["key"]]
                 }
-            ).json()
-            if 'passwd_name_key' in data['message']:
-                return {'message': 'User already exists'}, 400
-            if 'passwd_host_fkey' in data['message']:
-                return {'message': 'Unknown shell server'}, 400
+            }
+            r = requests.post(
+                "https://userdb.hashbang.sh/passwd",
+                json = post_data
+            )
+            print(f"{r.status_code} - {args['user']} - {r.text}")
+            if r.status_code >= 400:
+                data = r.json()
+                return {'message': data['message']}, r.status_code
         except:
             (typ, value, tb) = sys.exc_info()
             sys.stderr.write("Unexpected Error: %s\n" % typ)
