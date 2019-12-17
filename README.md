@@ -26,3 +26,4 @@ This allows both bash and browsers to render this document appropriately.
     ```
     ssh core@hashbang.sh sudo systemctl restart hashbangsh
     ```
+
