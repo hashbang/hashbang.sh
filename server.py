@@ -13,7 +13,6 @@ import requests
 from tornado.wsgi import WSGIContainer
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
-from reserved import RESERVED_USERNAMES
 
 app = Flask(__name__)
 app.config['RESTFUL_JSON'] = {"indent": 4}
@@ -24,130 +23,6 @@ certfile = os.path.join(os.getcwd(), "certs/server.crt")
 keyfile = os.path.join(os.getcwd(), "certs/server.key")
 https_port = 4443
 http_port = 8080
-
-
-def validate_pubkey(value):
-    if len(value) > 8192 or len(value) < 80:
-      raise ValueError("Expected length to be between 80 and 8192 characters")
-
-    value = value.replace("\"", "").replace("'", "").replace("\\\"", "")
-    value = value.split(' ')
-    types = [ 'ecdsa-sha2-nistp256', 'ecdsa-sha2-nistp384',
-              'ecdsa-sha2-nistp521', 'ssh-rsa', 'ssh-dss', 'ssh-ed25519' ]
-    if value[0] not in types:
-        raise ValueError(
-            "Expected " + ', '.join(types[:-1]) + ', or ' + types[-1]
-        )
-
-    return "%s %s" % (value[0], value[1])
-
-
-def validate_username(value):
-
-    # Regexp must be kept in sync with
-    #  https://github.com/hashbang/hashbang.sh/blob/master/src/hashbang.sh#L186-196
-    if re.compile(r"^[a-z][a-z0-9]{,30}$").match(value) is None:
-        raise ValueError('Username is invalid')
-
-    if value in RESERVED_USERNAMES:
-        raise ValueError('Username is reserved')
-
-    return value
-
-@api.representation('text/plain')
-def output_plain(data, code, headers=None):
-    lines = []
-    for server, stats in data.items():
-        line = [server]
-        for key, val in stats.items():
-            line.append(str(val))
-        lines.append("|".join(line))
-    data = "\n".join(lines)
-    resp = make_response(data, code)
-    resp.headers.extend(headers or {})
-    return resp
-
-
-class UserCreate(Resource):
-    def __init__(self):
-        self.reqparse = RequestParser()
-        self.reqparse.add_argument(
-            'user',
-            type = validate_username,
-            required = True,
-            location = 'json'
-        )
-        self.reqparse.add_argument(
-            'key',
-            type = validate_pubkey,
-            required = True,
-            location = 'json'
-        )
-        self.reqparse.add_argument(
-            'host',
-            type = str,
-            required = True,
-            location = 'json'
-        )
-        super(UserCreate, self).__init__()
-
-    def post(self):
-        args = self.reqparse.parse_args()
-
-        try:
-            data = requests.post(
-                "https://userdb.hashbang.sh/passwd",
-                data = {
-                    "name": str(args["user"]),
-                    "host": args["host"],
-                    "data": {
-                        "shell": "/bin/bash",
-                        "ssh_keys": [
-                            args["key"]
-                        ]
-                    }
-                }
-            ).json()
-            if 'passwd_name_key' in data['message']:
-                return {'message': 'User already exists'}, 400
-            if 'passwd_host_fkey' in data['message']:
-                return {'message': 'Unknown shell server'}, 400
-        except:
-            (typ, value, tb) = sys.exc_info()
-            sys.stderr.write("Unexpected Error: %s\n" % typ)
-            sys.stderr.write("\t%s\n" % value)
-            traceback.print_tb(tb)
-            return {'message': 'User creation script failed'}, 500
-
-        return {'message': 'success'}
-
-
-class ServerStats(Resource):
-    LOCATIONS = {
-        "da1.hashbang.sh": {"lat": 32.8, "lon": -96.8},
-        "ny1.hashbang.sh": {"lat": 40.7, "lon": -74},
-        "sf1.hashbang.sh": {"lat": 37.8, "lon": -122.4},
-        "to1.hashbang.sh": {"lat": 43.7, "lon": -79.4},
-        "de1.hashbang.sh": {"lat": 49.4478, "lon": 11.0683},
-    }
-
-    def get(self, out_format='json'):
-        try:
-            data = requests.get("https://userdb.hashbang.sh/hosts").json()
-        except:
-            return {'message': 'Unable to connect to server'}, 500
-
-        for idx, s in enumerate(data):
-            server_host = s['name']
-            if server_host in self.LOCATIONS.keys():
-                data[idx].update({'coordinates': self.LOCATIONS[server_host]})
-
-        return data
-
-
-api.add_resource(UserCreate, '/user/create')
-api.add_resource(ServerStats, '/server/stats')
-
 
 def security_headers(response, secure=False):
     csp = "default-src 'none'; "                            \
