@@ -1,4 +1,4 @@
-FROM debian:stretch
+FROM debian:stretch as build
 
 RUN LC_ALL=C \
     DEBIAN_FRONTEND=noninteractive \
@@ -6,17 +6,15 @@ RUN LC_ALL=C \
     apt-get install -y \
         ca-certificates \
         git \
-        python3 \
-        python3-flask-restful \
-        python3-tornado \
-        python3-requests \
+        python-pip \
         && \
     apt-get clean && \
     rm -rf /tmp/* /var/tmp/*
 
+RUN pip install grow
 ADD ./ /opt/app/
 WORKDIR /opt/app
 
-EXPOSE 4443
+FROM nginx:latest
+COPY --from=build /opt/app/dist/ /var/www/html/
 
-CMD ["python3", "server.py"]
