@@ -8,7 +8,7 @@
     {% if podspec.meta.site_author %}<meta name="author" content="{{podspec.meta.site_author}}">{% endif %}
     <link rel="canonical" href="{{doc.url}}">
     <link rel="shortcut icon" href="{{g.static(podspec.meta.favicon_path).url.path}}">
-    <title>{% if doc.title %}{{doc.title}} – {% endif %}{{_(podspec.meta.site_name)}}</title>
+    <title>{% if doc.title %}{{doc.title}} | {% endif %}{{_(podspec.meta.site_name)}}</title>
     <link href="//fonts.googleapis.com/css?family=Inconsolata|Roboto:400,300,500,300italic,400italic,500italic,100italic,100" rel="stylesheet" type="text/css">
     <link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
     <link href="{{g.static('/dist/css/main.min.css').url.path}}" rel="stylesheet">
@@ -143,7 +143,6 @@
         </div>
       </div>
     </div>
-    {# TODO(jeremydw): Rewrite from mkdocs and use standard gulpfile. #}
     <script>
       var base_url = '{{podspec.root.rstrip('/')}}/assets/search';
       var base_url_locale = '{{doc.locale}}';
