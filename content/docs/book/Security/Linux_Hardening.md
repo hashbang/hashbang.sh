@@ -1,3 +1,14 @@
+---
+$title: Linux Hardening
+$titles:
+  nav: Docs
+  side: Welcome
+$path: /security/linux-hardening/
+$category: Book/Security
+$order: 6
+---
+
+
 ## Linux Hardening
 
 The following is an opinionated minimal-compromises reference to configuring a

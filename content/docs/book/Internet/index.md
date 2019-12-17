@@ -1,3 +1,13 @@
+---
+$title: Intro
+$titles:
+  nav: Docs
+  side: Welcome
+$path: /internet/intro/
+$category: Book/Internet
+$order: 0
+---
+
 ## Internet
 
 So the internet is kind of a big deal. But how do email clients, web browsers,

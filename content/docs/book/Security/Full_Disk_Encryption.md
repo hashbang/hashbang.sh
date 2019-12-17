@@ -1,3 +1,14 @@
+---
+$title: Full Disk Encryption
+$titles:
+  nav: Docs
+  side: Welcome
+$path: /security/full-disk-encryption/
+$category: Book/Security
+$order: 4
+---
+
+
 # Full Disk Encryption
 
 Viable solutions exist for Yubikey-based FDE on OSX/Windows that require either

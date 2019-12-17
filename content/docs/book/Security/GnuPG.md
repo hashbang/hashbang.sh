@@ -1,3 +1,14 @@
+---
+$title: GnuPG
+$titles:
+  nav: Docs
+  side: Welcome
+$path: /security/gnupg/
+$category: Book/Security
+$order: 5
+---
+
+
 # GnuPG
 
 If you have encountered GPG before you probably know it as one of the worst
@@ -12,7 +23,7 @@ to the project you dislike. Before that, learn how it works today.
 
 The biggest advantage of GnuPG and, by extension PGP, is that it is a standard.
 
-A GPG keychain can be the foundation of many common use cases such as:
+A GPG keychain can be the foundation of many common use cases such as
 
 * Superuser access in your OS
 * Password Management
@@ -432,7 +443,6 @@ Alternatively, you can retrieve it with a gpg command
 ```
 ## gpg --list-keys
 /Users/some.person/.gnupg/pubring.gpg
---------------------------------
 pub   4096R/B44C2E4A 2015-05-29 [expires: 2016-05-28]
 uid       [ultimate] Some Person <some.person@company.com>
 ```

@@ -1,3 +1,13 @@
+---
+$title: IRC
+$titles:
+  nav: Docs
+  side: Welcome
+$path: /internet/irc/
+$category: Book/Internet
+$order: 2
+---
+
 ## Internet Relay Chat
 
 The chat protocol known as IRC was originally developed in 1988 as a way to

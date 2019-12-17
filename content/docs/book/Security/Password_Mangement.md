@@ -1,3 +1,14 @@
+---
+$title: Password Management
+$titles:
+  nav: Docs
+  side: Welcome
+$path: /security/password-management/
+$category: Book/Security
+$order: 7
+---
+
+
 # Password Management
 
 There are a lot of password management solutions so here we will focus on the

@@ -39,25 +39,27 @@
                   if '/content/docs/' in doc.collection.pod_path
                   else doc.collection %}
 
-              {# /content/codelab/ collection. #}
-              {% if doc.collection.nav_title %}
-                <div class="layout__nav__content__body__header">{{doc.collection.nav_title}}</div>
-              {% endif %}
-              {% for nav_item in collection.docs(recursive=False, locale=doc.locale) %}
-                <div {% if doc == nav_item %}class="layout__nav__content__body__items__item--active"{% endif %}>
-                  <a href="{{nav_item.url.path|relative}}">{{_(nav_item.title)}}</a>
-                </div>
-              {% endfor %}
-
               {# /content/docs/ collection. #}
               {% for col in collection.collections()|sort(attribute='order') %}
                 <div class="layout__nav__content__body__header">{{_(col.title)}}</div>
-                {% for sub_doc in col.docs(locale=doc.locale) %}
-                  <div {% if doc == sub_doc %}class="layout__nav__content__body__items__item--active"{% endif %}>
-                    {% set url = sub_doc.reference.url.path if sub_doc.reference else sub_doc.url.path %}
-                    <a href="{{url|relative}}">{{ (sub_doc.title)}}</a>
-                  </div>
-                {% endfor %}
+                {% if col.collections() %}
+                  {% for subcol in col.collections()|sort(attribute='order') %}
+                  <div class="layout__nav__content__body__subheader">{{_(subcol.title)}}</div>
+                    {% for sub_doc in subcol.docs(locale=doc.locale) %}
+                      <div {% if doc == sub_doc %}class="layout__nav__content__body__items__item--active"{% endif %}>
+                        {% set url = sub_doc.reference.url.path if sub_doc.reference else sub_doc.url.path %}
+                        <a href="{{url|relative}}">{{ (sub_doc.title)}}</a>
+                      </div>
+                    {% endfor %}
+                  {% endfor %}
+                {% else %}
+                  {% for sub_doc in col.docs(locale=doc.locale) %}
+                    <div {% if doc == sub_doc %}class="layout__nav__content__body__items__item--active"{% endif %}>
+                      {% set url = sub_doc.reference.url.path if sub_doc.reference else sub_doc.url.path %}
+                      <a href="{{url|relative}}">{{ (sub_doc.title)}}</a>
+                    </div>
+                  {% endfor %}
+                {% endif %}
               {% endfor %}
 
             </div>

@@ -1,3 +1,12 @@
+---
+$title: Commit Signing
+$titles:
+  nav: Docs
+  side: Welcome
+$path: /security/commit-signing/
+$category: Book/Security
+$order: 2
+---
 # Commit signing
 
 Signing all commits has significant value when you do it universally, and

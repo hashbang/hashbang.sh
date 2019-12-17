@@ -1,3 +1,14 @@
+---
+$title: SSH
+$titles:
+  nav: Docs
+  side: Welcome
+$path: /security/ssh/
+$category: Book/Security
+$order: 10
+---
+
+
 # SSH
 
 There are a number of different methods for using SSH with a yubikey. Most

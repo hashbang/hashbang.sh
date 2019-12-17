@@ -1,3 +1,14 @@
+---
+$title: System Login
+$titles:
+  nav: Docs
+  side: Welcome
+$path: /security/system-login/
+$category: Book/Security
+$order: 11
+---
+
+
 # System Login
 
 No real guide on best practices here yet.
