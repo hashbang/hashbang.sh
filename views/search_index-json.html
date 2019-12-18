@@ -18,6 +18,15 @@
       'text': item.html|striptags
     }) %}
   {% endfor %}
+  {% for subcol in col.collections() %}
+    {% for item in subcol.docs() if item.path_format %}
+      {% do docs.append({
+        'location': item.url.path,
+        'title': _(item.title),
+        'text': item.html|striptags
+      }) %}
+    {% endfor %}
+  {% endfor %}
 {% endfor %}
 
 {% set index = {'docs': docs} %}
