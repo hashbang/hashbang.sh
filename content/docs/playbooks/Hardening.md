@@ -1,3 +1,12 @@
+---
+$title: Hardening
+$titles:
+  nav: Docs
+  side: Welcome
+$category: Playbooks/Hardening
+$order: 1
+---
+
 # Hardening Playbook
 
 ## Abstract
