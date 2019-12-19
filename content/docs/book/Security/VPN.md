@@ -8,6 +8,7 @@ $category: Book/Security
 $order: 12
 ---
 
+# VPN
 
 If you happen to be using a standard VPN system that allows authentication via X.509 certificates,it is possible to securely store these inside any smartcard that supports a PKCS12 interface.
 

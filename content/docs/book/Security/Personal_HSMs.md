@@ -27,7 +27,9 @@ damage and data theft from remote attackers.
 
 ### YubiKey
 
-![Yubikey 5](assets/img/yubikey-4.png)
+<img src="/assets/images/yubikey.png" alt="Yubikey Series 5" width="320px" />
+
+[https://www.yubico.com/store/#yubikey-5-series](https://www.yubico.com/store/#yubikey-5-series)
 
 A YubiKey is an inexpensive personal HSM produced by Yubico and widely used by
 large organizations such as the US Department of Defense, Facebook and Google.
@@ -55,8 +57,9 @@ large organizations such as the US Department of Defense, Facebook and Google.
 
 #### GnuK FST-01
 
-![GnuK](assets/img/fst-01.png)
-[http://wiki.seeedstudio.com/wiki/FST-01]
+<img src="/assets/images/fst-01.jpg" alt="Gnuk" width="320px" />
+
+[https://wiki.seeedstudio.com/wiki/FST-01](https://wiki.seeedstudio.com/wiki/FST-01)
 
 The GnuK FST-01 is an STM23 based personal HSM solution available for all
 typical GPG workflows such as SSH, code/binary/email signing, encryption, etc.
@@ -80,8 +83,9 @@ HSMs that boast full compatibility with all YubiKey 5 features with the
 exception of physical touch while additionally being fully open software and
 hardware.
 
-![Nitrokey](assets/img/nitrokey-pro.png)
-[https://www.nitrokey.com/]
+<img src="/assets/images/nitrokey-pro.jpg" alt="Nitrokey Pro" width="320px" />
+
+[https://www.nitrokey.com/](https://www.nitrokey.com)
 
 ##### Advantages
  * 100% of source code and hardware design is public and auditable
@@ -132,8 +136,9 @@ support allowing it to be used for most common use cases.
 
 #### VivoKey
 
-![VivoKey](assets/img/vivokey.png)
-[http://vivokey.com/]
+<img src="/assets/images/vivokey.jpg" alt="Vivokey" width="320px" />
+
+[https://vivokey.com/](https://vivokey.com)
 
 The VivoKey is an NFC-only device designed to cover the bulk of use cases of
 the YubiKey while also having space for general user-supplied applications such

@@ -9,7 +9,8 @@
     <link rel="canonical" href="{{doc.url}}">
     <link rel="shortcut icon" href="{{g.static(podspec.meta.favicon_path).url.path}}">
     <title>{% if doc.title %}{{doc.title}} | {% endif %}{{_(podspec.meta.site_name)}}</title>
-    <link href="//fonts.googleapis.com/css?family=Inconsolata|Roboto:400,300,500,300italic,400italic,500italic,100italic,100" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Fira+Code&display=swap" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
     <link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
     <link href="{{g.static('/dist/css/main.min.css').url.path}}" rel="stylesheet">
     {% if podspec.meta.google_analytics_id %}
@@ -30,7 +31,7 @@
         <div class="layout__nav__content">
           <div class="layout__nav__content__header">
             <a class="navbar-brand" href="{{podspec.home.localize(locale=doc.locale).url.path|relative}}">
-              <img src="{{g.static(podspec.meta.site_logo_path).url.path}}" title="{{_(podspec.meta.site_name)}}">
+              #!
             </a>
           </div>
           <div class="layout__nav__content__body" role="complementary">
