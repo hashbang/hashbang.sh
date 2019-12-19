@@ -1,7 +1,15 @@
 ---
-title: BYLAWS OF HASHBANG, INC.
-section: 7
+$title: Bylaws
+$titles:
+  nav: Docs
+  side: Welcome
+$category: Legal/Bylaws
+$order: 0
 ---
+
+| Title | BYLAWS OF HASHBANG, INC. |
+|:---:|:---:|
+| Section | 7 |
 
 The name of the organization is Hashbang, Inc.
 
@@ -23,11 +31,9 @@ candidate for public office. The organization is organized exclusively for
 purposes subsequent to section 501(c)(3) of the Internal Revenue Code.
 
 
-ARTICLE I - MEETINGS
-====================
+# ARTICLE I - MEETINGS
 
-Section 1. Annual Meeting
--------------------------
+## Section 1. Annual Meeting
 
 An annual meeting shall be held once each calendar year for the purpose
 of electing directors and for the transaction of such other business as
@@ -35,15 +41,13 @@ may properly come before the meeting. The annual meeting shall be held
 at the time and place designated by the Board of Directors.
 
 
-Section 2. Special Meetings
----------------------------
+## Section 2. Special Meetings
 
 Special meetings maybe be requested by the President or the Board of
 Directors.
 
 
-Section 3. Notice
------------------
+## Section 3. Notice
 
 Written notice of all meetings shall be provided under this section or
 as otherwise required by law. The Notice shall state the place, date,
@@ -54,15 +58,13 @@ meeting. Such notice shall be deemed effective when deposited in
 ordinary U.S. mail, properly addressed, with postage prepaid.
 
 
-Section 4. Place of Meeting
----------------------------
+## Section 4. Place of Meeting
 
 Meetings shall be held at the organization's principal place of business
 unless otherwise stated in the notice.
 
 
-Section 5. Quorum
------------------
+## Section 5. Quorum
 
 A majority of the directors shall constitute a quorum at a meeting. In
 the absence of a quorum, a majority of the directors may adjourn the
@@ -74,40 +76,34 @@ transact business until adjournment, even if the withdrawal of some
 directors results in representation of less than a quorum.
 
 
-ARTICLE II - DIRECTORS
-======================
+# ARTICLE II - DIRECTORS
 
-Section 1. Number of Directors
-------------------------------
+## Section 1. Number of Directors
 
 The organization shall be managed by a Board of Directors consisting of
 7 directors.
 
 
-Section 2. Election and Term of Office
---------------------------------------
+## Section 2. Election and Term of Office
 
 The directors shall be elected at the annual meeting. Each director
 shall serve a term of 3 years, or until a successor has been elected and
 qualified.
 
 
-Section 3. Quorum
------------------
+## Section 3. Quorum
 
 A majority of directors shall constitute a quorum.
 
 
-Section 4. Adverse Interest
----------------------------
+## Section 4. Adverse Interest
 
 In the determination of a quorum of the directors, or in voting, the
 disclosed adverse interest of a director shall not disqualify the
 director or invalidate his or her vote.
 
 
-Section 5. Regular Meeting
---------------------------
+## Section 5. Regular Meeting
 
 The Board of Directors shall meet immediately after the election for the
 purpose of electing its new officers, appointing new committee
@@ -117,8 +113,7 @@ additional regular meetings without notice other than the notice
 provided by the resolution.
 
 
-Section 6. Special Meeting
---------------------------
+## Section 6. Special Meeting
 
 Special meetings may be requested by the President, Vice-President,
 Secretary, or any two directors by providing five days' written notice
@@ -127,8 +122,7 @@ meeting shall be sent to the Board of Directors within two weeks after
 the meeting.
 
 
-Section 7. Procedures
----------------------
+## Section 7. Procedures
 
 The vote of a majority of the directors present at a properly called
 meeting at which a quorum is present shall be the act of the Board of
@@ -141,8 +135,7 @@ the minutes of the meeting. The Board shall keep written minutes of its
 proceedings in its permanent records.
 
 
-Section 8. Informal Action
---------------------------
+## Section 8. Informal Action
 
 Any action required to be taken at a meeting of directors, or any action
 which may be taken at a meeting of directors or of a committee of
@@ -151,8 +144,7 @@ setting forth the action so taken, is signed by all of the directors or
 all of the members of the committee of directors, as the case may be.
 
 
-Section 9. Removal / Vacancies
-------------------------------
+## Section 9. Removal / Vacancies
 
 A director shall be subject to removal, with or without cause, at a
 meeting called for that purpose. Any vacancy that occurs on the Board of
@@ -162,19 +154,16 @@ vacancy shall serve the remaining term of his or her predecessor, or
 until a successor has been elected and qualified.
 
 
-Section 10. Committees
-----------------------
+## Section 10. Committees
 
 To the extent permitted by law, the Board of Directors may appoint from
 its members a committee or committees, temporary or permanent, and
 designate the duties, powers and authorities of such committees.
 
 
-ARTICLE III - OFFICERS 
-=======================
+# ARTICLE III - OFFICERS
 
-Section 1. Number of Officers
------------------------------
+## Section 1. Number of Officers
 
 The officers of the organization shall be a President, one or more
 Vice-Presidents (as determined by the Board of Directors), a Treasurer,
@@ -217,8 +206,7 @@ corporate finances as required, but no less often than at each meeting
 of the Board of Directors and Executive Committee.
 
 
-Section 2. Election and Term of Office
---------------------------------------
+## Section 2. Election and Term of Office
 
 The officers shall be elected annually by the Board of Directors at the
 first meeting of the Board of Directors, immediately following the
@@ -226,16 +214,14 @@ annual meeting. Each officer shall serve a one year term or until a
 successor has been elected and qualified.
 
 
-Section 3. Removal or Vacancy
------------------------------
+## Section 3. Removal or Vacancy
 
 The Board of Directors shall have the power to remove an officer or
 agent of the organization. Any vacancy that occurs for any reason may be
 filled by the Board of Directors.
 
 
-ARTICLE IV - CORPORATE SEAL, EXECUTION OF INSTRUMENTS
-=====================================================
+# ARTICLE IV - CORPORATE SEAL, EXECUTION OF INSTRUMENTS
 
 The organization shall not have a corporate seal. All instruments that
 are executed on behalf of the organization which are acknowledged and
@@ -249,8 +235,7 @@ may be executed by any officer(s) or agent(s) that are specifically designated
 by resolution of the Board of Directors.
 
 
-ARTICLE V - AMENDMENT TO BYLAWS
-===============================
+# ARTICLE V - AMENDMENT TO BYLAWS
 
 The bylaws may be amended, altered, or repealed by the Board of Directors by
 a two-thirds majority of a quorum vote at any regular or special meeting.
@@ -258,8 +243,7 @@ The text of the proposed change shall be distributed to all board members at
 least ten (10) days before the meeting.
 
 
-ARTICLE VI - INDEMNIFICATION
-============================
+# ARTICLE VI - INDEMNIFICATION
 
 Any director or officer who is involved in litigation by reason of his
 or her position as a director or officer of this organization shall be
@@ -270,8 +254,7 @@ amendment permits the organization to provide broader indemnification
 rights).
 
 
-ARTICLE VII - DISSOLUTION
-=========================
+# ARTICLE VII - DISSOLUTION
 
 The organization may be dissolved only with authorization of its Board of
 Directors given at a special meeting called for that purpose, and with the
@@ -290,8 +273,7 @@ and distributed as follows:
   as determined by the Board of Directors.
 
 
-Certification
-=============
+# Certification
 
 \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_, President of Hashbang, Inc., and  
 \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_, Secretary of Hashbang, Inc. certify
