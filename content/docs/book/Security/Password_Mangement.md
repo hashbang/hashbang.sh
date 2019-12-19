@@ -3,7 +3,6 @@ $title: Password Management
 $titles:
   nav: Docs
   side: Welcome
-$path: /security/password-management/
 $category: Book/Security
 $order: 7
 ---

@@ -1,6 +1,6 @@
 $title@: Internet
 $order: 2
-$path: /{root}/{collection.basename}/{base}/
+$path: /{root}/book/{collection.basename}/{base}/
 $localization:
-  path: /{root}/{locale}/{collection.basename}/{base}/
+  path: /{root}/{locale}/book/{collection.basename}/{base}/
 $view: /views/base.html

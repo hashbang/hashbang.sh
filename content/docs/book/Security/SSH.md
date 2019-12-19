@@ -3,7 +3,6 @@ $title: SSH
 $titles:
   nav: Docs
   side: Welcome
-$path: /security/ssh/
 $category: Book/Security
 $order: 10
 ---

@@ -3,7 +3,6 @@ $title: Email
 $titles:
   nav: Docs
   side: Welcome
-$path: /security/email/
 $category: Book/Security
 $order: 3
 ---

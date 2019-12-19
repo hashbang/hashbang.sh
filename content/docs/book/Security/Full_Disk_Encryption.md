@@ -3,7 +3,6 @@ $title: Full Disk Encryption
 $titles:
   nav: Docs
   side: Welcome
-$path: /security/full-disk-encryption/
 $category: Book/Security
 $order: 4
 ---

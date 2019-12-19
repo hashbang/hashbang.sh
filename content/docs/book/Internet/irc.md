@@ -3,7 +3,6 @@ $title: IRC
 $titles:
   nav: Docs
   side: Welcome
-$path: /internet/irc/
 $category: Book/Internet
 $order: 2
 ---

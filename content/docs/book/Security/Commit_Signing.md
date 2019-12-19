@@ -3,7 +3,6 @@ $title: Commit Signing
 $titles:
   nav: Docs
   side: Welcome
-$path: /security/commit-signing/
 $category: Book/Security
 $order: 2
 ---

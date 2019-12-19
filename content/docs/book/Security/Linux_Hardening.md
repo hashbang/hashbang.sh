@@ -3,7 +3,6 @@ $title: Linux Hardening
 $titles:
   nav: Docs
   side: Welcome
-$path: /security/linux-hardening/
 $category: Book/Security
 $order: 6
 ---

@@ -3,7 +3,6 @@ $title: GnuPG
 $titles:
   nav: Docs
   side: Welcome
-$path: /security/gnupg/
 $category: Book/Security
 $order: 5
 ---

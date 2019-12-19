@@ -3,7 +3,6 @@ $title: Personal HSMs
 $titles:
   nav: Docs
   side: Welcome
-$path: /security/personal-hsms/
 $category: Book/Security
 $order: 8
 ---

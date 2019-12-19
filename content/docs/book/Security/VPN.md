@@ -3,7 +3,6 @@ $title: VPN
 $titles:
   nav: Docs
   side: Welcome
-$path: /security/vpn/
 $category: Book/Security
 $order: 12
 ---

@@ -3,7 +3,6 @@ $title: Building Access
 $titles:
   nav: Docs
   side: Welcome
-$path: /security/building_access/
 $category: Book/Security
 $order: 1
 ---

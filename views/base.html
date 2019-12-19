@@ -45,17 +45,19 @@
                 <div class="layout__nav__content__body__header">{{_(col.title)}}</div>
                 {% if col.collections() %}
                   {% for subcol in col.collections()|sort(attribute='order') %}
-                  <div class="layout__nav__content__body__subheader">{{_(subcol.title)}}</div>
-                    {% for sub_doc in subcol.docs(locale=doc.locale) %}
-                      <div {% if doc == sub_doc %}class="layout__nav__content__body__items__item--active"{% endif %}>
-                        {% set url = sub_doc.reference.url.path if sub_doc.reference else sub_doc.url.path %}
-                        <a href="{{url|relative}}">{{ (sub_doc.title)}}</a>
-                      </div>
-                    {% endfor %}
+                  <div class="layout__nav__content__body__subheader__wrapper">
+                    <div class="layout__nav__content__body__subheader">{{_(subcol.title)}}</div>
+                      {% for sub_doc in subcol.docs(locale=doc.locale) %}
+                        <div class="layout__nav__content__body__items__item {% if doc == sub_doc %}layout__nav__content__body__items__item--active{% endif %}">
+                          {% set url = sub_doc.reference.url.path if sub_doc.reference else sub_doc.url.path %}
+                          <a href="{{url|relative}}">{{ (sub_doc.title)}}</a>
+                        </div>
+                      {% endfor %}
+                    </div>
                   {% endfor %}
                 {% else %}
                   {% for sub_doc in col.docs(locale=doc.locale) %}
-                    <div {% if doc == sub_doc %}class="layout__nav__content__body__items__item--active"{% endif %}>
+                    <div class="layout__nav__content__body__items__item {% if doc == sub_doc %}layout__nav__content__body__items__item--active{% endif %}">
                       {% set url = sub_doc.reference.url.path if sub_doc.reference else sub_doc.url.path %}
                       <a href="{{url|relative}}">{{ (sub_doc.title)}}</a>
                     </div>

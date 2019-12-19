@@ -3,7 +3,6 @@ $title: Email
 $titles:
   nav: Docs
   side: Welcome
-$path: /internet/email/
 $category: Book/Internet
 $order: 1
 ---

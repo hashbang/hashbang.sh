@@ -1,6 +1,6 @@
 $title@: Security
 $order: 2
-$path: /{root}/{collection.basename}/security/{base}/
+$path: /{root}/book/security/{base}/
 $localization:
   path: /{root}/{locale}/{collection.basename}/security/{base}/
 $view: /views/base.html

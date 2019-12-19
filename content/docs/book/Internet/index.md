@@ -3,7 +3,6 @@ $title: Intro
 $titles:
   nav: Docs
   side: Welcome
-$path: /internet/intro/
 $category: Book/Internet
 $order: 0
 ---
