@@ -283,8 +283,8 @@ while [ "x$username" = "x" ]; do
 	printf " Username: ";
 	read -r input;
 
-	# Keep in sync with the description and
-	#  https://github.com/hashbang/provisor/blob/master/provisor/utils.py#L77
+	# Keep in sync with the description and the validate_username function in
+	#  https://github.com/hashbang/provisor/blob/master/provisor/utils.py
 	if echo "$input" | grep -E "^[a-z][a-z0-9]{0,30}$" >/dev/null; then
 		username="$input"
 	else
@@ -470,17 +470,17 @@ fi
 exit 0
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEERWK8VmkyzxwW8tfM0sTHTY+qlvUFAlnNcAgACgkQ0sTHTY+q
-lvVlPw//fSJA3YNo+O4lt5d09Jubt4z50B+RfcyVk9dqEKbZh1oNe2Y3hQli2NgS
-+ilLlW/W3oGleWVy/Um4SWcQEGFXyC8apJfuEMDoOQeGa4y3Ng3unpLzFUP4O9iP
-INDqOks8MvbEEmWr/HY4liRt5ylweHKuYo+F5pkbsAqdDftON0BGdwYsKbT/uFai
-3Js+ISUdo1f/qU+cwU9y7wnK8M9LolxoGBUe3cVbSFfVNHkXjmv7SB32BHpPPsNJ
-URz+C8w9qgfzgUPlGQAKM4GMJLSKL4XWgFR9CRXjgBMs3c413G4DZnBuP3pvvg6y
-hpUVyVhqpSmyp8l3cEEyw08d9yVvkI5cn1vxdkNidUlbySggDcpwAtsQ/6sQ4hPx
-0l8s/NiRQMEKlKg+DymU32AozByP4RIm3rDsOcRZpd6NaTY/W8R6hySTUILm0yR4
-UrmW33y4Cup3Nk1dmywknJ6DG9XBHHMulRDZGf+yZJRgUT5FNwb0bsfcnrMHnzmY
-H/TaaU0gRAlloec+KidOc2i6+JTkNPnZADGxWAirTI0mXFfkkoTZBCW//xE4r8ji
-yiygEXlYPrBOhiYHgxozWXS0YlRO2f8+A7Y43/wwEGFClAVDEegUWjldYKngwLr5
-IZpOp6q6pYPVXKMTomyfBF9NAT0UBu499W+HOOroTBVqvqkIA4g=
-=2Cfs
+iQIzBAEBCgAdFiEERWK8VmkyzxwW8tfM0sTHTY+qlvUFAlnxsB8ACgkQ0sTHTY+q
+lvUlsQ//ZT56auGjiLvtnkc8rvpvEOpYicd7UzFzGBO5mb3qWnPyW1q1nv+ZOrn9
+JLS6q40aCbTcKe3gRaGqg8J1Y1iYZB5BPEgfWF150pvGrmzM+1/e2EZNeiD+GcQz
+k+F86VtlMZlq9Ae8sLvswsReP8vyK/l/C7mmgfH/VEYMnzwqu13nq2O/zYMbr/LU
+ydFxZrUEO4aWmgFV1+asBTOt+Z8sk7XGRrrzjX1kFi5idaEls6dH4eN8FAoF9q57
+dGWO1lrRriliF5gOTiCd8qa1Oa8YSxedDwFaYmWzLaPK0dTbjw9mrRzL7v1eT/Mx
+jHMketAUh+Mvt7YcT3HSYE8GbZqOvNx/c2jMc5YTygcg3gQMW57RpTNdrHjptYVQ
+gH8i72WzuRkH6sV85ua4nqvxF59SbwE0z30AHstQa5cFw+LYp507nIkazrIScaZ3
+87LOURJzs4KjsLwNCK7+c3RE1/4mU44vgMnqX8yjiwchvCLfuueGLWSjHNjecJ2s
+3141MvM0RsLJSyXb8oXxJU+fo6UL5FQwf47qh94It38fERinFmFaRFXpm2RYaSI4
+T7/c3S3DMi22YF7aeiUrz5W18EJdhTrqUOze4OQDYYiE5xfnO6CBpBKVnN4Ncvx5
+Xjp0qltOlXwh42z1CDwlv2U8O2RjWLRL2vNiGXtX5kj3vzKQv2E=
+=uJT+
 -----END PGP SIGNATURE-----
