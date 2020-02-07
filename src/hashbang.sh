@@ -101,7 +101,7 @@ ask() {
 	echo " "
 }
 
-# generate ssh kypair
+# generate ssh keypair
 makekey() {
 	( checkutil ssh-keygen && checkutil ssh ) || bail
 	if [ ! -e "$1" ]; then
