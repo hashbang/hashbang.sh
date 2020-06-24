@@ -1,4 +1,4 @@
-FROM debian:stretch
+FROM debian:buster
 
 RUN LC_ALL=C \
     DEBIAN_FRONTEND=noninteractive \

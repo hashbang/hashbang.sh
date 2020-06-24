@@ -16,7 +16,7 @@ from tornado.wsgi import WSGIContainer
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 
-from werkzeug.middleware.proxy_fix import ProxyFix
+from werkzeug.contrib.fixers import ProxyFix
 
 from reserved import RESERVED_USERNAMES
 
