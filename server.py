@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 
-import os
 import sys
 import traceback
 import re
@@ -16,12 +15,12 @@ from tornado.wsgi import WSGIContainer
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 
-from werkzeug.contrib.fixers import ProxyFix
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 from reserved import RESERVED_USERNAMES
 
 app = Flask(__name__)
-ProxyFix(app)
+app.wsgi_app = ProxyFix(app.wsgi_app)
 app.config['RESTFUL_JSON'] = {"indent": 4}
 
 api = Api(app)
