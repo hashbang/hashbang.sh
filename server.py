@@ -21,7 +21,7 @@ from werkzeug.contrib.fixers import ProxyFix
 from reserved import RESERVED_USERNAMES
 
 app = Flask(__name__)
-app = ProxyFix(app)
+ProxyFix(app)
 app.config['RESTFUL_JSON'] = {"indent": 4}
 
 api = Api(app)
