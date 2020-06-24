@@ -26,8 +26,6 @@ app.config['RESTFUL_JSON'] = {"indent": 4}
 
 api = Api(app)
 
-certfile = os.path.join(os.getcwd(), "certs/server.crt")
-keyfile = os.path.join(os.getcwd(), "certs/server.key")
 http_port = 8080
 
 

@@ -17,6 +17,6 @@ RUN LC_ALL=C \
 ADD ./ /opt/app/
 WORKDIR /opt/app
 
-EXPOSE 4443
+EXPOSE 8080
 
 CMD ["python3", "server.py"]
