@@ -200,7 +200,7 @@ while [ "x$username" = "x" ]; do
 	read -r input;
 
 	# Keep in sync with the description and
-	#  https://github.com/hashbang/provisor/blob/master/provisor/utils.py#L77
+	#  https://github.com/hashbang/provisor/blob/master/provisor/utils.py#L56
 	if echo "$input" | grep -E "^[a-z][a-z0-9]{0,30}$" >/dev/null; then
 		username="$input"
 	else
