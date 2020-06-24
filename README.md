@@ -7,6 +7,7 @@ The index.html is both an html page, and a bash script, which is done by:
 
 This allows both bash and browsers to render this document appropriately.
 
+
 ## Deployment
 
 1. Build/sign index.html (requires hashbang team private key in gpg ring)
@@ -14,6 +15,7 @@ This allows both bash and browsers to render this document appropriately.
     ```
     make
     ```
+
 2. Build/push new docker container
 
     ```
@@ -21,8 +23,6 @@ This allows both bash and browsers to render this document appropriately.
     docker push hashbang/hashbang.sh
     ```
 
-3. Restart systemd service on production CoreOS machine
+3. Update hash in [gitops repository](https://github.com/hashbang/gitops/tree/master/site)
 
-    ```
-    ssh core@hashbang.sh sudo systemctl restart hashbangsh
-    ```
+4. Sync using [ArgoCD](https://argocd.hashbang.sh/applications/site)
