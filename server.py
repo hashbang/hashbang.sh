@@ -3,37 +3,42 @@
 import os
 import sys
 import traceback
-import base64
 import re
-import ssl
-from flask import Flask, send_file, send_from_directory, redirect, request, make_response
+
+import requests
+
+from flask import (Flask, send_file, send_from_directory, redirect, request,
+                   make_response)
 from flask_restful import Resource, Api
 from flask_restful.reqparse import RequestParser
-import requests
+
 from tornado.wsgi import WSGIContainer
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
+
+from werkzeug.middleware.proxy_fix import ProxyFix
+
 from reserved import RESERVED_USERNAMES
 
 app = Flask(__name__)
+app = ProxyFix(app)
 app.config['RESTFUL_JSON'] = {"indent": 4}
 
 api = Api(app)
 
 certfile = os.path.join(os.getcwd(), "certs/server.crt")
 keyfile = os.path.join(os.getcwd(), "certs/server.key")
-https_port = 4443
 http_port = 8080
 
 
 def validate_pubkey(value):
     if len(value) > 8192 or len(value) < 80:
-      raise ValueError("Expected length to be between 80 and 8192 characters")
+        raise ValueError("Expected length between 80 and 8192 characters")
 
     value = value.replace("\"", "").replace("'", "").replace("\\\"", "")
     value = value.split(' ')
-    types = [ 'ecdsa-sha2-nistp256', 'ecdsa-sha2-nistp384',
-              'ecdsa-sha2-nistp521', 'ssh-rsa', 'ssh-dss', 'ssh-ed25519' ]
+    types = ['ecdsa-sha2-nistp256', 'ecdsa-sha2-nistp384',
+             'ecdsa-sha2-nistp521', 'ssh-rsa', 'ssh-dss', 'ssh-ed25519']
     if value[0] not in types:
         raise ValueError(
             "Expected " + ', '.join(types[:-1]) + ', or ' + types[-1]
@@ -53,6 +58,7 @@ def validate_username(value):
         raise ValueError('Username is reserved')
 
     return value
+
 
 @api.representation('text/plain')
 def output_plain(data, code, headers=None):
@@ -77,21 +83,21 @@ class UserCreate(Resource):
         self.reqparse = RequestParser()
         self.reqparse.add_argument(
             'user',
-            type = validate_username,
-            required = True,
-            location = 'json'
+            type=validate_username,
+            required=True,
+            location='json'
         )
         self.reqparse.add_argument(
             'key',
-            type = validate_pubkey,
-            required = True,
-            location = 'json'
+            type=validate_pubkey,
+            required=True,
+            location='json'
         )
         self.reqparse.add_argument(
             'host',
-            type = str,
-            required = True,
-            location = 'json'
+            type=str,
+            required=True,
+            location='json'
         )
         super(UserCreate, self).__init__()
 
@@ -109,7 +115,7 @@ class UserCreate(Resource):
             }
             r = requests.post(
                 "https://userdb.hashbang.sh/passwd",
-                json = post_data
+                json=post_data
             )
             print("{status_code} - {user} - {text}".format(
                 status_code=r.status_code,
@@ -119,10 +125,9 @@ class UserCreate(Resource):
             if r.status_code >= 400:
                 data = r.json()
                 return {'message': data['message']}, r.status_code
-        except:
+        except Exception as e:
             (typ, value, tb) = sys.exc_info()
-            sys.stderr.write("Unexpected Error: %s\n" % typ)
-            sys.stderr.write("\t%s\n" % value)
+            sys.stderr.write("Unexpected Error: %r\n" % e)
             traceback.print_tb(tb)
             return {'message': 'User creation script failed'}, 500
 
@@ -141,7 +146,7 @@ class ServerStats(Resource):
     def get(self, out_format='json'):
         try:
             data = requests.get("https://userdb.hashbang.sh/hosts").json()
-        except:
+        except Exception as e:  # noqa
             return {'message': 'Unable to connect to server'}, 500
 
         for idx, s in enumerate(data):
@@ -157,18 +162,18 @@ api.add_resource(ServerStats, '/server/stats')
 
 
 def security_headers(response, secure=False):
-    csp = "default-src 'none'; "                            \
+    csp = "default-src 'none'; " \
           "style-src https://fonts.googleapis.com 'self'; " \
-          "font-src https://fonts.gstatic.com; "            \
-          "img-src data:; script-src 'self'; "              \
-          "sandbox allow-same-origin allow-scripts; "       \
+          "font-src https://fonts.gstatic.com; " \
+          "img-src data:; script-src 'self'; " \
+          "sandbox allow-same-origin allow-scripts; " \
           "frame-ancestors 'none'"
 
     response.headers['Content-Security-Policy'] = csp
-    response.headers['Referrer-Policy']         = 'no-referrer'
-    response.headers['X-Content-Type-Options']  = 'nosniff'
-    response.headers['X-Frame-Options']         = 'DENY'
-    response.headers['X-XSS-Protection']        = '1; mode=block'
+    response.headers['Referrer-Policy'] = 'no-referrer'
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['X-Frame-Options'] = 'DENY'
+    response.headers['X-XSS-Protection'] = '1; mode=block'
 
     if secure:
         response.headers['Strict-Transport-Security'] = 'max-age=31536000'
@@ -196,42 +201,21 @@ def license():
     return security_headers(send_file('LICENSE.md', mimetype='text/markdown'),
                             secure=request.is_secure)
 
+
 # HE.net domain validation
 @app.route('/s73rmwh.txt', methods=['GET'])
 def he_net():
     return security_headers(make_response('Hello IPv6!'),
                             secure=request.is_secure)
 
+
 @app.route('/assets/<path:filename>', methods=['GET'])
 def assets(filename):
     return security_headers(send_from_directory('src', filename),
                             secure=request.is_secure)
 
+
 if __name__ == '__main__':
-
-    if os.path.isfile(certfile) and os.path.isfile(keyfile):
-        ssl_ctx = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
-        ssl_ctx.load_cert_chain(certfile, keyfile)
-
-        # Protocol options: allow TLSv1.1 and later
-        ssl_ctx.options |= ssl.OP_NO_SSLv2
-        ssl_ctx.options |= ssl.OP_NO_SSLv3
-        ssl_ctx.options |= ssl.OP_NO_TLSv1
-
-        # Cipher options: strong ciphers, follow server preferences
-        ssl_ctx.set_ciphers("ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA384")
-        ssl_ctx.options |= ssl.OP_CIPHER_SERVER_PREFERENCE
-
-        # Key exchange: strong prime curve, no point reuse
-        ssl_ctx.set_ecdh_curve('prime256v1')
-        ssl_ctx.options |= ssl.OP_SINGLE_ECDH_USE
-
-        https_server = HTTPServer(
-            WSGIContainer(app),
-            ssl_options=ssl_ctx
-        )
-        https_server.listen(https_port)
-
     http_server = HTTPServer(WSGIContainer(app))
     http_server.listen(http_port)
     IOLoop.instance().start()
