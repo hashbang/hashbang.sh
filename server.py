@@ -111,7 +111,7 @@ class UserCreate(Resource):
                 }
             }
             r = requests.post(
-                "https://userdb.hashbang.sh/passwd",
+                "http://userdb-api.userdb-api.svc/passwd",
                 json=post_data
             )
             print("{status_code} - {user} - {text}".format(
@@ -142,7 +142,7 @@ class ServerStats(Resource):
 
     def get(self, out_format='json'):
         try:
-            data = requests.get("https://userdb.hashbang.sh/hosts").json()
+            data = requests.get("http://userdb-api.userdb-api.svc/hosts").json()
         except Exception as e:  # noqa
             return {'message': 'Unable to connect to server'}, 500
 
