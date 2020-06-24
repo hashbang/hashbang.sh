@@ -185,7 +185,7 @@ ask() {
 	echo " "
 }
 
-# generate ssh kypair
+# generate ssh keypair
 makekey() {
 	( checkutil ssh-keygen && checkutil ssh ) || bail
 	if [ ! -e "$1" ]; then
@@ -284,7 +284,7 @@ while [ "x$username" = "x" ]; do
 	read -r input;
 
 	# Keep in sync with the description and
-	#  https://github.com/hashbang/provisor/blob/master/provisor/utils.py#L77
+	#  https://github.com/hashbang/provisor/blob/master/provisor/utils.py#L56
 	if echo "$input" | grep -E "^[a-z][a-z0-9]{0,30}$" >/dev/null; then
 		username="$input"
 	else
@@ -470,17 +470,17 @@ fi
 exit 0
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEERWK8VmkyzxwW8tfM0sTHTY+qlvUFAlnNcAgACgkQ0sTHTY+q
-lvVlPw//fSJA3YNo+O4lt5d09Jubt4z50B+RfcyVk9dqEKbZh1oNe2Y3hQli2NgS
-+ilLlW/W3oGleWVy/Um4SWcQEGFXyC8apJfuEMDoOQeGa4y3Ng3unpLzFUP4O9iP
-INDqOks8MvbEEmWr/HY4liRt5ylweHKuYo+F5pkbsAqdDftON0BGdwYsKbT/uFai
-3Js+ISUdo1f/qU+cwU9y7wnK8M9LolxoGBUe3cVbSFfVNHkXjmv7SB32BHpPPsNJ
-URz+C8w9qgfzgUPlGQAKM4GMJLSKL4XWgFR9CRXjgBMs3c413G4DZnBuP3pvvg6y
-hpUVyVhqpSmyp8l3cEEyw08d9yVvkI5cn1vxdkNidUlbySggDcpwAtsQ/6sQ4hPx
-0l8s/NiRQMEKlKg+DymU32AozByP4RIm3rDsOcRZpd6NaTY/W8R6hySTUILm0yR4
-UrmW33y4Cup3Nk1dmywknJ6DG9XBHHMulRDZGf+yZJRgUT5FNwb0bsfcnrMHnzmY
-H/TaaU0gRAlloec+KidOc2i6+JTkNPnZADGxWAirTI0mXFfkkoTZBCW//xE4r8ji
-yiygEXlYPrBOhiYHgxozWXS0YlRO2f8+A7Y43/wwEGFClAVDEegUWjldYKngwLr5
-IZpOp6q6pYPVXKMTomyfBF9NAT0UBu499W+HOOroTBVqvqkIA4g=
-=2Cfs
+iQIzBAEBCgAdFiEERWK8VmkyzxwW8tfM0sTHTY+qlvUFAl7zZukACgkQ0sTHTY+q
+lvUDjg/8CBSI16SKcsgQKMThhXGxgMT1np/fnAEUXK30JOmvDXFEmH4qUKA2jU3Z
++gbjqk7/oYVS41u9IBjLUtsIiRi+rCledWLiTjuTM6nG0R0ow+t5UdHi8JZi8Q+A
+F7B27KKeJugaYTu3ilG6jtmXDs03KYMAnSE/NjBcFXB/QNIqmzy7yki9/YeI8KMd
+2qbKyrsFHmBuJHVmQzRfJF1R0WpO4AxL3q9wp49RZR27G0i2lyeA8LtND5DIVJWS
+qXYuuL4fB5X6b426qf/F+vbpK9ny/JHf8JH+zmE76Zih0nlXbGPoq163lBxisWx7
+9m+z/wYydNYPzH+9stLa8FdLcCW6EOVEfn1aWcp/te45af5ghpJLPt/hImA/9/TC
+MBbtYOCu4s4k2DA29q+aXw2vxbx8TBDLhSpove9NpBJ9Rr2TyR0NDL50N0idNiNI
++GFa+cQ7OqW8ISg2TnOAuJdgT0L33Z1/kZouUlTcyViCmXJG0D+GXiPkrJPaPEOR
+aASvjdaOoKlq1tAOcECvN+7udcbV2MLQywUZPKXal0lh7kPecTxNdEWutnU8tkfr
+U1L3aHGuV2LDXSodj3PzhyK3kpyrKaEmqHeqHgZ7vj84AsY4ddy+M96RiGsXri4k
+rx2ltsBps/PfcZKA9mGp0DVq5VRxx+n/aCdY3IvLE7k/WAyQ+jg=
+=nVd1
 -----END PGP SIGNATURE-----
