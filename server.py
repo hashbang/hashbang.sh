@@ -180,7 +180,7 @@ def security_headers(response, secure=False):
 
 @app.route('/', methods=["GET"])
 def root():
-    useragent = request.headers.get('User-Agent')
+    useragent = request.headers.get('User-Agent', '')
     has_https = 'https_server' in globals()
 
     if 'curl' in useragent and not request.is_secure:
