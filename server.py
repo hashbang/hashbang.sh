@@ -105,13 +105,11 @@ class UserCreate(Resource):
             post_data = {
                 "name": str(args["user"]),
                 "host": args["host"],
-                "data": {
-                    "shell": "/bin/bash",
-                    "ssh_keys": [args["key"]]
-                }
+                "shell": "/bin/bash",
+                "keys": [args["key"]],
             }
             r = requests.post(
-                "http://userdb-api.userdb-api.svc/passwd",
+                "http://userdb-api.userdb-api.svc/v1/signup",
                 json=post_data
             )
             print("{status_code} - {user} - {text}".format(
@@ -142,7 +140,7 @@ class ServerStats(Resource):
 
     def get(self, out_format='json'):
         try:
-            data = requests.get("http://userdb-api.userdb-api.svc/hosts").json()
+            data = requests.get("http://userdb-api.userdb-api.svc/v1/hosts").json()
         except Exception as e:  # noqa
             return {'message': 'Unable to connect to server'}, 500
 
