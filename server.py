@@ -109,7 +109,7 @@ class UserCreate(Resource):
                 "keys": [args["key"]],
             }
             r = requests.post(
-                "http://userdb-api.userdb-api.svc/v1/signup",
+                "http://userdb-api.userdb-api.svc/signup",
                 json=post_data
             )
             print("{status_code} - {user} - {text}".format(
@@ -140,7 +140,7 @@ class ServerStats(Resource):
 
     def get(self, out_format='json'):
         try:
-            data = requests.get("http://userdb-api.userdb-api.svc/v1/hosts").json()
+            data = requests.get("http://userdb-api.userdb-api.svc/hosts").json()
         except Exception as e:  # noqa
             return {'message': 'Unable to connect to server'}, 500
 
