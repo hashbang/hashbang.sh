@@ -108,7 +108,7 @@ makekey() {
 		if ! ssh-keygen -t rsa -C "#! $username" -f "$1"; then
 			echo " Unable to make key with that location"
 		else
-			chmod 600 "$1"
+			chmod go-rw "$1"
 			echo " Successfully generated key"
 			return
 		fi
