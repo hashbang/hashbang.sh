@@ -358,6 +358,7 @@ if [ -n "$public_key" ] && [ -n "$username" ]; then
 			printf '\nHost hashbang\n  HostName %s\n  IdentitiesOnly yes\n  User %s\n  IdentityFile %s\n' \
 			       "${host}" "$username" "$private_keyfile" \
 			>> ~/.ssh/config
+			chmod 600 ~/.ssh/config
 			echo " You can now connect any time by entering the command:";
 			echo " ";
 			echo " > ssh hashbang";
