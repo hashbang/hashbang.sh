@@ -43,7 +43,7 @@ host_data="${tmp_hb_dir}/server_stats"
 curl -sfH 'Accept:text/plain' https://hashbang.sh/server/stats > "$host_data" || bail
 echo >> "$host_data"
 
-# check if can write to file
+# checks if command is available
 checkutil() {
 	printf '%s' " * Checking for $1..."
 	if command -v "$1" >/dev/null; then
