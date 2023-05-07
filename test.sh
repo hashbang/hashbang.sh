@@ -5,7 +5,7 @@ make default
 
 # Fetch the signing key if needed or if in the CI environment
 if [ -n "$CI" ] || ! gpg --quiet -k 0xD2C4C74D8FAA96F5; then
-    gpg --recv-keys --keyserver keys.gnupg.net 0xD2C4C74D8FAA96F5
+    gpg --import ./.ci/team@hashbang.sh.gpg
 fi
 
 # Check the OpenPGP signatures
