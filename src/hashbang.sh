@@ -202,7 +202,7 @@ echo " and the first 6 characters of the last name, but feel free to use ";
 echo " whatever you want";
 echo " ";
 
-while [ "x$username" = "x" ]; do
+while [ "$username" = "" ]; do
 	printf " Username: ";
 	read -r input;
 
