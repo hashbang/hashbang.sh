@@ -1,0 +1,17 @@
+name: Run test script
+
+on: [pull_request]
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+      -
+        name: Install gnupg & shellcheck
+        run: sudo apt install gnupg shellcheck
+      -
+        name: Test
+        run: ./test.sh
