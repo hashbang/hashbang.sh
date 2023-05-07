@@ -26,4 +26,4 @@ rm warn.sh
 
 # Shellcheck the script
 # Skipped in CI, as we run it separately for better feedback UX
-[ -n "$CI" ] || shellcheck src/hashbang.sh
+[ -n "$CI" ] || find . -type f -name '*.sh' -exec shellcheck '{}' '+'
