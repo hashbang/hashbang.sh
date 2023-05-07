@@ -9,7 +9,11 @@ jobs:
       -
         name: Checkout
         uses: actions/checkout@v3
+      -
+        uses: lumaxis/shellcheck-problem-matchers@v2.1.0
+        with:
+          format: gcc
       - # No install needed, shellcheck is included in Github's image
         name: Run shellcheck
         run: find -type f -name '*.sh'
-                  -exec shellcheck '{}' '+'
+                  -exec shellcheck --format=gcc '{}' '+'
