@@ -1,16 +1,6 @@
-FROM debian:buster
+FROM python:3
 
-RUN LC_ALL=C \
-    DEBIAN_FRONTEND=noninteractive \
-    apt-get update && \
-    apt-get install -y \
-        ca-certificates \
-        git \
-        python3 \
-	python3-pip && \
-    apt-get clean && \
-    rm -rf /tmp/* /var/tmp/* && \
-    pip3 install pipenv
+RUN pip install pipenv
 
 ADD ./ /opt/app/
 WORKDIR /opt/app
