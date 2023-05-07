@@ -4,6 +4,7 @@
 # possible to provide an easy gateway for new users.
 
 # If we're using bash, we do this
+# shellcheck disable=SC3040,SC3044
 if [ -n "$BASH" ]; then
 	shopt -s extglob
 	set -o posix
@@ -201,7 +202,7 @@ echo " and the first 6 characters of the last name, but feel free to use ";
 echo " whatever you want";
 echo " ";
 
-while [ "x$username" = "x" ]; do
+while [ "$username" = "" ]; do
 	printf " Username: ";
 	read -r input;
 

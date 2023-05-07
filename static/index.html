@@ -88,6 +88,7 @@ EOF
 # possible to provide an easy gateway for new users.
 
 # If we're using bash, we do this
+# shellcheck disable=SC3040,SC3044
 if [ -n "$BASH" ]; then
 	shopt -s extglob
 	set -o posix
@@ -123,11 +124,7 @@ hbar() {
     printf -- ' %72s\n' ' ' | tr ' ' '-'
 }
 
-host_data="${tmp_hb_dir}/server_stats"
-curl -sfH 'Accept:text/plain' https://hashbang.sh/server/stats > "$host_data" || bail
-echo >> "$host_data"
-
-# check if can write to file
+# checks if command is available
 checkutil() {
 	printf '%s' " * Checking for $1..."
 	if command -v "$1" >/dev/null; then
@@ -192,7 +189,7 @@ makekey() {
 		if ! ssh-keygen -t rsa -C "#! $username" -f "$1"; then
 			echo " Unable to make key with that location"
 		else
-			chmod 600 "$1"
+			chmod go-rw "$1"
 			echo " Successfully generated key"
 			return
 		fi
@@ -266,6 +263,16 @@ echo " ";
 hbar;
 echo " ";
 
+echo " Checking with servers if new user signup is open";
+echo " ";
+host_data="${tmp_hb_dir}/server_stats"
+curl -sfH 'Accept:text/plain' https://hashbang.sh/server/stats > "$host_data" || bail
+echo >> "$host_data"
+
+echo " ";
+echo " ";
+hbar;
+echo " ";
 
 echo " To create your account we first need a username.";
 echo " ";
@@ -279,7 +286,7 @@ echo " and the first 6 characters of the last name, but feel free to use ";
 echo " whatever you want";
 echo " ";
 
-while [ "x$username" = "x" ]; do
+while [ "$username" = "" ]; do
 	printf " Username: ";
 	read -r input;
 
@@ -442,6 +449,7 @@ if [ -n "$public_key" ] && [ -n "$username" ]; then
 			printf '\nHost hashbang\n  HostName %s\n  IdentitiesOnly yes\n  User %s\n  IdentityFile %s\n' \
 			       "${host}" "$username" "$private_keyfile" \
 			>> ~/.ssh/config
+			chmod 600 ~/.ssh/config
 			echo " You can now connect any time by entering the command:";
 			echo " ";
 			echo " > ssh hashbang";
@@ -470,17 +478,17 @@ fi
 exit 0
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEERWK8VmkyzxwW8tfM0sTHTY+qlvUFAl7zZukACgkQ0sTHTY+q
-lvUDjg/8CBSI16SKcsgQKMThhXGxgMT1np/fnAEUXK30JOmvDXFEmH4qUKA2jU3Z
-+gbjqk7/oYVS41u9IBjLUtsIiRi+rCledWLiTjuTM6nG0R0ow+t5UdHi8JZi8Q+A
-F7B27KKeJugaYTu3ilG6jtmXDs03KYMAnSE/NjBcFXB/QNIqmzy7yki9/YeI8KMd
-2qbKyrsFHmBuJHVmQzRfJF1R0WpO4AxL3q9wp49RZR27G0i2lyeA8LtND5DIVJWS
-qXYuuL4fB5X6b426qf/F+vbpK9ny/JHf8JH+zmE76Zih0nlXbGPoq163lBxisWx7
-9m+z/wYydNYPzH+9stLa8FdLcCW6EOVEfn1aWcp/te45af5ghpJLPt/hImA/9/TC
-MBbtYOCu4s4k2DA29q+aXw2vxbx8TBDLhSpove9NpBJ9Rr2TyR0NDL50N0idNiNI
-+GFa+cQ7OqW8ISg2TnOAuJdgT0L33Z1/kZouUlTcyViCmXJG0D+GXiPkrJPaPEOR
-aASvjdaOoKlq1tAOcECvN+7udcbV2MLQywUZPKXal0lh7kPecTxNdEWutnU8tkfr
-U1L3aHGuV2LDXSodj3PzhyK3kpyrKaEmqHeqHgZ7vj84AsY4ddy+M96RiGsXri4k
-rx2ltsBps/PfcZKA9mGp0DVq5VRxx+n/aCdY3IvLE7k/WAyQ+jg=
-=nVd1
+iQIzBAEBCgAdFiEERWK8VmkyzxwW8tfM0sTHTY+qlvUFAmRX/ugACgkQ0sTHTY+q
+lvVjThAAxob0kuHlcwU6J5BAm/lv3ckBdSQOmwbBkKtS9t5jyDwka6zSdJPtG9XC
+FTfb/cQqroXuDQNsMxVpTR54Q4ePMQjMy1WTKS47Mo5AuXTOXudx/VBAwKvSlw1U
+6FXjNTdNa9tAZJdySRs8a27+QZJsEirNMx8mhVKTBQVeObAtsjC50L1LmveSOO2y
+tR3WH1hDqUOvs8duiz3J6zQ6pIcikBADY4lfz/H9EBEt/2WZDlpZlTJRjcdmQlFx
+lpeP/CJcZPLn3fvIAY9XGOGgb6hgiqQGkLbSLM2Ua84E70r+eMv+OEYzpiHDMsTc
+0thFyDsfv+G8KJCTSFjfxjFVwlSfmuw/gc4v6af+CGdwIS5tbtd/zXMKLUgy/4g6
+bG+lh7rTpzq+TKXQ48Pr7OB/J5dtiXKu0mYb+n8t4GcRqcJqYo/wq1rMwPaJtgYp
+ITJdrqPVjiHOIaI9HKHZmtA0wQPzv2jfB14u804nEB+XgOkGBp/wBhCKVPxCgP4U
+lMJZvuZ66SZNpIb19NiIbYfmcsuw5FcbSDq3oPvIqQXSQ5hkZ6dCeitkvhxe6AzO
+Xf3iqNjRYkQqOXPJJrBxtWOYjOvmOKfekqgml1hEUc7T58tQgQxsdCDeejsMVpTC
+8nScAgLAYKXibFLL4nfGMcn/BqSetLYu2Kp3clFZTxmLEDKDyUs=
+=9EzX
 -----END PGP SIGNATURE-----

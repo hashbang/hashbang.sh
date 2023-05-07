@@ -4,7 +4,7 @@
 make default
 
 # Fetch the signing key if needed or if in the CI environment
-if [ -n "$CI" ] || !gpg --quiet -k 0xD2C4C74D8FAA96F5; then
+if [ -n "$CI" ] || ! gpg --quiet -k 0xD2C4C74D8FAA96F5; then
     gpg --recv-keys --keyserver keys.gnupg.net 0xD2C4C74D8FAA96F5
 fi
 
@@ -25,8 +25,4 @@ rm warn.sh
 
 
 # Shellcheck the script
-#  Ignore warning SC2029 “SSH argument is evaluated client-side”
-#  Ignore warning SC2039 “In POSIX sh, 'shopt' is not supported”
-#    (it is gated with `if [ -n "$BASH" ]`)
-
-shellcheck -e SC2029,SC2039 src/hashbang.sh
+shellcheck src/hashbang.sh
