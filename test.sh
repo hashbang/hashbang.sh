@@ -25,4 +25,5 @@ rm warn.sh
 
 
 # Shellcheck the script
-shellcheck src/hashbang.sh
+# Skipped in CI, as we run it separately for better feedback UX
+[ -n "$CI" ] || shellcheck src/hashbang.sh
