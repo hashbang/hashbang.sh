@@ -4,6 +4,7 @@
 # possible to provide an easy gateway for new users.
 
 # If we're using bash, we do this
+# shellcheck disable=SC3040,SC3044
 if [ -n "$BASH" ]; then
 	shopt -s extglob
 	set -o posix
