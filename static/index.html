@@ -290,8 +290,8 @@ while [ "$username" = "" ]; do
 	printf " Username: ";
 	read -r input;
 
-	# Keep in sync with the description and
-	#  https://github.com/hashbang/provisor/blob/master/provisor/utils.py#L56
+	# Keep in sync with the description and the validate_username function in
+	#  https://github.com/hashbang/hashbang.sh/blob/master/server.py
 	if echo "$input" | grep -E "^[a-z][a-z0-9]{0,30}$" >/dev/null; then
 		username="$input"
 	else
@@ -478,17 +478,17 @@ fi
 exit 0
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEERWK8VmkyzxwW8tfM0sTHTY+qlvUFAmRX/ugACgkQ0sTHTY+q
-lvVjThAAxob0kuHlcwU6J5BAm/lv3ckBdSQOmwbBkKtS9t5jyDwka6zSdJPtG9XC
-FTfb/cQqroXuDQNsMxVpTR54Q4ePMQjMy1WTKS47Mo5AuXTOXudx/VBAwKvSlw1U
-6FXjNTdNa9tAZJdySRs8a27+QZJsEirNMx8mhVKTBQVeObAtsjC50L1LmveSOO2y
-tR3WH1hDqUOvs8duiz3J6zQ6pIcikBADY4lfz/H9EBEt/2WZDlpZlTJRjcdmQlFx
-lpeP/CJcZPLn3fvIAY9XGOGgb6hgiqQGkLbSLM2Ua84E70r+eMv+OEYzpiHDMsTc
-0thFyDsfv+G8KJCTSFjfxjFVwlSfmuw/gc4v6af+CGdwIS5tbtd/zXMKLUgy/4g6
-bG+lh7rTpzq+TKXQ48Pr7OB/J5dtiXKu0mYb+n8t4GcRqcJqYo/wq1rMwPaJtgYp
-ITJdrqPVjiHOIaI9HKHZmtA0wQPzv2jfB14u804nEB+XgOkGBp/wBhCKVPxCgP4U
-lMJZvuZ66SZNpIb19NiIbYfmcsuw5FcbSDq3oPvIqQXSQ5hkZ6dCeitkvhxe6AzO
-Xf3iqNjRYkQqOXPJJrBxtWOYjOvmOKfekqgml1hEUc7T58tQgQxsdCDeejsMVpTC
-8nScAgLAYKXibFLL4nfGMcn/BqSetLYu2Kp3clFZTxmLEDKDyUs=
-=9EzX
+iQIzBAEBCgAdFiEERWK8VmkyzxwW8tfM0sTHTY+qlvUFAmRYcDUACgkQ0sTHTY+q
+lvXGIA/+LkArFpMDqdSu5vjhi+LJDYcSxQBZvBQPJDWD82MsL8DYWW7h1rSCgGnR
+3rD4tCoE3vLuq2L8xJlrlXSF7Try1d3vjpUm7PY2mAQRs1kblXIOTczbAy8xvu94
+CFMI9BnKRXqhxzOtiUqUqhfJKJt5WfIiob5uG3mqZXll6+OmKMdbrCLwnaUXIo1B
+xYyivTUVjH8JpHfXcsx7iQqsCC9SA6HABGD8TIE4by4S3MMMWSfs0qhPpwkXSqqu
+Zwjn9KVLpztEBOx1dzMAV5sE/SuYOS3xyTddlCmGsIz3rG7bCpwHTywgdKZInMJ+
+PnXv+lMqHDFNFXl0o/AjSg7/pWjXrXm0s6IeOHWrZ+yqijMkCs0908xfJcNHcGo5
+g2Sb980ZiOwQ+XLTHnkebJhaFYlt1ejIxXLCr1c40ouHunRmhB6b+MRFy9SHHsye
+358Zpio7wT57cfflP3z7JjEmXA0fSZkoz0qpwo5Vs9M1nqTBVDW/Udy/tz9OnASb
+e4SuJo8OrFpFYX3R2QHxi7o8lxmCBuickwiIy5STEWV+C0DeJCgD1AA7klih0RgT
+UkqgnfbqyzMKqDwUzQZc6H9BavR+KpPUvehFaHH0AKGXgC0zOM5hOrlf2mgdoc10
+stRKC0b6uzW2zkAYSPwLPwqGV39w+YOnIxAWbHhJ1Pn1KuIwaRI=
+=cwVT
 -----END PGP SIGNATURE-----
