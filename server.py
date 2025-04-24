@@ -209,6 +209,9 @@ def assets(filename):
     return security_headers(send_from_directory('src', filename),
                             secure=request.is_secure)
 
+@app.route('/.well-known/atproto-did', methods=['GET'])
+def atproto_did():
+  return security_headers(make_response('did:plc:d5vnrky4rxilzxou6get5tlt'), secure=request.is_secure)
 
 if __name__ == '__main__':
     http_server = HTTPServer(WSGIContainer(app))
