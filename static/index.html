@@ -312,11 +312,13 @@ echo " yourself to systems like this one without ever sending your password ";
 echo " over the internet, and thus by nature we won't even know what it is";
 
 for keytype in id_ed25519 id_ecdsa id_rsa id_dsa; do
-	if [ -e ~/.ssh/${keytype}.pub ] && [ -e ~/.ssh/${keytype} ]; then
+	if [ -e ~/.ssh/${keytype}.pub ]; then
 		if ask " We found a public key in [ ~/.ssh/${keytype}.pub ]. Use this key?" Y; then
-			private_keyfile="${HOME}/.ssh/${keytype}"
-			public_key="$(cat ~/.ssh/${keytype}.pub)"
-			break
+			if [ -e ~/.ssh/${keytype} ] || ask " Are you sure? There is no corresponding private key file." N; then
+				private_keyfile="${HOME}/.ssh/${keytype}"
+				public_key="$(cat ~/.ssh/${keytype}.pub)"
+				break
+			fi
 		fi
 	fi
 done
@@ -478,17 +480,17 @@ fi
 exit 0
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEERWK8VmkyzxwW8tfM0sTHTY+qlvUFAmRYcDUACgkQ0sTHTY+q
-lvXGIA/+LkArFpMDqdSu5vjhi+LJDYcSxQBZvBQPJDWD82MsL8DYWW7h1rSCgGnR
-3rD4tCoE3vLuq2L8xJlrlXSF7Try1d3vjpUm7PY2mAQRs1kblXIOTczbAy8xvu94
-CFMI9BnKRXqhxzOtiUqUqhfJKJt5WfIiob5uG3mqZXll6+OmKMdbrCLwnaUXIo1B
-xYyivTUVjH8JpHfXcsx7iQqsCC9SA6HABGD8TIE4by4S3MMMWSfs0qhPpwkXSqqu
-Zwjn9KVLpztEBOx1dzMAV5sE/SuYOS3xyTddlCmGsIz3rG7bCpwHTywgdKZInMJ+
-PnXv+lMqHDFNFXl0o/AjSg7/pWjXrXm0s6IeOHWrZ+yqijMkCs0908xfJcNHcGo5
-g2Sb980ZiOwQ+XLTHnkebJhaFYlt1ejIxXLCr1c40ouHunRmhB6b+MRFy9SHHsye
-358Zpio7wT57cfflP3z7JjEmXA0fSZkoz0qpwo5Vs9M1nqTBVDW/Udy/tz9OnASb
-e4SuJo8OrFpFYX3R2QHxi7o8lxmCBuickwiIy5STEWV+C0DeJCgD1AA7klih0RgT
-UkqgnfbqyzMKqDwUzQZc6H9BavR+KpPUvehFaHH0AKGXgC0zOM5hOrlf2mgdoc10
-stRKC0b6uzW2zkAYSPwLPwqGV39w+YOnIxAWbHhJ1Pn1KuIwaRI=
-=cwVT
+iQIzBAEBCgAdFiEERWK8VmkyzxwW8tfM0sTHTY+qlvUFAmRYdwkACgkQ0sTHTY+q
+lvVswQ//eR6Eh1rFLthPrtLK8lceHlT9dlzuAYq42WE6/QMbfbDRIZ3tmk192Mpu
+oCmlQBzpzEb8Y1ROJK2B13r28RqQmF9s72HEeWu7uT6Ezcn8YYg16sQERBETvpUu
+uOuAd6ioagnUhVByKbrf3B/6WH+DJ3uVmzOsNqOkNh9ILmGAvjHvYvnl3Kdr7Q6q
+DoSaNoSAljMhoeFkJt24ICAHgumVL/Ee1UT3avOqPnpYe4cUmujFCL2UdCV//mRc
+VUQSzqhKx6AY1vy42vuKYVenjoOVyZowVkh2oY3ZjwmPbnH4jQ5lWrRPJxXl7UX7
+iGPlTAhYy4JXaNFFPlIAtGWwEzdTkTEYcA5q1cbL2D/QvPS5DuCK3TaCZm32Lppg
+C8zo4VOX6vzJswhMdi4BOgb6fO4SdpPCJRRtl7ZucxBvG53JkZc6VaQ0osaFgjkQ
+mKvfyHIclowUrpCWQ4igtgzPaNg4McOleZlNi6SoIXFMS74F0hYKIhwNBxNOYngk
+wXbL24KcSXfxra1DrdD4UfN3GbUNu+YxXMffqEzo2QTI5MS4ExJK+fC76yMlDjM7
+/LTH2RBVkX8Vlzyq1zVHTQiOvkXOz7LGFb086Bn+mF8066rBeUYhZdYntefRyePt
+r++wVtVorMAfQh+qwe/MJaQJdC9SsknpqVE3RDZFOK9oSlp6ZM0=
+=AebV
 -----END PGP SIGNATURE-----

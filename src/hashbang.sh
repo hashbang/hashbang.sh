@@ -228,11 +228,13 @@ echo " yourself to systems like this one without ever sending your password ";
 echo " over the internet, and thus by nature we won't even know what it is";
 
 for keytype in id_ed25519 id_ecdsa id_rsa id_dsa; do
-	if [ -e ~/.ssh/${keytype}.pub ] && [ -e ~/.ssh/${keytype} ]; then
+	if [ -e ~/.ssh/${keytype}.pub ]; then
 		if ask " We found a public key in [ ~/.ssh/${keytype}.pub ]. Use this key?" Y; then
-			private_keyfile="${HOME}/.ssh/${keytype}"
-			public_key="$(cat ~/.ssh/${keytype}.pub)"
-			break
+			if [ -e ~/.ssh/${keytype} ] || ask " Are you sure? There is no corresponding private key file." N; then
+				private_keyfile="${HOME}/.ssh/${keytype}"
+				public_key="$(cat ~/.ssh/${keytype}.pub)"
+				break
+			fi
 		fi
 	fi
 done
